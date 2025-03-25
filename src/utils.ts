@@ -12,6 +12,32 @@ import type { BuildMongooseModelOptions } from './types/options';
 export type DoNotRemoveOrUseThisType = typeof setCustomMongooseOptions;
 
 /**
+ * Asserts that a Mongoose update operation was successful by checking that it was acknowledged
+ * and that at least the expected number of documents were modified.
+ *
+ * This function is intended for use with `updateOne`, `updateMany`, or any update operation
+ * that returns a MongoDB `UpdateResult`.
+ *
+ * @template T - The shape of the document being updated.
+ * @param updatePromise - A promise returned from a Mongoose update operation.
+ * @param expectedModifiedCount - The minimum number of documents expected to be modified. Defaults to 1.
+ * @throws Will throw an error if:
+ *   - The operation was not acknowledged by MongoDB,
+ *   - Fewer documents were modified than expected.
+ */
+export async function assertMongooseUpdateSuccess<T extends mongo.BSON.Document>(
+    updatePromise: Promise<mongo.UpdateResult<T>>,
+    expectedModifiedCount = 1,
+) {
+    const updateResult = await updatePromise;
+    if (!updateResult.acknowledged) throw new Error('Update was not acknowledged.');
+    if (updateResult.modifiedCount < expectedModifiedCount) {
+        // eslint-disable-next-line style/max-len
+        throw new Error(`Expected to modify at least ${expectedModifiedCount} document(s), but modified ${updateResult.modifiedCount}.`);
+    }
+}
+
+/**
  * Builds and returns a Mongoose model with specified schema and options.
  *
  * This function sets up a Mongoose model with optional plugins and timestamp settings.
@@ -57,32 +83,6 @@ export function buildMongooseModel<
     // eslint-disable-next-line style/max-len
     const connection = options?.connection || (mongooseConnections.default ||= mongoose.createConnection(process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017'));
     return connection.model<DocType, Model, QueryHelpers>(name, schema, collection);
-}
-
-/**
- * Ensures that a MongoDB update operation was acknowledged and modified
- * at least the expected number of documents.
- *
- * This utility is intended for use with `updateOne`, `updateMany`, or any
- * update operation that returns a `UpdateResult`.
- *
- * @template T - The shape of the document being updated.
- * @param updatePromise - A Promise returned from a MongoDB update operation (e.g., `updateOne`, `updateMany`).
- * @param expectedModifiedCount - The minimum number of documents expected to be modified. Defaults to 1.
- * @throws Will throw an error if:
- *   - The update operation was not acknowledged,
- *   - Fewer documents were modified than expected.
- */
-export async function ensureUpdateSuccess<T extends mongo.BSON.Document>(
-    updatePromise: Promise<mongo.UpdateResult<T>>,
-    expectedModifiedCount = 1,
-) {
-    const updateResult = await updatePromise;
-    if (!updateResult.acknowledged) throw new Error('Update was not acknowledged.');
-    if (updateResult.modifiedCount < expectedModifiedCount) {
-        // eslint-disable-next-line style/max-len
-        throw new Error(`Expected to modify at least ${expectedModifiedCount} document(s), but modified ${updateResult.modifiedCount}.`);
-    }
 }
 
 /**
