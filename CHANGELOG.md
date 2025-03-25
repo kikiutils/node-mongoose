@@ -1,5 +1,22 @@
 # Changelog
 
+## v2.3.0
+
+[compare changes](https://github.com/kikiutils/node-mongoose/compare/v2.2.0...v2.3.0)
+
+### 🚀 Enhancements
+
+- Add `ensureUpdateSuccess` utils ([4302b77](https://github.com/kikiutils/node-mongoose/commit/4302b77))
+
+### 🏡 Chore
+
+- Upgrade dependencies ([3af6e01](https://github.com/kikiutils/node-mongoose/commit/3af6e01))
+- Upgrade examples dependencies ([4c1a7b1](https://github.com/kikiutils/node-mongoose/commit/4c1a7b1))
+
+### ❤️ Contributors
+
+- kiki-kanri
+
 ## v2.2.0
 
 [compare changes](https://github.com/kikiutils/node-mongoose/compare/v2.1.8...v2.2.0)
