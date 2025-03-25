@@ -1,5 +1,17 @@
 # Changelog
 
+## v2.3.1
+
+[compare changes](https://github.com/kikiutils/node-mongoose/compare/v2.3.0...v2.3.1)
+
+### 💅 Refactors
+
+- Rename `ensureUpdateSuccess` to `assertMongooseUpdateSuccess` ([17a576d](https://github.com/kikiutils/node-mongoose/commit/17a576d))
+
+### ❤️ Contributors
+
+- kiki-kanri
+
 ## v2.3.0
 
 [compare changes](https://github.com/kikiutils/node-mongoose/compare/v2.2.0...v2.3.0)
