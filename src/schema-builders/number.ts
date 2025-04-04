@@ -13,7 +13,10 @@ import { createBaseSchemaBuilderFactory } from './base';
 export type ExtendNumberSchemaBuilder<
     Props extends BaseProps,
     ExtraOmitFields extends string,
-> = Omit<NumberSchemaBuilder<Props, ExtraOmitFields>, ExtraOmitFields | keyof Props>;
+> = Omit<
+    NumberSchemaBuilder<Props, ExtraOmitFields>,
+    ExtraOmitFields | keyof Props
+>;
 
 interface BaseProps {
     type: NumberSchemaDefinition;

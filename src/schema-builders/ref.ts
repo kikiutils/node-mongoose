@@ -15,7 +15,10 @@ import { createBaseSchemaBuilderFactory } from './base';
 export type ExtendRefSchemaBuilder<
     Props extends BaseProps,
     ExtraOmitFields extends string,
-> = Omit<RefSchemaBuilder<Props, ExtraOmitFields>, ExtraOmitFields | keyof Props>;
+> = Omit<
+    RefSchemaBuilder<Props, ExtraOmitFields>,
+    ExtraOmitFields | keyof Props
+>;
 
 interface BaseProps {
     type: typeof Schema.Types.ObjectId;
@@ -40,9 +43,10 @@ export interface RefSchemaBuilder<
         | { message?: M; values: Readonlyable<Array<null | O>> },
         M extends string,
         O extends Types.ObjectId,
-    >(
-        value: T
-    ) => ExtendRefSchemaBuilder<Merge<Props, { enum: T }>, ExtraOmitFields>;
+    >(value: T) => ExtendRefSchemaBuilder<
+        Merge<Props, { enum: T }>,
+        ExtraOmitFields
+    >;
 
     index: <T extends boolean | IndexDirection | IndexOptions>(value: T) => ExtendRefSchemaBuilder<
         Merge<Props, { index: T }>,
@@ -58,8 +62,8 @@ export interface RefSchemaBuilder<
 
 const baseBuilderFactory = createBaseSchemaBuilderFactory(Schema.Types.ObjectId);
 
-export function refSchemaBuilder<
-    T extends ((this: any, doc: any) => Model<any> | string) | Model<any> | string,
->(ref: T) {
+export function refSchemaBuilder<T extends ((this: any, doc: any) => Model<any> | string) | Model<any> | string>(
+    ref: T,
+) {
     return baseBuilderFactory({ ref }) as RefSchemaBuilder<{ ref: T; type: typeof Schema.Types.ObjectId }>;
 }

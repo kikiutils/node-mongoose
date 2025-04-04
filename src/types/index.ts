@@ -32,7 +32,11 @@ declare global {
      * @template CreatedAtField - A boolean flag indicating whether the `createdAt` field should be included.
      * @template UpdatedAtField - A boolean flag indicating whether the `updatedAt` field should be included.
      */
-    type BaseMongooseDocType<T, CreatedAtField extends boolean = true, UpdatedAtField extends boolean = true> =
+    type BaseMongooseDocType<
+        T,
+        CreatedAtField extends boolean = true,
+        UpdatedAtField extends boolean = true,
+    > =
       & IfElse<CreatedAtField, { createdAt: Date }, object>
       & IfElse<UpdatedAtField, { updatedAt: Date }, object>
       & Omit<T, 'createdAt' | 'id' | 'updatedAt'>;
@@ -47,7 +51,11 @@ declare global {
      * @template InstanceMethodsAndOverrides - Optional type parameter for instance methods and overrides.
      * @template QueryHelpers - Optional type parameter for additional query helper methods.
      */
-    type BaseMongoosePaginateModel<RawDocType, InstanceMethodsAndOverrides = object, QueryHelpers = object> =
+    type BaseMongoosePaginateModel<
+        RawDocType,
+        InstanceMethodsAndOverrides = object,
+        QueryHelpers = object,
+    > =
       & AggregatePaginateModel<RawDocType, QueryHelpers, InstanceMethodsAndOverrides>
       & BaseModelStatics<RawDocType, InstanceMethodsAndOverrides, QueryHelpers>
       & PaginateModel<RawDocType, QueryHelpers, InstanceMethodsAndOverrides>;
@@ -108,5 +116,9 @@ declare global {
         DocType,
         InstanceMethodsAndOverrides = object,
         QueryHelpers = object,
-    > = HydratedDocument<DocType, InstanceMethodsAndOverrides, QueryHelpers>;
+    > = HydratedDocument<
+        DocType,
+        InstanceMethodsAndOverrides,
+        QueryHelpers
+    >;
 }

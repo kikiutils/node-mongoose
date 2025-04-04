@@ -14,7 +14,10 @@ import { createBaseSchemaBuilderFactory } from './base';
 export type ExtendObjectIdSchemaBuilder<
     Props extends BaseProps,
     ExtraOmitFields extends string,
-> = Omit<ObjectIdSchemaBuilder<Props, ExtraOmitFields>, ExtraOmitFields | keyof Props>;
+> = Omit<
+    ObjectIdSchemaBuilder<Props, ExtraOmitFields>,
+    ExtraOmitFields | keyof Props
+>;
 
 interface BaseProps {
     type: typeof Schema.Types.ObjectId;
@@ -39,9 +42,10 @@ export interface ObjectIdSchemaBuilder<
         | { message?: M; values: Readonlyable<Array<null | O>> },
         M extends string,
         O extends Types.ObjectId,
-    >(
-        value: T
-    ) => ExtendObjectIdSchemaBuilder<Merge<Props, { enum: T }>, ExtraOmitFields>;
+    >(value: T) => ExtendObjectIdSchemaBuilder<
+        Merge<Props, { enum: T }>,
+        ExtraOmitFields
+    >;
 
     index: <T extends boolean | IndexDirection | IndexOptions>(value: T) => ExtendObjectIdSchemaBuilder<
         Merge<Props, { index: T }>,

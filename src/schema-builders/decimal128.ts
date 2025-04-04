@@ -15,7 +15,10 @@ import { createBaseSchemaBuilderFactory } from './base';
 export type ExtendDecimal128SchemaBuilder<
     Props extends BaseProps,
     ExtraOmitFields extends string,
-> = Omit<Decimal128SchemaBuilder<Props, ExtraOmitFields>, ExtraOmitFields | keyof Props>;
+> = Omit<
+    Decimal128SchemaBuilder<Props, ExtraOmitFields>,
+    ExtraOmitFields | keyof Props
+>;
 
 interface BaseProps {
     type: typeof Schema.Types.Decimal128;
@@ -72,10 +75,7 @@ export interface Decimal128SchemaBuilder<
      *
      * @returns A schema builder with the rounding and toFixed behavior applied to the `set` option in Mongoose.
      */
-    setRoundAndToFixedSetter: (
-        places?: number,
-        rounding?: Decimal.Rounding
-    ) => ExtendDecimal128SchemaBuilder<
+    setRoundAndToFixedSetter: (places?: number, rounding?: Decimal.Rounding) => ExtendDecimal128SchemaBuilder<
         Merge<Props, ToStringSetterSchema>,
         'setRoundAndToFixedSetter' | ExtraOmitFields
     >;

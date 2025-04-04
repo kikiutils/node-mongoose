@@ -13,7 +13,10 @@ import { createBaseSchemaBuilderFactory } from './base';
 export type ExtendDateSchemaBuilder<
     Props extends BaseProps,
     ExtraOmitFields extends string,
-> = Omit<DateSchemaBuilder<Props, ExtraOmitFields>, ExtraOmitFields | keyof Props>;
+> = Omit<
+    DateSchemaBuilder<Props, ExtraOmitFields>,
+    ExtraOmitFields | keyof Props
+>;
 
 interface BaseProps {
     type: DateSchemaDefinition;

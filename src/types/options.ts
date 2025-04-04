@@ -59,6 +59,11 @@ export interface CustomMongooseOptions {
         InstanceMethodsAndOverrides = object,
         QueryHelpers = object,
     >(
-        schema: Schema<DocType, Model, InstanceMethodsAndOverrides, QueryHelpers>
+        schema: Schema<
+            DocType,
+            Model,
+            InstanceMethodsAndOverrides,
+            QueryHelpers
+        >
     ) => void;
 }

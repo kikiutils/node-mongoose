@@ -15,7 +15,10 @@ import { createBaseSchemaBuilderFactory } from './base';
 export type ExtendStringSchemaBuilder<
     Props extends BaseProps,
     ExtraOmitFields extends string,
-> = Omit<StringSchemaBuilder<Props, ExtraOmitFields>, ExtraOmitFields | keyof Props>;
+> = Omit<
+    StringSchemaBuilder<Props, ExtraOmitFields>,
+    ExtraOmitFields | keyof Props
+>;
 
 interface BaseProps {
     type: StringSchemaDefinition;
@@ -45,9 +48,10 @@ export interface StringSchemaBuilder<
         | { message?: M; values: Readonlyable<Array<null | S>> },
         M extends string,
         S extends string,
-    >(
-        value: T
-    ) => ExtendStringSchemaBuilder<Merge<Props, { enum: T }>, ExtraOmitFields>;
+    >(value: T) => ExtendStringSchemaBuilder<
+        Merge<Props, { enum: T }>,
+        ExtraOmitFields
+    >;
 
     index: <T extends boolean | IndexDirection | IndexOptions>(value: T) => ExtendStringSchemaBuilder<
         Merge<Props, { index: T }>,

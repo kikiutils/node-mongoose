@@ -76,7 +76,10 @@ declare global {
     type OmitMongooseTimestampAndOtherFields<
         T,
         OT extends number | string | symbol = never,
-    > = Omit<T, 'createdAt' | 'updatedAt' | OT>;
+    > = Omit<
+        T,
+        'createdAt' | 'updatedAt' | OT
+    >;
 
     /**
      * Type definition for including timestamp fields conditionally based on the provided flags.

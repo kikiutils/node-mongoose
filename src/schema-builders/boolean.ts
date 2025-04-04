@@ -11,7 +11,10 @@ import { createBaseSchemaBuilderFactory } from './base';
 export type ExtendBooleanSchemaBuilder<
     Props extends BaseBooleanSchemaProps,
     ExtraOmitFields extends string,
-> = Omit<BooleanSchemaBuilder<Props, ExtraOmitFields>, ExtraOmitFields | keyof Props>;
+> = Omit<
+    BooleanSchemaBuilder<Props, ExtraOmitFields>,
+    ExtraOmitFields | keyof Props
+>;
 
 export interface BaseBooleanSchemaProps {
     type: BooleanSchemaDefinition;
