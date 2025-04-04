@@ -59,10 +59,10 @@
   "dependencies": {
     "decimal.js": "^10.5.0",
     "lodash": "^4.17.21",
-    "mongoose": "^8.13.0",
+    "mongoose": "^8.13.2",
     "mongoose-aggregate-paginate-v2": "^1.1.4",
     "mongoose-paginate-v2": "^1.9.0",
-    "type-fest": "^4.38.0"
+    "type-fest": "^4.39.1"
   },
   "devDependencies": {
     "@kikiutils/changelogen": "^0.8.0",
@@ -70,9 +70,9 @@
     "@kikiutils/tsconfigs": "^3.0.3",
     "@types/jest": "^29.5.14",
     "@types/lodash": "^4.17.16",
-    "@types/node": "^22.13.13",
+    "@types/node": "^22.14.0",
     "jest": "^29.7.0",
-    "ts-jest": "^29.3.0",
+    "ts-jest": "^29.3.1",
     "ts-project-builder": "^3.4.3",
     "tslib": "^2.8.1"
   }
