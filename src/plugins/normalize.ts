@@ -1,6 +1,6 @@
-import lodashGet from 'lodash/get';
-import lodashSet from 'lodash/set';
-import lodashUnset from 'lodash/unset';
+import lodashGet from 'lodash/get.js';
+import lodashSet from 'lodash/set.js';
+import lodashUnset from 'lodash/unset.js';
 import type {
     Schema,
     Types,
