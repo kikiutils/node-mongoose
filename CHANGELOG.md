@@ -1,5 +1,17 @@
 # Changelog
 
+## v3.0.3
+
+[compare changes](https://github.com/kikiutils/node-mongoose/compare/v3.0.2...v3.0.3)
+
+### 🩹 Fixes
+
+- Correct `createConnection` import to resolve runtime error ([6b000c7](https://github.com/kikiutils/node-mongoose/commit/6b000c7))
+
+### ❤️ Contributors
+
+- kiki-kanri
+
 ## v3.0.2
 
 [compare changes](https://github.com/kikiutils/node-mongoose/compare/v3.0.1...v3.0.2)
