@@ -117,7 +117,7 @@ export async function mongooseDocumentOrObjectIdToDocument<
     documentOrObjectId: MongooseDocumentOrObjectId<D>,
     model: BaseMongoosePaginateModel<DocType, InstanceMethodsAndOverrides, QueryHelpers>,
     selectFields?: string[],
-): Promise<D | null> {
+) {
     if (typeof documentOrObjectId === 'string' || documentOrObjectId instanceof Types.ObjectId) {
         return (await model.findById(documentOrObjectId).select(selectFields || [])) as D | null;
     }
