@@ -1,6 +1,6 @@
 {
   "name": "@kikiutils/mongoose",
-  "version": "2.3.1",
+  "version": "3.0.0",
   "description": "A Mongoose plugin for enhanced JSON normalization and common schema creation, with built-in support for pagination and automatic Decimal128 conversion.",
   "author": "kiki-kanri",
   "license": "MIT",
@@ -75,5 +75,10 @@
     "ts-jest": "^29.3.1",
     "ts-project-builder": "^4.0.0",
     "tslib": "^2.8.1"
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "esbuild"
+    ]
   }
 }

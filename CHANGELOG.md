@@ -1,5 +1,27 @@
 # Changelog
 
+## v3.0.0
+
+[compare changes](https://github.com/kikiutils/node-mongoose/compare/v2.3.1...v3.0.0)
+
+### 💅 Refactors
+
+- ⚠️ Update imports and exports ([86dbc5d](https://github.com/kikiutils/node-mongoose/commit/86dbc5d))
+
+### 🏡 Chore
+
+- Upgrade dependencies ([52bf666](https://github.com/kikiutils/node-mongoose/commit/52bf666))
+- Format code ([2e72af4](https://github.com/kikiutils/node-mongoose/commit/2e72af4))
+- Upgrade dependencies ([70fa459](https://github.com/kikiutils/node-mongoose/commit/70fa459))
+
+#### ⚠️ Breaking Changes
+
+- ⚠️ Update imports and exports ([86dbc5d](https://github.com/kikiutils/node-mongoose/commit/86dbc5d))
+
+### ❤️ Contributors
+
+- kiki-kanri
+
 ## v2.3.1
 
 [compare changes](https://github.com/kikiutils/node-mongoose/compare/v2.3.0...v2.3.1)
