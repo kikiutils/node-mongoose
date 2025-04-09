@@ -1,4 +1,4 @@
-import { numberSchemaBuilder } from '../../src/schema-builders/number';
+import { numberSchemaBuilder } from '../../src/schema-builders';
 
 describe('numberSchemaBuilder', () => {
     it('should create a schema with the correct type for Number', () => {

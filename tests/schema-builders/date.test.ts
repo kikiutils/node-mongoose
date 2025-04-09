@@ -1,4 +1,4 @@
-import { dateSchemaBuilder } from '../../src/schema-builders/date';
+import { dateSchemaBuilder } from '../../src/schema-builders';
 
 describe('dateSchemaBuilder', () => {
     it('should create a schema with the correct type for Date', () => {

@@ -1,6 +1,6 @@
 import { Schema } from 'mongoose';
 
-import { objectIdSchemaBuilder } from '../../src/schema-builders/object-id';
+import { objectIdSchemaBuilder } from '../../src/schema-builders';
 
 describe('objectIdSchemaBuilder', () => {
     it('should create a schema with the correct type for ObjectId', () => {

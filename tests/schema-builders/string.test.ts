@@ -1,4 +1,4 @@
-import { stringSchemaBuilder } from '../../src/schema-builders/string';
+import { stringSchemaBuilder } from '../../src/schema-builders';
 
 describe('stringSchemaBuilder', () => {
     it('should create a schema with the correct type for String', () => {

@@ -4,7 +4,7 @@ import {
     Types,
 } from 'mongoose';
 
-import { decimal128SchemaBuilder } from '../../src/schema-builders/decimal128';
+import { decimal128SchemaBuilder } from '../../src/schema-builders';
 
 describe('decimal128SchemaBuilder', () => {
     it('should create a schema with the correct type for Decimal128', () => {

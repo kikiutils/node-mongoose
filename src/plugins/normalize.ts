@@ -1,14 +1,10 @@
-import lodash from 'lodash';
+import lodashGet from 'lodash/get';
+import lodashSet from 'lodash/set';
+import lodashUnset from 'lodash/unset';
 import type {
     Schema,
     Types,
 } from 'mongoose';
-
-const {
-    get: lodashGet,
-    set: lodashSet,
-    unset: lodashUnset,
-} = lodash;
 
 /**
  * Mongoose plugin to normalize the JSON output of documents.
@@ -53,5 +49,3 @@ export function mongooseNormalizePlugin<S extends Schema>(schema: S) {
         },
     );
 }
-
-export default mongooseNormalizePlugin;

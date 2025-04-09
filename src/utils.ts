@@ -6,7 +6,7 @@ import mongoosePaginate from 'mongoose-paginate-v2';
 import { customMongooseOptions } from './_internals';
 import { mongooseConnections } from './constants';
 import type { setCustomMongooseOptions } from './options';
-import mongooseNormalizePlugin from './plugins/normalize';
+import { mongooseNormalizePlugin } from './plugins/normalize';
 import type { BuildMongooseModelOptions } from './types/options';
 
 export type DoNotRemoveOrUseThisType = typeof setCustomMongooseOptions;

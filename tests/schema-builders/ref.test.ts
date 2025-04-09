@@ -3,7 +3,7 @@ import {
     Schema,
 } from 'mongoose';
 
-import { refSchemaBuilder } from '../../src/schema-builders/ref';
+import { refSchemaBuilder } from '../../src/schema-builders';
 
 describe('refSchemaBuilder', () => {
     it('should create a schema with the correct ref for a function returning a model', () => {
