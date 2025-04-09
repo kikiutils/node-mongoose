@@ -1,4 +1,4 @@
-import Decimal from 'decimal.js';
+import { Decimal } from 'decimal.js';
 import { Schema } from 'mongoose';
 import type {
     DefaultType,
