@@ -1,5 +1,21 @@
 # Changelog
 
+## v3.0.1
+
+[compare changes](https://github.com/kikiutils/node-mongoose/compare/v3.0.0...v3.0.1)
+
+### 🩹 Fixes
+
+- Add missing file extensions in lodash import paths ([b2d04d7](https://github.com/kikiutils/node-mongoose/commit/b2d04d7))
+
+### 💅 Refactors
+
+- Update some imports to avoid importing entire modules ([eb4b394](https://github.com/kikiutils/node-mongoose/commit/eb4b394))
+
+### ❤️ Contributors
+
+- kiki-kanri
+
 ## v3.0.0
 
 [compare changes](https://github.com/kikiutils/node-mongoose/compare/v2.3.1...v3.0.0)
