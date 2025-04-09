@@ -1,7 +1,4 @@
-import {
-    createConnection,
-    Types,
-} from 'mongoose';
+import mongoose, { Types } from 'mongoose';
 import type {
     mongo,
     Schema,
@@ -87,7 +84,7 @@ export function buildMongooseModel<
     schema.set('timestamps', options?.timestamps ?? schema.get('timestamps') ?? true);
     customMongooseOptions.beforeModelBuild?.(schema);
     // eslint-disable-next-line style/max-len
-    const connection = options?.connection || (mongooseConnections.default ||= createConnection(process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017'));
+    const connection = options?.connection || (mongooseConnections.default ||= mongoose.createConnection(process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017'));
     return connection.model<DocType, Model, QueryHelpers>(name, schema, collection);
 }
 
