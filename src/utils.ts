@@ -1,5 +1,11 @@
-import type { mongo } from 'mongoose';
-import mongoose, { Types } from 'mongoose';
+import {
+    createConnection,
+    Types,
+} from 'mongoose';
+import type {
+    mongo,
+    Schema,
+} from 'mongoose';
 import mongooseAggregatePaginate from 'mongoose-aggregate-paginate-v2';
 import mongoosePaginate from 'mongoose-paginate-v2';
 
@@ -72,7 +78,7 @@ export function buildMongooseModel<
 >(
     collection: string,
     name: string,
-    schema: mongoose.Schema<DocType, Model, InstanceMethodsAndOverrides, QueryHelpers>,
+    schema: Schema<DocType, Model, InstanceMethodsAndOverrides, QueryHelpers>,
     options?: BuildMongooseModelOptions,
 ) {
     if (options?.enableNormalizePlugin !== false) schema.plugin(mongooseNormalizePlugin);
@@ -81,7 +87,7 @@ export function buildMongooseModel<
     schema.set('timestamps', options?.timestamps ?? schema.get('timestamps') ?? true);
     customMongooseOptions.beforeModelBuild?.(schema);
     // eslint-disable-next-line style/max-len
-    const connection = options?.connection || (mongooseConnections.default ||= mongoose.createConnection(process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017'));
+    const connection = options?.connection || (mongooseConnections.default ||= createConnection(process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017'));
     return connection.model<DocType, Model, QueryHelpers>(name, schema, collection);
 }
 

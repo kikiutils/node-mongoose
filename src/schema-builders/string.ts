@@ -1,4 +1,7 @@
-import net from 'node:net';
+import {
+    isIPv4,
+    isIPv6,
+} from 'node:net';
 
 import type {
     DefaultType,
@@ -148,7 +151,7 @@ export function stringSchemaBuilder() {
                         schema.trim = true;
                         schema.validate = {
                             message,
-                            validator: (value: string) => net.isIPv4(value),
+                            validator: (value: string) => isIPv4(value),
                         };
 
                         return receiver;
@@ -160,7 +163,7 @@ export function stringSchemaBuilder() {
                         schema.trim = true;
                         schema.validate = {
                             message,
-                            validator: (value: string) => net.isIPv6(value),
+                            validator: (value: string) => isIPv6(value),
                         };
 
                         return receiver;
