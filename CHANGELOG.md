@@ -1,5 +1,24 @@
 # Changelog
 
+## v3.0.2
+
+[compare changes](https://github.com/kikiutils/node-mongoose/compare/v3.0.1...v3.0.2)
+
+### 💅 Refactors
+
+- Update import style for `Decimal` ([20da030](https://github.com/kikiutils/node-mongoose/commit/20da030))
+- Simplify type definitions for `BaseMongooseModelData`, `WithMongooseTimestampFieldsData`, and `BaseMongooseDocType` than change some IfElse fallback types to unknown ([1295231](https://github.com/kikiutils/node-mongoose/commit/1295231))
+- Remove explicit return type from `mongooseDocumentOrObjectIdToDocument` ([62b4cf4](https://github.com/kikiutils/node-mongoose/commit/62b4cf4))
+
+### 🏡 Chore
+
+- Remove `tslib` devDependency ([9b888fa](https://github.com/kikiutils/node-mongoose/commit/9b888fa))
+- Set sideEffects to false in package.json ([52b1e01](https://github.com/kikiutils/node-mongoose/commit/52b1e01))
+
+### ❤️ Contributors
+
+- kiki-kanri
+
 ## v3.0.1
 
 [compare changes](https://github.com/kikiutils/node-mongoose/compare/v3.0.0...v3.0.1)
