@@ -37,8 +37,8 @@ declare global {
         CreatedAtField extends boolean = true,
         UpdatedAtField extends boolean = true,
     > =
-      & IfElse<CreatedAtField, { createdAt: Date }, object>
-      & IfElse<UpdatedAtField, { updatedAt: Date }, object>
+      & IfElse<CreatedAtField, { createdAt: Date }, unknown>
+      & IfElse<UpdatedAtField, { updatedAt: Date }, unknown>
       & Omit<T, 'createdAt' | 'id' | 'updatedAt'>;
 
     /**
