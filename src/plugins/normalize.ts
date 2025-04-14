@@ -1,5 +1,8 @@
+// @ts-expect-error Ignore this error.
 import lodashGet from 'lodash/get.js';
+// @ts-expect-error Ignore this error.
 import lodashSet from 'lodash/set.js';
+// @ts-expect-error Ignore this error.
 import lodashUnset from 'lodash/unset.js';
 import { Types } from 'mongoose';
 import type { Schema } from 'mongoose';
