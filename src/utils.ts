@@ -78,7 +78,10 @@ export function buildMongooseModel<
     schema: Schema<DocType, Model, InstanceMethodsAndOverrides, QueryHelpers>,
     options?: BuildMongooseModelOptions,
 ) {
-    if (options?.enableNormalizePlugin !== false) schema.plugin(mongooseNormalizePlugin);
+    if (options?.enableNormalizePlugin !== false) {
+        schema.plugin(mongooseNormalizePlugin, options?.normalizePluginOptions);
+    }
+
     schema.plugin(mongooseAggregatePaginate);
     schema.plugin(mongoosePaginate);
     schema.set('timestamps', options?.timestamps ?? schema.get('timestamps') ?? true);

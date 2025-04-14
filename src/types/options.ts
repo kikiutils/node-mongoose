@@ -4,6 +4,7 @@ import type {
     SchemaTimestampsConfig,
 } from 'mongoose';
 
+import type { MongooseNormalizePluginOptions } from '../plugins/normalize';
 import type { buildMongooseModel } from '../utils';
 
 export type DoNotRemoveOrUseThisType = typeof buildMongooseModel;
@@ -33,6 +34,7 @@ export interface BuildMongooseModelOptions {
      * @default true
      */
     enableNormalizePlugin?: boolean;
+    normalizePluginOptions?: MongooseNormalizePluginOptions;
 
     /**
      * Configures Mongoose timestamps.

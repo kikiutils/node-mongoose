@@ -7,6 +7,23 @@ import lodashUnset from 'lodash/unset.js';
 import { Types } from 'mongoose';
 import type { Schema } from 'mongoose';
 
+export interface MongooseNormalizePluginOptions {
+    /**
+     * Whether to convert `_id` field to `id`.
+     * If true, the `_id` field will be replaced with `id`.
+     *
+     * @default true
+     */
+    convertIdField?: boolean;
+
+    /**
+     * Whether to convert the `_id` field to a hex string if it's an ObjectId.
+     *
+     * @default true
+     */
+    toHexIdIfObjectId?: boolean;
+}
+
 /**
  * Mongoose plugin to normalize the JSON output of documents.
  *
@@ -21,7 +38,7 @@ import type { Schema } from 'mongoose';
  *
  * @param schema - The Mongoose schema to apply the plugin to.
  */
-export function mongooseNormalizePlugin<S extends Schema>(schema: S) {
+export function mongooseNormalizePlugin<S extends Schema>(schema: S, pluginOptions?: MongooseNormalizePluginOptions) {
     const toJson = schema.get('toJSON');
     const toJsonTransform = toJson?.transform;
     schema.set(
@@ -30,8 +47,13 @@ export function mongooseNormalizePlugin<S extends Schema>(schema: S) {
             ...toJson,
             transform(doc: any, ret: any, options: any) {
                 // eslint-disable-next-line style/object-curly-newline
-                const { __v, _id, ...copiedRet } = ret;
-                copiedRet.id = _id instanceof Types.ObjectId ? _id.toHexString() : _id;
+                let { __v, _id, ...copiedRet } = ret;
+                if (pluginOptions?.toHexIdIfObjectId !== false) {
+                    _id = _id instanceof Types.ObjectId ? _id.toHexString() : _id;
+                }
+
+                if (pluginOptions?.convertIdField !== false) copiedRet.id = _id;
+                else copiedRet._id = _id;
                 for (const path in schema.paths) {
                     if (schema.paths[path]?.options?.private) lodashUnset(copiedRet, path);
                     if (schema.paths[path]?.instance === 'Decimal128') {
