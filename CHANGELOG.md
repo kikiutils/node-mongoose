@@ -1,5 +1,26 @@
 # Changelog
 
+## v3.0.4
+
+[compare changes](https://github.com/kikiutils/node-mongoose/compare/v3.0.3...v3.0.4)
+
+### 🩹 Fixes
+
+- Handle non-ObjectId values when converting _id to id in normalize plugin ([d1c4b4a](https://github.com/kikiutils/node-mongoose/commit/d1c4b4a))
+- Use `@ts-expect-error` to suppress TypeScript errors when importing lodash functions ([59c659b](https://github.com/kikiutils/node-mongoose/commit/59c659b))
+
+### 💅 Refactors
+
+- Change `Decimal` import to named import ([aa4a9b8](https://github.com/kikiutils/node-mongoose/commit/aa4a9b8))
+
+### 🏡 Chore
+
+- Upgrade dependencies ([b4277f7](https://github.com/kikiutils/node-mongoose/commit/b4277f7))
+
+### ❤️ Contributors
+
+- kiki-kanri
+
 ## v3.0.3
 
 [compare changes](https://github.com/kikiutils/node-mongoose/compare/v3.0.2...v3.0.3)
