@@ -1,10 +1,8 @@
 import lodashGet from 'lodash/get.js';
 import lodashSet from 'lodash/set.js';
 import lodashUnset from 'lodash/unset.js';
-import type {
-    Schema,
-    Types,
-} from 'mongoose';
+import { Types } from 'mongoose';
+import type { Schema } from 'mongoose';
 
 /**
  * Mongoose plugin to normalize the JSON output of documents.
@@ -28,9 +26,9 @@ export function mongooseNormalizePlugin<S extends Schema>(schema: S) {
         {
             ...toJson,
             transform(doc: any, ret: any, options: any) {
-                const copiedRet = { ...ret };
-                copiedRet.id = copiedRet._id?.toHexString();
-                delete copiedRet._id;
+                // eslint-disable-next-line style/object-curly-newline
+                const { __v, _id, ...copiedRet } = ret;
+                copiedRet.id = _id instanceof Types.ObjectId ? _id.toHexString() : _id;
                 for (const path in schema.paths) {
                     if (schema.paths[path]?.options?.private) lodashUnset(copiedRet, path);
                     if (schema.paths[path]?.instance === 'Decimal128') {
@@ -39,7 +37,6 @@ export function mongooseNormalizePlugin<S extends Schema>(schema: S) {
                     }
                 }
 
-                delete copiedRet.__v;
                 if (toJsonTransform && typeof toJsonTransform !== 'boolean') {
                     return toJsonTransform(doc, copiedRet, options);
                 }
