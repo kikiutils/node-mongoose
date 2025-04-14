@@ -1,5 +1,17 @@
 # Changelog
 
+## v3.1.0
+
+[compare changes](https://github.com/kikiutils/node-mongoose/compare/v3.0.4...v3.1.0)
+
+### 🚀 Enhancements
+
+- Add option to normalize plugin to control _id conversion and to hex id ([a6f5442](https://github.com/kikiutils/node-mongoose/commit/a6f5442))
+
+### ❤️ Contributors
+
+- kiki-kanri
+
 ## v3.0.4
 
 [compare changes](https://github.com/kikiutils/node-mongoose/compare/v3.0.3...v3.0.4)
