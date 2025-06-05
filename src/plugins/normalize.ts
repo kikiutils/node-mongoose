@@ -45,7 +45,7 @@ export function mongooseNormalizePlugin<S extends Schema>(schema: S, pluginOptio
         'toJSON',
         {
             ...toJson,
-            transform(doc: any, ret: any, options: any) {
+            transform(doc, ret, options) {
                 // eslint-disable-next-line style/object-curly-newline
                 let { __v, _id, ...copiedRet } = ret;
                 if (pluginOptions?.toHexIdIfObjectId !== false) {
