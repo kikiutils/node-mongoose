@@ -27,6 +27,18 @@ declare module 'mongoose' {
         totalPages?: T;
     }
 
+    interface AggregatePaginateModel<
+        RawDocType,
+        QueryHelpers = object,
+        InstanceMethodsAndOverrides = object,
+    > extends Model<RawDocType, QueryHelpers, InstanceMethodsAndOverrides> {
+        aggregatePaginate: <T>(
+            query?: Aggregate<T[]> | PrePaginatePipelineStage[],
+            options?: AggregatePaginateOptions,
+            callback?: (err: any, result: AggregatePaginateResult<T>) => void,
+        ) => Promise<AggregatePaginateResult<T>>;
+    }
+
     interface AggregatePaginateOptions {
         allowDiskUse?: boolean;
         countQuery?: object;
@@ -73,18 +85,6 @@ declare module 'mongoose' {
         prevPage?: null | number;
         totalDocs: number;
         totalPages: number;
-    }
-
-    interface AggregatePaginateModel<
-        RawDocType,
-        QueryHelpers = object,
-        InstanceMethodsAndOverrides = object,
-    > extends Model<RawDocType, QueryHelpers, InstanceMethodsAndOverrides> {
-        aggregatePaginate: <T>(
-            query?: Aggregate<T[]> | PrePaginatePipelineStage[],
-            options?: AggregatePaginateOptions,
-            callback?: (err: any, result: AggregatePaginateResult<T>) => void,
-        ) => Promise<AggregatePaginateResult<T>>;
     }
 }
 

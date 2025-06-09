@@ -8,6 +8,25 @@ import type {
 import type { IfElse } from './utils';
 
 declare module 'mongoose' {
+    type PaginateDocument<
+        T,
+        TMethods,
+        TQueryHelpers,
+        O extends PaginateOptions = object,
+    > = IfElse<
+        O['lean'],
+        IfElse<
+            O['leanWithId'],
+            T & { id: string },
+            IfElse<
+                O['leanWithVirtuals'],
+                T & { [key: string]: any },
+                T
+            >
+        >,
+        HydratedDocument<T, TMethods, TQueryHelpers>
+    >;
+
     interface PaginateCustomLabels<T = boolean | string | undefined> {
         docs?: T;
         hasNextPage?: T;
@@ -22,9 +41,32 @@ declare module 'mongoose' {
         totalPages?: T;
     }
 
-    interface PaginateReadOptions {
-        pref: string;
-        tags?: any[];
+    interface PaginateModel<T, TQueryHelpers = object, TMethods = object> extends Model<T, TQueryHelpers, TMethods> {
+        paginate: {
+            <O extends PaginateOptions>(
+                query?: FilterQuery<T>,
+                options?: O,
+                callback?: (err: any, result: PaginateResult<PaginateDocument<T, TMethods, TQueryHelpers, O>>) => void
+            ): Promise<PaginateResult<PaginateDocument<T, TMethods, TQueryHelpers, O>>>;
+
+            <UserType = T, O extends PaginateOptions = PaginateOptions>(
+                query?: FilterQuery<T>,
+                options?: O,
+                callback?: (
+                    err: any,
+                    result: PaginateResult<PaginateDocument<UserType, TMethods, TQueryHelpers, O>>
+                ) => void
+            ): Promise<PaginateResult<PaginateDocument<UserType, TMethods, TQueryHelpers, O>>>;
+
+            <UserType = T>(
+                query?: FilterQuery<T>,
+                options?: PaginateOptions,
+                callback?: (
+                    err: any,
+                    result: PaginateResult<PaginateDocument<UserType, TMethods, TQueryHelpers, PaginateOptions>>
+                ) => void
+            ): Promise<PaginateResult<PaginateDocument<UserType, TMethods, TQueryHelpers, PaginateOptions>>>;
+        };
     }
 
     interface PaginateOptions {
@@ -55,18 +97,9 @@ declare module 'mongoose' {
         useEstimatedCount?: boolean;
     }
 
-    interface SubPaginateOptions {
-        pagination?: boolean;
-        pagingOptions?: SubDocumentPagingOptions;
-        populate?: PopulateOptions | PopulateOptions[] | string | string[];
-        read?: PaginateReadOptions;
-        select?: object | string;
-    }
-
-    interface SubDocumentPagingOptions {
-        limit?: number;
-        page?: number;
-        populate?: PopulateOptions | PopulateOptions[] | string | string[];
+    interface PaginateReadOptions {
+        pref: string;
+        tags?: any[];
     }
 
     interface PaginateResult<T> {
@@ -83,53 +116,6 @@ declare module 'mongoose' {
         prevPage?: null | number;
         totalDocs: number;
         totalPages: number;
-    }
-
-    type PaginateDocument<
-        T,
-        TMethods,
-        TQueryHelpers,
-        O extends PaginateOptions = object,
-    > = IfElse<
-        O['lean'],
-        IfElse<
-            O['leanWithId'],
-            T & { id: string },
-            IfElse<
-                O['leanWithVirtuals'],
-                T & { [key: string]: any },
-                T
-            >
-        >,
-        HydratedDocument<T, TMethods, TQueryHelpers>
-    >;
-
-    interface PaginateModel<T, TQueryHelpers = object, TMethods = object> extends Model<T, TQueryHelpers, TMethods> {
-        paginate: {
-            <O extends PaginateOptions>(
-                query?: FilterQuery<T>,
-                options?: O,
-                callback?: (err: any, result: PaginateResult<PaginateDocument<T, TMethods, TQueryHelpers, O>>) => void
-            ): Promise<PaginateResult<PaginateDocument<T, TMethods, TQueryHelpers, O>>>;
-
-            <UserType = T, O extends PaginateOptions = PaginateOptions>(
-                query?: FilterQuery<T>,
-                options?: O,
-                callback?: (
-                    err: any,
-                    result: PaginateResult<PaginateDocument<UserType, TMethods, TQueryHelpers, O>>
-                ) => void
-            ): Promise<PaginateResult<PaginateDocument<UserType, TMethods, TQueryHelpers, O>>>;
-
-            <UserType = T>(
-                query?: FilterQuery<T>,
-                options?: PaginateOptions,
-                callback?: (
-                    err: any,
-                    result: PaginateResult<PaginateDocument<UserType, TMethods, TQueryHelpers, PaginateOptions>>
-                ) => void
-            ): Promise<PaginateResult<PaginateDocument<UserType, TMethods, TQueryHelpers, PaginateOptions>>>;
-        };
     }
 
     // @ts-expect-error Ignore this error.
@@ -154,6 +140,20 @@ declare module 'mongoose' {
                 PaginateResult<PaginateDocument<UserType, TInstanceMethods, THelpers, PaginateOptions>>
             >;
         };
+    }
+
+    interface SubDocumentPagingOptions {
+        limit?: number;
+        page?: number;
+        populate?: PopulateOptions | PopulateOptions[] | string | string[];
+    }
+
+    interface SubPaginateOptions {
+        pagination?: boolean;
+        pagingOptions?: SubDocumentPagingOptions;
+        populate?: PopulateOptions | PopulateOptions[] | string | string[];
+        read?: PaginateReadOptions;
+        select?: object | string;
     }
 }
 

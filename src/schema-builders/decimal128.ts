@@ -24,14 +24,6 @@ interface BaseProps {
     type: typeof Schema.Types.Decimal128;
 }
 
-interface ToStringGetterSchema {
-    get: (value?: Types.Decimal128) => string | undefined;
-}
-
-interface ToStringSetterSchema {
-    set: (value?: { toString: () => string }) => string;
-}
-
 export interface Decimal128SchemaBuilder<
     Props extends { type: typeof Schema.Types.Decimal128 } = { type: typeof Schema.Types.Decimal128 },
     ExtraOmitFields extends string = never,
@@ -96,6 +88,14 @@ export interface Decimal128SchemaBuilder<
 
     sparse: ExtendDecimal128SchemaBuilder<Merge<Props, { sparse: true }>, ExtraOmitFields>;
     unique: ExtendDecimal128SchemaBuilder<Merge<Props, { unique: true }>, ExtraOmitFields>;
+}
+
+interface ToStringGetterSchema {
+    get: (value?: Types.Decimal128) => string | undefined;
+}
+
+interface ToStringSetterSchema {
+    set: (value?: { toString: () => string }) => string;
 }
 
 const baseBuilderFactory = createBaseSchemaBuilderFactory(Schema.Types.Decimal128);
