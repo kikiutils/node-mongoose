@@ -1,11 +1,16 @@
+import {
+    describe,
+    it,
+} from 'vitest';
+
 import { stringSchemaBuilder } from '../../src/schema-builders';
 
-describe('stringSchemaBuilder', () => {
-    it('should create a schema with the correct type for String', () => {
+describe.concurrent('stringSchemaBuilder', () => {
+    it('should create a schema with the correct type for String', ({ expect }) => {
         expect(stringSchemaBuilder().nonRequired).toEqual({ type: String });
     });
 
-    it('should correctly set IPv4 validator and validate IPv4 addresses', () => {
+    it('should correctly set IPv4 validator and validate IPv4 addresses', ({ expect }) => {
         const schema = stringSchemaBuilder().ipv4().nonRequired;
         expect(schema).toEqual({
             trim: true,
@@ -23,7 +28,7 @@ describe('stringSchemaBuilder', () => {
         expect(schema.validate.validator('')).toBe(false);
     });
 
-    it('should correctly set IPv6 validator and validate IPv6 addresses', () => {
+    it('should correctly set IPv6 validator and validate IPv6 addresses', ({ expect }) => {
         const schema = stringSchemaBuilder().ipv6().nonRequired;
         expect(schema).toEqual({
             trim: true,
@@ -41,7 +46,7 @@ describe('stringSchemaBuilder', () => {
         expect(schema.validate.validator('')).toBe(false);
     });
 
-    it('should set both maxlength and minlength to the specified length', () => {
+    it('should set both maxlength and minlength to the specified length', ({ expect }) => {
         expect(stringSchemaBuilder().length(10).nonRequired).toEqual({
             maxlength: 10,
             minlength: 10,
