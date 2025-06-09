@@ -39,7 +39,7 @@ You can also use `yarn`, `npm`, or `bun`.
 ## Usage
 
 <!-- TODO: Full doc. -->
-Please refer to the [examples](./examples/README.md) folder for usage instructions of this package.
+To be completed.
 
 ## License
 
