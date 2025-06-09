@@ -1,5 +1,62 @@
 # Changelog
 
+## v3.1.1
+
+[compare changes](https://github.com/kikiutils/node-mongoose/compare/v3.1.0...v3.1.1)
+
+### 💅 Refactors
+
+- Remove unnecessary type annotations from some parameters ([60bf3b4](https://github.com/kikiutils/node-mongoose/commit/60bf3b4))
+
+### 📖 Documentation
+
+- Update README badges urls ([499bc71](https://github.com/kikiutils/node-mongoose/commit/499bc71))
+- Replace `%2F` with `/` in badge URLs in README ([4aaf916](https://github.com/kikiutils/node-mongoose/commit/4aaf916))
+
+### 🏡 Chore
+
+- Format script ([16ca049](https://github.com/kikiutils/node-mongoose/commit/16ca049))
+- Update file permissions after installing or updating dependencies ([d141f76](https://github.com/kikiutils/node-mongoose/commit/d141f76))
+- Add `--hideAuthorEmail` flag to bumplog command ([382091b](https://github.com/kikiutils/node-mongoose/commit/382091b))
+- Add typecheck command to package.json scripts ([2a1f7e0](https://github.com/kikiutils/node-mongoose/commit/2a1f7e0))
+- Rename `jest.config.js` to `jest.config.mjs` ([76371a1](https://github.com/kikiutils/node-mongoose/commit/76371a1))
+- Reorder lint, test, and build steps in release command ([b63dcb4](https://github.com/kikiutils/node-mongoose/commit/b63dcb4))
+- Disable `isolatedDeclarations` in tsconfig ([ed1636f](https://github.com/kikiutils/node-mongoose/commit/ed1636f))
+- Update `modify-files-permissions.sh` ([89f72e3](https://github.com/kikiutils/node-mongoose/commit/89f72e3))
+- Add option to `upgrade-dependencies.sh` to clean `node_modules` and `pnpm-lock.yaml` before upgrading ([e542b14](https://github.com/kikiutils/node-mongoose/commit/e542b14))
+- Upgrade dependencies ([d3ee5a7](https://github.com/kikiutils/node-mongoose/commit/d3ee5a7))
+- Ensure all scripts change to their own directory before execution ([9be5fbf](https://github.com/kikiutils/node-mongoose/commit/9be5fbf))
+- Update ignore files ([c81c294](https://github.com/kikiutils/node-mongoose/commit/c81c294))
+- **scripts:** Ensure all scripts `cd` to their current directory correctly ([5362c3b](https://github.com/kikiutils/node-mongoose/commit/5362c3b))
+- Set `--max-warnings=0` for `lint` and `lint:fix` ([bffe476](https://github.com/kikiutils/node-mongoose/commit/bffe476))
+- Set eslint config to enable `lib` mode ([59e03e4](https://github.com/kikiutils/node-mongoose/commit/59e03e4))
+- Disable `ts/explicit-function-return-type` eslint rule ([5190f6b](https://github.com/kikiutils/node-mongoose/commit/5190f6b))
+- Lint code ([f8f0974](https://github.com/kikiutils/node-mongoose/commit/f8f0974))
+- **test:** Migrate from `jest` to `vitest` ([9a9d869](https://github.com/kikiutils/node-mongoose/commit/9a9d869))
+- Split `tsconfig` and create build-specific config for production builds ([564b6d2](https://github.com/kikiutils/node-mongoose/commit/564b6d2))
+- **vitest:** Configure coverage to collect files only under `src/` ([e2c7f65](https://github.com/kikiutils/node-mongoose/commit/e2c7f65))
+- Upgrade dependencies and remove `@types/node` ([32aaf31](https://github.com/kikiutils/node-mongoose/commit/32aaf31))
+- Wrap all variable expansions in scripts with `${}` ([82c47c9](https://github.com/kikiutils/node-mongoose/commit/82c47c9))
+- Remove Jest-related files, examples, and update README ([08c1abd](https://github.com/kikiutils/node-mongoose/commit/08c1abd))
+- Lint codes ([805f4ab](https://github.com/kikiutils/node-mongoose/commit/805f4ab))
+
+### ✅ Tests
+
+- Add pass test unit ([d7b98bd](https://github.com/kikiutils/node-mongoose/commit/d7b98bd))
+- Migrate test to vitest ([a6fc90c](https://github.com/kikiutils/node-mongoose/commit/a6fc90c))
+
+### 🤖 CI
+
+- Add test github workflow config file ([dd421d1](https://github.com/kikiutils/node-mongoose/commit/dd421d1))
+- Update test workflow ([1519e46](https://github.com/kikiutils/node-mongoose/commit/1519e46))
+- Update condition for uploading to Codecov in workflow job ([39851ac](https://github.com/kikiutils/node-mongoose/commit/39851ac))
+- Set `--prod=false` when install dependencies ([93d7945](https://github.com/kikiutils/node-mongoose/commit/93d7945))
+- Remove `--prod=false` flag when install dependencies ([249def0](https://github.com/kikiutils/node-mongoose/commit/249def0))
+
+### ❤️ Contributors
+
+- kiki-kanri
+
 ## v3.1.0
 
 [compare changes](https://github.com/kikiutils/node-mongoose/compare/v3.0.4...v3.1.0)
