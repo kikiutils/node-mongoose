@@ -5,7 +5,10 @@
       "mongoose-aggregate-paginate-v2": ["./src/types/aggregate-paginate"],
       "mongoose-paginate-v2": ["./src/types/paginate"]
     },
-    "noEmit": true
+    "declaration": true,
+    "declarationDir": "./dist",
+    "declarationMap": true,
+    "emitDeclarationOnly": true
   },
-  "include": ["./src", "./tests"]
+  "include": ["./src"]
 }

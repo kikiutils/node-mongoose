@@ -50,35 +50,39 @@
     "node": ">=18.12.1"
   },
   "scripts": {
-    "build": "ts-project-builder ./src/constants.ts ./src/options.ts ./src/schema-builders/index.ts ./src/utils.ts --clean --preserve-modules --sourcemaps",
-    "bumplog": "changelogen --bump",
-    "lint": "eslint",
-    "lint:fix": "eslint --fix",
-    "release": "pnpm run lint && pnpm run build && pnpm run test && changelogen --hideAuthorEmail --push --release && npm publish",
-    "test": "jest --coverage"
+    "build": "ts-project-builder './src/**/*.ts' --clean --preserve-modules --sourcemaps",
+    "bumplog": "changelogen --bump --hideAuthorEmail",
+    "lint": "eslint --max-warnings 0",
+    "lint:fix": "eslint --fix --max-warnings 0",
+    "prepack": "pnpm run build",
+    "release": "pnpm run lint && pnpm run typecheck && pnpm run test && pnpm run build && changelogen --hideAuthorEmail --push --release && npm publish",
+    "test": "vitest run --coverage",
+    "test:watch": "vitest watch --coverage",
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
     "decimal.js": "^10.5.0",
     "lodash": "^4.17.21",
-    "mongoose": "^8.13.2",
+    "mongoose": "^8.15.1",
     "mongoose-aggregate-paginate-v2": "^1.1.4",
-    "mongoose-paginate-v2": "^1.9.0",
-    "type-fest": "^4.39.1"
+    "mongoose-paginate-v2": "^1.9.1",
+    "type-fest": "^4.41.0"
   },
   "devDependencies": {
     "@kikiutils/changelogen": "^0.8.0",
-    "@kikiutils/eslint-config": "^0.12.2",
-    "@kikiutils/tsconfigs": "^4.1.0",
-    "@types/jest": "^29.5.14",
-    "@types/lodash": "^4.17.16",
-    "@types/node": "^22.14.1",
-    "jest": "^29.7.0",
-    "ts-jest": "^29.3.2",
-    "ts-project-builder": "^4.0.1"
+    "@kikiutils/eslint-config": "^1.2.3",
+    "@kikiutils/tsconfigs": "^5.0.4",
+    "@types/lodash": "^4.17.17",
+    "@types/node": "^22.15.30",
+    "@vitest/coverage-v8": "^3.2.2",
+    "ts-project-builder": "^5.0.2",
+    "typescript": "^5.8.3",
+    "vitest": "^3.2.2"
   },
   "pnpm": {
     "onlyBuiltDependencies": [
-      "esbuild"
+      "esbuild",
+      "unrs-resolver"
     ]
   }
 }

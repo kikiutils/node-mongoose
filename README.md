@@ -1,3 +1,5 @@
+<!-- TODO: Update -->
+
 # @kikiutils/mongoose
 
 [![npm version][npm-version-src]][npm-version-href]
@@ -19,25 +21,24 @@ A Mongoose plugin for enhanced JSON normalization and common schema creation, wi
 - 🔄 Reference Management: Enables easy conversion of ObjectId references to fully populated documents with field selection and population options
 - 🔧 Utility Functions: Includes helper functions for converting and normalizing documents, handling ObjectId transformations, and processing schema fields
 
-## Environment Requirements
+## Requirements
 
-- Mongoose version 8.x
-- Node.js version 18.12.1 or higher
+- **Mongoose** `>= 8`
+- **Node.js** `>= 18.12.1`
 
 ## Installation
 
-Add dependency (example using pnpm).
+Using [pnpm](https://pnpm.io):
 
 ```bash
 pnpm add @kikiutils/mongoose mongoose
 ```
 
-You can also use yarn, npm, or bun to add the dependency.
-
-That's it! You're ready to use this package in your project. Check out the [usage instructions](#usage) below ✨.
+You can also use `yarn`, `npm`, or `bun`.
 
 ## Usage
 
+<!-- TODO: Full doc. -->
 Please refer to the [examples](./examples/README.md) folder for usage instructions of this package.
 
 ## License
@@ -46,13 +47,13 @@ Please refer to the [examples](./examples/README.md) folder for usage instructio
 
 <!-- Badges -->
 [npm-version-href]: https://npmjs.com/package/@kikiutils/mongoose
-[npm-version-src]: https://img.shields.io/npm/v/@kikiutils/mongoose/latest.svg?style=flat&colorA=18181B&colorB=28CF8D
+[npm-version-src]: https://img.shields.io/npm/v/@kikiutils/mongoose/latest.svg?colorA=18181b&colorB=28cf8d&style=flat
 
 [npm-downloads-href]: https://npmjs.com/package/@kikiutils/mongoose
-[npm-downloads-src]: https://img.shields.io/npm/dm/@kikiutils/mongoose.svg?style=flat&colorA=18181B&colorB=28CF8D
+[npm-downloads-src]: https://img.shields.io/npm/dm/@kikiutils/mongoose.svg?colorA=18181b&colorB=28cf8d&style=flat
 
-[codecov-href]: https://codecov.io/github/kikiutils/node-mongoose
-[codecov-src]: https://codecov.io/github/kikiutils/node-mongoose/graph/badge.svg?token=GRSQ7JO39E
+[codecov-href]: https://codecov.io/gh/kikiutils/node-mongoose
+[codecov-src]: https://codecov.io/gh/kikiutils/node-mongoose/graph/badge.svg?token=DM89MM6FPK
 
 [license-href]: https://github.com/kikiutils/node-mongoose/blob/main/LICENSE
-[license-src]: https://img.shields.io/npm/l/@kikiutils/mongoose.svg?style=flat&colorA=18181B&colorB=28CF8D
+[license-src]: https://img.shields.io/github/license/kikiutils/node-mongoose?colorA=18181b&colorB=28cf8d&style=flat
