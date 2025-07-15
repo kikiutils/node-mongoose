@@ -52,30 +52,34 @@
   "scripts": {
     "build": "ts-project-builder './src/**/*.ts' --clean --preserve-modules --sourcemaps",
     "bumplog": "changelogen --bump --hideAuthorEmail",
+    "depcheck": "depcheck",
     "lint": "eslint --max-warnings 0",
     "lint:fix": "eslint --fix --max-warnings 0",
     "prepack": "pnpm run build",
     "release": "pnpm run lint && pnpm run typecheck && pnpm run test && pnpm run build && changelogen --hideAuthorEmail --push --release && npm publish",
     "test": "vitest run --coverage",
     "test:watch": "vitest watch --coverage",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "unused-exports": "ts-unused-exports ./tsconfig.json"
   },
   "dependencies": {
-    "decimal.js": "^10.5.0",
+    "decimal.js": "^10.6.0",
     "lodash": "^4.17.21",
-    "mongoose": "^8.16.1",
+    "mongoose": "^8.16.3",
     "mongoose-aggregate-paginate-v2": "^1.1.4",
     "mongoose-paginate-v2": "^1.9.1",
     "type-fest": "^4.41.0"
   },
   "devDependencies": {
-    "@kikiutils/changelogen": "^0.8.0",
+    "@kikiutils/changelogen": "^0.8.1",
     "@kikiutils/eslint-config": "^1.2.7",
     "@kikiutils/tsconfigs": "^5.0.4",
     "@types/lodash": "^4.17.20",
-    "@types/node": "^24.0.10",
+    "@types/node": "^24.0.14",
     "@vitest/coverage-v8": "^3.2.4",
+    "depcheck": "^1.4.7",
     "ts-project-builder": "^5.0.2",
+    "ts-unused-exports": "^11.0.1",
     "typescript": "^5.8.3",
     "vitest": "^3.2.4"
   },
