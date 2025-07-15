@@ -41,9 +41,10 @@ export interface NumberSchemaBuilder<
         | { message?: M; values: Readonlyable<Array<N | null>> },
         M extends string,
         N extends number,
-    >(
-        value: T
-    ) => ExtendNumberSchemaBuilder<Merge<Props, { enum: T }>, ExtraOmitFields>;
+    >(value: T) => ExtendNumberSchemaBuilder<
+        Merge<Props, { enum: T }>,
+        ExtraOmitFields
+    >;
 
     index: <T extends boolean | IndexDirection | IndexOptions>(value: T) => ExtendNumberSchemaBuilder<
         Merge<Props, { index: T }>,
