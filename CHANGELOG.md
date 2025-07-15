@@ -1,5 +1,29 @@
 # Changelog
 
+## v3.1.2
+
+[compare changes](https://github.com/kikiutils/node-mongoose/compare/v3.1.1...v3.1.2)
+
+### 🩹 Fixes
+
+- Fix type error ([bfb939f](https://github.com/kikiutils/node-mongoose/commit/bfb939f))
+
+### 🏡 Chore
+
+- Upgrade dependencies ([dc6c114](https://github.com/kikiutils/node-mongoose/commit/dc6c114))
+- Update dependencies and modify scripts ([374cc56](https://github.com/kikiutils/node-mongoose/commit/374cc56))
+- Clean up logger and error messages by removing periods and other punctuation ([ffd934a](https://github.com/kikiutils/node-mongoose/commit/ffd934a))
+- Format code ([f51dc13](https://github.com/kikiutils/node-mongoose/commit/f51dc13))
+
+### ✅ Tests
+
+- Change vitest config file to mjs ([5c3bc1f](https://github.com/kikiutils/node-mongoose/commit/5c3bc1f))
+- Update `tests/schema-builders/string.test.ts` unit ([16b469e](https://github.com/kikiutils/node-mongoose/commit/16b469e))
+
+### ❤️ Contributors
+
+- kiki-kanri
+
 ## v3.1.1
 
 [compare changes](https://github.com/kikiutils/node-mongoose/compare/v3.1.0...v3.1.1)
