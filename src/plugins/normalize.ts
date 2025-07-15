@@ -63,7 +63,7 @@ export function mongooseNormalizePlugin<S extends Schema>(schema: S, pluginOptio
                 }
 
                 if (toJsonTransform && typeof toJsonTransform !== 'boolean') {
-                    return toJsonTransform(doc, copiedRet, options);
+                    return toJsonTransform(doc as any, copiedRet as any, options as any);
                 }
 
                 return copiedRet;
