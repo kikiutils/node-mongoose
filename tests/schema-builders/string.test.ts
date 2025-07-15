@@ -16,7 +16,7 @@ describe.concurrent('stringSchemaBuilder', () => {
             trim: true,
             type: String,
             validate: {
-                message: '`{VALUE}` is not a valid IPv4 address for path `{PATH}`.',
+                message: '`{VALUE}` is not a valid IPv4 address for path `{PATH}`',
                 validator: expect.any(Function),
             },
         });
@@ -34,7 +34,7 @@ describe.concurrent('stringSchemaBuilder', () => {
             trim: true,
             type: String,
             validate: {
-                message: '`{VALUE}` is not a valid IPv6 address for path `{PATH}`.',
+                message: '`{VALUE}` is not a valid IPv6 address for path `{PATH}`',
                 validator: expect.any(Function),
             },
         });
