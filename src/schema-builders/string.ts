@@ -136,8 +136,8 @@ export interface StringSchemaBuilder<
 }
 
 const baseBuilderFactory = createBaseSchemaBuilderFactory(String);
-const defaultIpv4ValidateMessage = '`{VALUE}` is not a valid IPv4 address for path `{PATH}`.';
-const defaultIpv6ValidateMessage = '`{VALUE}` is not a valid IPv6 address for path `{PATH}`.';
+const defaultIpv4ValidateMessage = '`{VALUE}` is not a valid IPv4 address for path `{PATH}`';
+const defaultIpv6ValidateMessage = '`{VALUE}` is not a valid IPv6 address for path `{PATH}`';
 
 export function stringSchemaBuilder() {
     const schema: Record<string, any> = {};
