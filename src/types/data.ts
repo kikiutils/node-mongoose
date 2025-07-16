@@ -1,3 +1,6 @@
+import type { Types } from 'mongoose';
+import type { SetFieldType } from 'type-fest';
+
 import type { IfElse } from './utils';
 
 declare global {
@@ -14,6 +17,18 @@ declare global {
       & IfElse<CreatedAtField, { createdAt: string }, unknown>
       & IfElse<UpdatedAtField, { updatedAt: string }, unknown>
       & { id: string };
+
+    type DataToBaseMongooseDocType<
+        T,
+        ObjectIdFields extends keyof T = never,
+        DateFields extends Exclude<keyof T, ObjectIdFields> = never,
+        CreatedAtField extends boolean = true,
+        UpdatedAtField extends boolean = true,
+    > = BaseMongooseDocType<
+        SetFieldType<SetFieldType<T, DateFields, Date>, ObjectIdFields, Types.ObjectId>,
+        CreatedAtField,
+        UpdatedAtField
+    >;
 
     /**
      * Type definition to omit timestamp fields (`createdAt`, `updatedAt`)
