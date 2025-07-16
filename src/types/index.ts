@@ -6,6 +6,7 @@ import type {
     QueryWithHelpers,
     Types,
 } from 'mongoose';
+import type { SetFieldType } from 'type-fest';
 
 import type { IfElse } from './utils';
 
@@ -121,4 +122,6 @@ declare global {
         InstanceMethodsAndOverrides,
         QueryHelpers
     >;
+
+    type SetFieldsToObjectId<T, F extends keyof T> = SetFieldType<T, F, Types.ObjectId>;
 }
