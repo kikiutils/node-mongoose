@@ -32,26 +32,26 @@ declare global {
 
     /**
      * Type definition to omit timestamp fields (`createdAt`, `updatedAt`)
-     * and other specified fields (`OT`) from a given type `T`.
+     * and other specified fields (`K`) from a given type `T`.
      *
      * @template T - The type from which to omit fields.
-     * @template OT - Additional fields to omit, specified as a union of keys in `T`.
+     * @template K - Additional fields to omit, specified as a union of keys in `T`.
      */
-    type ExceptMongooseTimestampAndOtherFields<T, OT extends keyof T> = Omit<T, 'createdAt' | 'updatedAt' | OT>;
+    type ExceptMongooseTimestampAndOtherFields<T, K extends keyof T> = Omit<T, 'createdAt' | 'updatedAt' | K>;
 
     /**
      * Type definition to omit timestamp fields (`createdAt`, `updatedAt`)
-     * and other specified fields (`OT`) from a given type `T`.
+     * and other specified fields (`K`) from a given type `T`.
      *
      * @template T - The type from which to omit fields.
-     * @template OT - Additional fields to omit, specified as a union of string, number, or symbol keys.
+     * @template K - Additional fields to omit, specified as a union of string, number, or symbol keys.
      */
     type OmitMongooseTimestampAndOtherFields<
         T,
-        OT extends number | string | symbol = never,
+        K extends number | string | symbol = never,
     > = Omit<
         T,
-        'createdAt' | 'updatedAt' | OT
+        'createdAt' | 'updatedAt' | K
     >;
 
     /**
