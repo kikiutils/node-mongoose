@@ -1,5 +1,21 @@
 # Changelog
 
+## v3.3.0
+
+[compare changes](https://github.com/kikiutils/node-mongoose/compare/v3.2.0...v3.3.0)
+
+### 🚀 Enhancements
+
+- Add `DataToBaseMongooseDocType` global type ([6054967](https://github.com/kikiutils/node-mongoose/commit/6054967))
+
+### 💅 Refactors
+
+- Rename generic parameter `OT` to `K` ([731ca7d](https://github.com/kikiutils/node-mongoose/commit/731ca7d))
+
+### ❤️ Contributors
+
+- kiki-kanri
+
 ## v3.2.0
 
 [compare changes](https://github.com/kikiutils/node-mongoose/compare/v3.1.2...v3.2.0)
