@@ -1,5 +1,17 @@
 # Changelog
 
+## v3.2.0
+
+[compare changes](https://github.com/kikiutils/node-mongoose/compare/v3.1.2...v3.2.0)
+
+### 🚀 Enhancements
+
+- Add `SetFieldsToObjectId` global type ([91f32f4](https://github.com/kikiutils/node-mongoose/commit/91f32f4))
+
+### ❤️ Contributors
+
+- kiki-kanri
+
 ## v3.1.2
 
 [compare changes](https://github.com/kikiutils/node-mongoose/compare/v3.1.1...v3.1.2)
