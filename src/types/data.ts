@@ -1,4 +1,3 @@
-import type { Types } from 'mongoose';
 import type { SetFieldType } from 'type-fest';
 
 import type { IfElse } from './utils';
@@ -25,7 +24,7 @@ declare global {
         CreatedAtField extends boolean = true,
         UpdatedAtField extends boolean = true,
     > = BaseMongooseDocType<
-        SetFieldType<SetFieldType<T, DateFields, Date>, ObjectIdFields, Types.ObjectId>,
+        SetFieldsToObjectId<SetFieldType<T, DateFields, Date>, ObjectIdFields>,
         CreatedAtField,
         UpdatedAtField
     >;

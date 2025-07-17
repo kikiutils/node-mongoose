@@ -123,5 +123,5 @@ declare global {
         QueryHelpers
     >;
 
-    type SetFieldsToObjectId<T, F extends keyof T> = SetFieldType<T, F, Types.ObjectId>;
+    type SetFieldsToObjectId<T, K extends keyof T> = SetFieldType<T, K, Types.ObjectId>;
 }
