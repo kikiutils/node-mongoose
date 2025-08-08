@@ -1,5 +1,30 @@
 # Changelog
 
+## v4.0.0
+
+[compare changes](https://github.com/kikiutils/node-mongoose/compare/v3.3.0...v4.0.0)
+
+### 🚀 Enhancements
+
+- Add `toObjectIdHexString` utils and test unit ([be3c948](https://github.com/kikiutils/node-mongoose/commit/be3c948))
+
+### 💅 Refactors
+
+- Replace `ObjectIdFields` setting in `DataToBaseMongooseDocType` with direct use of `SetFieldsToObjectId` ([1335c51](https://github.com/kikiutils/node-mongoose/commit/1335c51))
+
+### 🏡 Chore
+
+- ⚠️ Drop support for Node.js 18.12.1, set minimum supported version to 20 ([32c6ad3](https://github.com/kikiutils/node-mongoose/commit/32c6ad3))
+- Upgrade dependencies ([a752987](https://github.com/kikiutils/node-mongoose/commit/a752987))
+
+#### ⚠️ Breaking Changes
+
+- ⚠️ Drop support for Node.js 18.12.1, set minimum supported version to 20 ([32c6ad3](https://github.com/kikiutils/node-mongoose/commit/32c6ad3))
+
+### ❤️ Contributors
+
+- kiki-kanri
+
 ## v3.3.0
 
 [compare changes](https://github.com/kikiutils/node-mongoose/compare/v3.2.0...v3.3.0)
