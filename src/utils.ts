@@ -124,3 +124,15 @@ export async function mongooseDocumentOrObjectIdToDocument<
 
     return documentOrObjectId;
 }
+
+/**
+ * Converts the input, which can be a MongoDB ObjectId or a string,
+ * into a 24-character hexadecimal string representation of the ObjectId.
+ *
+ * @param {string | Types.ObjectId} id - The ObjectId instance or its string representation
+ *
+ * @returns {string} The hexadecimal string representation of the ObjectId
+ */
+export function toObjectIdHexString(id: string | Types.ObjectId) {
+    return id instanceof Types.ObjectId ? id.toHexString() : id;
+}
