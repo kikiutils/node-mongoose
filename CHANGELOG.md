@@ -1,5 +1,24 @@
 # Changelog
 
+## v4.0.1
+
+[compare changes](https://github.com/kikiutils/node-mongoose/compare/v4.0.0...v4.0.1)
+
+### 🩹 Fixes
+
+- Prevent `mongooseNormalizePlugin` from assigning id: undefined when input _id is undefined ([d68e729](https://github.com/kikiutils/node-mongoose/commit/d68e729))
+
+### 🏡 Chore
+
+- Bump tsconfig target to es2023 ([b9185b7](https://github.com/kikiutils/node-mongoose/commit/b9185b7))
+- Update `.gitignore` ([1465997](https://github.com/kikiutils/node-mongoose/commit/1465997))
+- **ci:** Configure pnpm cache in workflow ([79e2264](https://github.com/kikiutils/node-mongoose/commit/79e2264))
+- Upgrade dependencies ([8d29a5e](https://github.com/kikiutils/node-mongoose/commit/8d29a5e))
+
+### ❤️ Contributors
+
+- kiki-kanri
+
 ## v4.0.0
 
 [compare changes](https://github.com/kikiutils/node-mongoose/compare/v3.3.0...v4.0.0)
