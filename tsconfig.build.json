@@ -1,5 +1,5 @@
 {
-  "extends": "@kikiutils/tsconfigs/esnext/es2022.json",
+  "extends": "@kikiutils/tsconfigs/esnext/es2023.json",
   "compilerOptions": {
     "paths": {
       "mongoose-aggregate-paginate-v2": ["./src/types/aggregate-paginate"],

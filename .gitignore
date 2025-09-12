@@ -156,4 +156,9 @@ dist
 
 # End of https://www.toptal.com/developers/gitignore/api/node
 
+# pnpm v8-compile-cache dependency
+# - https://github.com/pnpm/pnpm/issues/7330
+node-compile-cache/
+v8-compile-cache*/
+
 ### Custom ###
