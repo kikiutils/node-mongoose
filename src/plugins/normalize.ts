@@ -52,8 +52,11 @@ export function mongooseNormalizePlugin<S extends Schema>(schema: S, pluginOptio
                     _id = _id instanceof Types.ObjectId ? _id.toHexString() : _id;
                 }
 
-                if (pluginOptions?.convertIdField !== false) copiedRet.id = _id;
-                else copiedRet._id = _id;
+                if (_id !== undefined) {
+                    if (pluginOptions?.convertIdField !== false) copiedRet.id = _id;
+                    else copiedRet._id = _id;
+                }
+
                 for (const path in schema.paths) {
                     if (schema.paths[path]?.options?.private) lodashUnset(copiedRet, path);
                     if (schema.paths[path]?.instance === 'Decimal128') {
