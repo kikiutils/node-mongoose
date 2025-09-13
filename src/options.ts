@@ -14,6 +14,6 @@ export type DoNotRemoveOrUseThisType = typeof buildMongooseModel;
 export function setCustomMongooseOptions<K extends keyof CustomMongooseOptions>(
     key: K,
     value: CustomMongooseOptions[K],
-) {
-    return customMongooseOptions[key] = value;
+): void {
+    customMongooseOptions[key] = value;
 }

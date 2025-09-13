@@ -37,7 +37,10 @@ export interface MongooseNormalizePluginOptions {
  *
  * @param schema - The Mongoose schema to apply the plugin to.
  */
-export function mongooseNormalizePlugin<S extends Schema>(schema: S, pluginOptions?: MongooseNormalizePluginOptions) {
+export function mongooseNormalizePlugin<S extends Schema>(
+    schema: S,
+    pluginOptions?: MongooseNormalizePluginOptions,
+): void {
     const toJson = schema.get('toJSON');
     const toJsonTransform = toJson?.transform;
     schema.set(

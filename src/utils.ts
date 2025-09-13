@@ -31,7 +31,7 @@ export type DoNotRemoveOrUseThisType = typeof setCustomMongooseOptions;
 export async function assertMongooseUpdateSuccess<T extends mongo.BSON.Document>(
     updatePromise: Promise<mongo.UpdateResult<T>>,
     expectedModifiedCount = 1,
-) {
+): Promise<void> {
     const updateResult = await updatePromise;
     if (!updateResult.acknowledged) throw new Error('Update was not acknowledged');
     if (updateResult.modifiedCount < expectedModifiedCount) {
@@ -77,7 +77,7 @@ export function buildMongooseModel<
     name: string,
     schema: Schema<DocType, Model, InstanceMethodsAndOverrides, QueryHelpers>,
     options?: BuildMongooseModelOptions,
-) {
+): Model {
     if (options?.enableNormalizePlugin !== false) {
         schema.plugin(mongooseNormalizePlugin, options?.normalizePluginOptions);
     }
@@ -117,7 +117,7 @@ export async function mongooseDocumentOrObjectIdToDocument<
     documentOrObjectId: MongooseDocumentOrObjectId<D>,
     model: BaseMongoosePaginateModel<DocType, InstanceMethodsAndOverrides, QueryHelpers>,
     selectFields?: string[],
-) {
+): Promise<D | null> {
     if (typeof documentOrObjectId === 'string' || documentOrObjectId instanceof Types.ObjectId) {
         return (await model.findById(documentOrObjectId).select(selectFields || [])) as D | null;
     }
@@ -133,6 +133,6 @@ export async function mongooseDocumentOrObjectIdToDocument<
  *
  * @returns {string} The hexadecimal string representation of the ObjectId
  */
-export function toObjectIdHexString(id: string | Types.ObjectId) {
+export function toObjectIdHexString(id: string | Types.ObjectId): string {
     return id instanceof Types.ObjectId ? id.toHexString() : id;
 }

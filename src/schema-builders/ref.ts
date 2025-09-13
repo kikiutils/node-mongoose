@@ -64,6 +64,6 @@ const baseBuilderFactory = createBaseSchemaBuilderFactory(Schema.Types.ObjectId)
 
 export function refSchemaBuilder<T extends ((this: any, doc: any) => Model<any> | string) | Model<any> | string>(
     ref: T,
-) {
+): RefSchemaBuilder<{ ref: T; type: typeof Schema.Types.ObjectId }> {
     return baseBuilderFactory({ ref }) as RefSchemaBuilder<{ ref: T; type: typeof Schema.Types.ObjectId }>;
 }

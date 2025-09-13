@@ -139,7 +139,7 @@ const baseBuilderFactory = createBaseSchemaBuilderFactory(String);
 const defaultIpv4ValidateMessage = '`{VALUE}` is not a valid IPv4 address for path `{PATH}`';
 const defaultIpv6ValidateMessage = '`{VALUE}` is not a valid IPv6 address for path `{PATH}`';
 
-export function stringSchemaBuilder() {
+export function stringSchemaBuilder(): StringSchemaBuilder {
     const schema: Record<string, any> = {};
     const baseBuilder = baseBuilderFactory(schema);
     return new Proxy(
