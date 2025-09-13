@@ -1,9 +1,8 @@
-// @ts-expect-error Ignore this error.
-import lodashGet from 'lodash/get.js';
-// @ts-expect-error Ignore this error.
-import lodashSet from 'lodash/set.js';
-// @ts-expect-error Ignore this error.
-import lodashUnset from 'lodash/unset.js';
+import {
+    get as getProp,
+    set as setProp,
+    unset as unsetProp,
+} from 'es-toolkit/compat';
 import { Types } from 'mongoose';
 import type { Schema } from 'mongoose';
 
@@ -58,10 +57,14 @@ export function mongooseNormalizePlugin<S extends Schema>(schema: S, pluginOptio
                 }
 
                 for (const path in schema.paths) {
-                    if (schema.paths[path]?.options?.private) lodashUnset(copiedRet, path);
+                    if (schema.paths[path]?.options?.private) {
+                        unsetProp(copiedRet, path);
+                        continue;
+                    }
+
                     if (schema.paths[path]?.instance === 'Decimal128') {
-                        const value: Types.Decimal128 | undefined = lodashGet(copiedRet, path);
-                        if (value) lodashSet(copiedRet, path, value.toString());
+                        const value = getProp(copiedRet, path) as Types.Decimal128 | undefined;
+                        if (value) setProp(copiedRet, path, value.toString());
                     }
                 }
 
