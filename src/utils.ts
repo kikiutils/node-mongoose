@@ -6,11 +6,11 @@ import type {
 import mongooseAggregatePaginate from 'mongoose-aggregate-paginate-v2';
 import mongoosePaginate from 'mongoose-paginate-v2';
 
-import { customMongooseOptions } from './_internals';
-import { mongooseConnections } from './constants';
-import type { setCustomMongooseOptions } from './options';
-import { mongooseNormalizePlugin } from './plugins/normalize';
-import type { BuildMongooseModelOptions } from './types/options';
+import { customMongooseOptions } from '@/_internals';
+import { mongooseConnections } from '@/constants';
+import type { setCustomMongooseOptions } from '@/options';
+import { mongooseNormalizePlugin } from '@/plugins/normalize';
+import type { BuildMongooseModelOptions } from '@/types/options';
 
 export type DoNotRemoveOrUseThisType = typeof setCustomMongooseOptions;
 
@@ -31,7 +31,7 @@ export type DoNotRemoveOrUseThisType = typeof setCustomMongooseOptions;
 export async function assertMongooseUpdateSuccess<T extends mongo.BSON.Document>(
     updatePromise: Promise<mongo.UpdateResult<T>>,
     expectedModifiedCount = 1,
-): Promise<void> {
+) {
     const updateResult = await updatePromise;
     if (!updateResult.acknowledged) throw new Error('Update was not acknowledged');
     if (updateResult.modifiedCount < expectedModifiedCount) {
@@ -77,7 +77,7 @@ export function buildMongooseModel<
     name: string,
     schema: Schema<DocType, Model, InstanceMethodsAndOverrides, QueryHelpers>,
     options?: BuildMongooseModelOptions,
-): Model {
+) {
     if (options?.enableNormalizePlugin !== false) {
         schema.plugin(mongooseNormalizePlugin, options?.normalizePluginOptions);
     }
@@ -117,7 +117,7 @@ export async function mongooseDocumentOrObjectIdToDocument<
     documentOrObjectId: MongooseDocumentOrObjectId<D>,
     model: BaseMongoosePaginateModel<DocType, InstanceMethodsAndOverrides, QueryHelpers>,
     selectFields?: string[],
-): Promise<D | null> {
+) {
     if (typeof documentOrObjectId === 'string' || documentOrObjectId instanceof Types.ObjectId) {
         return (await model.findById(documentOrObjectId).select(selectFields || [])) as D | null;
     }
@@ -133,6 +133,6 @@ export async function mongooseDocumentOrObjectIdToDocument<
  *
  * @returns {string} The hexadecimal string representation of the ObjectId
  */
-export function toObjectIdHexString(id: string | Types.ObjectId): string {
+export function toObjectIdHexString(id: string | Types.ObjectId) {
     return id instanceof Types.ObjectId ? id.toHexString() : id;
 }

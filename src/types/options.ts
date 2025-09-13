@@ -4,8 +4,8 @@ import type {
     SchemaTimestampsConfig,
 } from 'mongoose';
 
-import type { MongooseNormalizePluginOptions } from '../plugins/normalize';
-import type { buildMongooseModel } from '../utils';
+import type { MongooseNormalizePluginOptions } from '@/plugins/normalize';
+import type { buildMongooseModel } from '@/utils';
 
 export type DoNotRemoveOrUseThisType = typeof buildMongooseModel;
 

@@ -100,7 +100,7 @@ interface ToStringSetterSchema {
 
 const baseBuilderFactory = createBaseSchemaBuilderFactory(Schema.Types.Decimal128);
 
-export function decimal128SchemaBuilder(): Decimal128SchemaBuilder {
+export function decimal128SchemaBuilder() {
     const schema: Record<string, any> = {};
     const baseBuilder = baseBuilderFactory(schema);
     return new Proxy(

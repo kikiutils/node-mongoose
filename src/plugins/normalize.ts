@@ -40,7 +40,7 @@ export interface MongooseNormalizePluginOptions {
 export function mongooseNormalizePlugin<S extends Schema>(
     schema: S,
     pluginOptions?: MongooseNormalizePluginOptions,
-): void {
+) {
     const toJson = schema.get('toJSON');
     const toJsonTransform = toJson?.transform;
     schema.set(
