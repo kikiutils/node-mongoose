@@ -100,4 +100,6 @@ declare namespace _ {
     const aggregatePaginate: { options: AggregatePaginateOptions };
 }
 
+export type DoNotRemoveOrUseThisType = unknown;
+
 export default mongooseAggregatePaginate;

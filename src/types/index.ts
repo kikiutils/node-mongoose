@@ -10,8 +10,8 @@ import type { SetFieldType } from 'type-fest';
 
 import type { IfElse } from './utils';
 
-export type {} from './aggregate-paginate';
-export type {} from './paginate';
+export type { DoNotRemoveOrUseThisType as _ADoNotRemoveOrUseThisType } from './aggregate-paginate';
+export type { DoNotRemoveOrUseThisType as _PDoNotRemoveOrUseThisType } from './paginate';
 
 // @ts-expect-error Ignore this error.
 // eslint-disable-next-line unused-imports/no-unused-vars
