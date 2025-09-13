@@ -1,14 +1,16 @@
+import { resolve } from 'node:path';
+
 import { defineConfig } from 'tsdown';
 
 export default defineConfig({
-    alias: { '@/': './src' },
+    alias: { '@': resolve(import.meta.dirname, 'src') },
     clean: true,
     dts: true,
     entry: [
         './src/**/*.ts',
         '!./src/**/_internals.ts',
-        '!./src/**/internals/**',
         '!./src/**/_internals/**',
+        '!./src/**/internals/**',
     ],
     exports: true,
     format: 'esm',
