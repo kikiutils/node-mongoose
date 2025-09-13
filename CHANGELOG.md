@@ -1,5 +1,46 @@
 # Changelog
 
+## v5.0.0
+
+[compare changes](https://github.com/kikiutils/node-mongoose/compare/v4.0.1...v5.0.0)
+
+### 🩹 Fixes
+
+- Fix all lint errors ([1e87145](https://github.com/kikiutils/node-mongoose/commit/1e87145))
+
+### 💅 Refactors
+
+- **tsconfig:** Separate references so src and tests use different settings ([df472e2](https://github.com/kikiutils/node-mongoose/commit/df472e2))
+- Replace `lodash` with `es-toolkit` ([344f33e](https://github.com/kikiutils/node-mongoose/commit/344f33e))
+
+### 📦 Build
+
+- ⚠️ Switch builder to tsdown and convert package to pure ESM ([d307be4](https://github.com/kikiutils/node-mongoose/commit/d307be4))
+
+### 🏡 Chore
+
+- **ci:** Remove pnpm cache configure in workflow ([abc0801](https://github.com/kikiutils/node-mongoose/commit/abc0801))
+- ⚠️ Drop support for Node.js 20, set minimum supported version to 22 ([3319820](https://github.com/kikiutils/node-mongoose/commit/3319820))
+- Upgrade devDependencies ([57244a0](https://github.com/kikiutils/node-mongoose/commit/57244a0))
+- Set tsdown alias and tsconfig paths ([be49779](https://github.com/kikiutils/node-mongoose/commit/be49779))
+- Update tsdown config ([fc9e7cb](https://github.com/kikiutils/node-mongoose/commit/fc9e7cb))
+- Add `tsconfig.base.json` ([f6ba6dd](https://github.com/kikiutils/node-mongoose/commit/f6ba6dd))
+- Update eslint config ([99cd82e](https://github.com/kikiutils/node-mongoose/commit/99cd82e))
+- Update tsdown entry config ([4cbeb50](https://github.com/kikiutils/node-mongoose/commit/4cbeb50))
+
+### ✅ Tests
+
+- Fix vitest config to correctly load tsconfig and aliases ([0522f79](https://github.com/kikiutils/node-mongoose/commit/0522f79))
+
+#### ⚠️ Breaking Changes
+
+- ⚠️ Switch builder to tsdown and convert package to pure ESM ([d307be4](https://github.com/kikiutils/node-mongoose/commit/d307be4))
+- ⚠️ Drop support for Node.js 20, set minimum supported version to 22 ([3319820](https://github.com/kikiutils/node-mongoose/commit/3319820))
+
+### ❤️ Contributors
+
+- kiki-kanri
+
 ## v4.0.1
 
 [compare changes](https://github.com/kikiutils/node-mongoose/compare/v4.0.0...v4.0.1)
