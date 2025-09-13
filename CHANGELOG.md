@@ -1,5 +1,17 @@
 # Changelog
 
+## v5.0.1
+
+[compare changes](https://github.com/kikiutils/node-mongoose/compare/v5.0.0...v5.0.1)
+
+### 🩹 Fixes
+
+- Ensure types are properly loaded during usage ([c22ef96](https://github.com/kikiutils/node-mongoose/commit/c22ef96))
+
+### ❤️ Contributors
+
+- kiki-kanri
+
 ## v5.0.0
 
 [compare changes](https://github.com/kikiutils/node-mongoose/compare/v4.0.1...v5.0.0)
