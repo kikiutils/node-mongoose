@@ -1,5 +1,5 @@
 {
-  "extends": "@kikiutils/tsconfigs/esnext/es2023.json",
+  "extends": "./tsconfig.src.json",
   "compilerOptions": {
     "paths": {
       "mongoose-aggregate-paginate-v2": ["./src/types/aggregate-paginate"],
@@ -8,7 +8,8 @@
     "declaration": true,
     "declarationDir": "./dist",
     "declarationMap": true,
-    "emitDeclarationOnly": true
+    "emitDeclarationOnly": true,
+    "noEmit": false
   },
   "include": ["./src"]
 }

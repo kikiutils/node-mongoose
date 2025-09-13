@@ -1,5 +1,6 @@
 {
   "name": "@kikiutils/mongoose",
+  "type": "module",
   "version": "4.0.1",
   "description": "A Mongoose plugin for enhanced JSON normalization and common schema creation, with built-in support for pagination and automatic Decimal128 conversion.",
   "author": "kiki-kanri",
@@ -20,37 +21,37 @@
   ],
   "sideEffects": false,
   "exports": {
-    "./*": {
-      "types": "./dist/*.d.ts",
-      "import": "./dist/*.mjs",
-      "require": "./dist/*.cjs"
-    },
-    "./_internals": {
-      "types": null,
-      "import": null,
-      "require": null
-    },
-    "./schema-builders": {
-      "types": "./dist/schema-builders/index.d.ts",
-      "import": "./dist/schema-builders/index.mjs",
-      "require": "./dist/schema-builders/index.cjs"
-    },
-    "./types": {
-      "types": "./dist/types/index.d.ts"
-    },
-    "./types/*": {
-      "types": "./dist/types/*.d.ts"
-    }
+    "./_internals": "./dist/_internals.js",
+    "./constants": "./dist/constants.js",
+    "./options": "./dist/options.js",
+    "./plugins/normalize": "./dist/plugins/normalize.js",
+    "./schema-builders": "./dist/schema-builders/index.js",
+    "./schema-builders/base": "./dist/schema-builders/base.js",
+    "./schema-builders/boolean": "./dist/schema-builders/boolean.js",
+    "./schema-builders/date": "./dist/schema-builders/date.js",
+    "./schema-builders/decimal128": "./dist/schema-builders/decimal128.js",
+    "./schema-builders/number": "./dist/schema-builders/number.js",
+    "./schema-builders/object-id": "./dist/schema-builders/object-id.js",
+    "./schema-builders/ref": "./dist/schema-builders/ref.js",
+    "./schema-builders/string": "./dist/schema-builders/string.js",
+    "./types": "./dist/types/index.js",
+    "./types/aggregate-paginate": "./dist/types/aggregate-paginate.js",
+    "./types/data": "./dist/types/data.js",
+    "./types/options": "./dist/types/options.js",
+    "./types/paginate": "./dist/types/paginate.js",
+    "./types/utils": "./dist/types/utils.js",
+    "./utils": "./dist/utils.js",
+    "./package.json": "./package.json"
   },
   "files": [
     "./dist",
     "./src"
   ],
   "engines": {
-    "node": ">=20.0.0"
+    "node": ">=22.0.0"
   },
   "scripts": {
-    "build": "ts-project-builder './src/**/*.ts' --clean --preserve-modules --sourcemaps",
+    "build": "tsdown",
     "bumplog": "changelogen --bump --hideAuthorEmail",
     "depcheck": "depcheck",
     "lint": "eslint --max-warnings 0",
@@ -68,19 +69,22 @@
     "mongoose": "^8.18.1",
     "mongoose-aggregate-paginate-v2": "^1.1.4",
     "mongoose-paginate-v2": "^1.9.1",
-    "type-fest": "^4.41.0"
+    "type-fest": "^5.0.0"
   },
   "devDependencies": {
     "@kikiutils/changelogen": "^0.9.0",
-    "@kikiutils/eslint-config": "^2.1.1",
-    "@kikiutils/tsconfigs": "^5.0.4",
+    "@kikiutils/eslint-config": "^3.0.0",
+    "@kikiutils/tsconfigs": "^5.0.5",
     "@types/lodash": "^4.17.20",
-    "@types/node": "^24.3.1",
+    "@types/node": "^24.3.3",
     "@vitest/coverage-v8": "^3.2.4",
     "depcheck": "^1.4.7",
-    "ts-project-builder": "^5.0.2",
+    "publint": "^0.3.12",
     "ts-unused-exports": "^11.0.1",
+    "tsconfck": "^3.1.6",
+    "tsdown": "^0.15.1",
     "typescript": "^5.9.2",
+    "unplugin-unused": "^0.5.3",
     "vitest": "^3.2.4"
   },
   "pnpm": {

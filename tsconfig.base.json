@@ -1,0 +1,11 @@
+{
+  "extends": "@kikiutils/tsconfigs/esnext/es2023.json",
+  "compilerOptions": {
+    "paths": {
+      "@/*": ["./src/*"],
+      "mongoose-aggregate-paginate-v2": ["./src/types/aggregate-paginate"],
+      "mongoose-paginate-v2": ["./src/types/paginate"]
+    },
+    "noEmit": true
+  }
+}
