@@ -1,5 +1,21 @@
 # Changelog
 
+## v5.1.3
+
+[compare changes](https://github.com/kikiutils/node-mongoose/compare/v5.1.2...v5.1.3)
+
+### 🩹 Fixes
+
+- Ensure types are properly loaded during usage ([4020d02](https://github.com/kikiutils/node-mongoose/commit/4020d02))
+
+### 📦 Build
+
+- Clean up js files under `dist/types` after tsdown build and update exports config ([299e647](https://github.com/kikiutils/node-mongoose/commit/299e647))
+
+### ❤️ Contributors
+
+- kiki-kanri
+
 ## v5.1.2
 
 [compare changes](https://github.com/kikiutils/node-mongoose/compare/v5.1.1...v5.1.2)
