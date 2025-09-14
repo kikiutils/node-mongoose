@@ -16,15 +16,7 @@ export default defineConfig({
         '!./src/**/_internals/**',
         '!./src/**/internals/**',
     ],
-    exports: {
-        customExports(exports) {
-            Object.entries(exports).forEach(([key, value]: [string, string]) => {
-                if (value.startsWith('./dist/types')) exports[key] = { types: value.replace(/\.js$/, '.d.ts') };
-            });
-
-            return exports;
-        },
-    },
+    exports: true,
     format: 'esm',
     plugins: [
         {
