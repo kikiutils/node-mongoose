@@ -1,5 +1,35 @@
 # Changelog
 
+## v5.1.0
+
+[compare changes](https://github.com/kikiutils/node-mongoose/compare/v5.0.1...v5.1.0)
+
+### 🚀 Enhancements
+
+- Add `update-peer-dependencies-meta.ts` ([643c006](https://github.com/kikiutils/node-mongoose/commit/643c006))
+
+### 🩹 Fixes
+
+- Resolve alias configuration error in tsdown setup ([656e2e0](https://github.com/kikiutils/node-mongoose/commit/656e2e0))
+- Add missing -b flag to typecheck command ([cf0c795](https://github.com/kikiutils/node-mongoose/commit/cf0c795))
+
+### 💅 Refactors
+
+- Remove unnecessary code and update some import paths to use `@/` (paths alias) ([cefc865](https://github.com/kikiutils/node-mongoose/commit/cefc865))
+- Update method of loading global types related to pagination ([41d0e64](https://github.com/kikiutils/node-mongoose/commit/41d0e64))
+
+### 🏡 Chore
+
+- Update tsdown entry ([9cbb6bb](https://github.com/kikiutils/node-mongoose/commit/9cbb6bb))
+- Disable `isolatedDeclarations` ([85f066e](https://github.com/kikiutils/node-mongoose/commit/85f066e))
+- Update eslint config ([09d584b](https://github.com/kikiutils/node-mongoose/commit/09d584b))
+- Update all scripts ([fa5e797](https://github.com/kikiutils/node-mongoose/commit/fa5e797))
+- Upgrade dependencies ([865f6ec](https://github.com/kikiutils/node-mongoose/commit/865f6ec))
+
+### ❤️ Contributors
+
+- kiki-kanri
+
 ## v5.0.1
 
 [compare changes](https://github.com/kikiutils/node-mongoose/compare/v5.0.0...v5.0.1)
