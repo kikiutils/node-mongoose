@@ -1,5 +1,17 @@
 # Changelog
 
+## v5.1.5
+
+[compare changes](https://github.com/kikiutils/node-mongoose/compare/v5.1.4...v5.1.5)
+
+### 🩹 Fixes
+
+- Explicitly type `buildMongooseModel` to avoid losing return type after build ([628053d](https://github.com/kikiutils/node-mongoose/commit/628053d))
+
+### ❤️ Contributors
+
+- kiki-kanri
+
 ## v5.1.4
 
 [compare changes](https://github.com/kikiutils/node-mongoose/compare/v5.1.3...v5.1.4)
