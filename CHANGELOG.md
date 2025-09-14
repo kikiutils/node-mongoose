@@ -1,5 +1,18 @@
 # Changelog
 
+## v5.1.2
+
+[compare changes](https://github.com/kikiutils/node-mongoose/compare/v5.1.1...v5.1.2)
+
+### 🩹 Fixes
+
+- Remove custom exports configuration from tsdown ([efb18bc](https://github.com/kikiutils/node-mongoose/commit/efb18bc))
+- Remove tsdown `remove-types-js` plugin ([6922c2f](https://github.com/kikiutils/node-mongoose/commit/6922c2f))
+
+### ❤️ Contributors
+
+- kiki-kanri
+
 ## v5.1.1
 
 [compare changes](https://github.com/kikiutils/node-mongoose/compare/v5.1.0...v5.1.1)
