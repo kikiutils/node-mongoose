@@ -77,7 +77,7 @@ export function buildMongooseModel<
     name: string,
     schema: Schema<DocType, Model, InstanceMethodsAndOverrides, QueryHelpers>,
     options?: BuildMongooseModelOptions,
-) {
+): Model {
     if (options?.enableNormalizePlugin !== false) {
         schema.plugin(mongooseNormalizePlugin, options?.normalizePluginOptions);
     }
