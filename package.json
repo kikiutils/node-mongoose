@@ -59,7 +59,7 @@
     "release": "pnpm run lint && pnpm run typecheck && pnpm run test && pnpm run build && changelogen --hideAuthorEmail --push --release && npm publish",
     "test": "vitest run --coverage",
     "test:watch": "vitest watch --coverage",
-    "typecheck": "tsc --noEmit",
+    "typecheck": "tsc -b --noEmit",
     "unused-exports": "ts-unused-exports ./tsconfig.json"
   },
   "dependencies": {
