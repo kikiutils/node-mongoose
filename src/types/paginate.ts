@@ -172,4 +172,6 @@ declare namespace _ {
     }
 }
 
+export type _LoadPaginateTypes = unknown;
+
 export default _;
