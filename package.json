@@ -1,7 +1,7 @@
 {
   "name": "@kikiutils/mongoose",
   "type": "module",
-  "version": "5.1.0",
+  "version": "5.1.1",
   "description": "A Mongoose plugin for enhanced JSON normalization and common schema creation, with built-in support for pagination and automatic Decimal128 conversion.",
   "author": "kiki-kanri",
   "license": "MIT",
@@ -33,12 +33,24 @@
     "./schema-builders/object-id": "./dist/schema-builders/object-id.js",
     "./schema-builders/ref": "./dist/schema-builders/ref.js",
     "./schema-builders/string": "./dist/schema-builders/string.js",
-    "./types": "./dist/types/index.js",
-    "./types/aggregate-paginate": "./dist/types/aggregate-paginate.js",
-    "./types/data": "./dist/types/data.js",
-    "./types/options": "./dist/types/options.js",
-    "./types/paginate": "./dist/types/paginate.js",
-    "./types/utils": "./dist/types/utils.js",
+    "./types": {
+      "types": "./dist/types/index.d.ts"
+    },
+    "./types/aggregate-paginate": {
+      "types": "./dist/types/aggregate-paginate.d.ts"
+    },
+    "./types/data": {
+      "types": "./dist/types/data.d.ts"
+    },
+    "./types/options": {
+      "types": "./dist/types/options.d.ts"
+    },
+    "./types/paginate": {
+      "types": "./dist/types/paginate.d.ts"
+    },
+    "./types/utils": {
+      "types": "./dist/types/utils.d.ts"
+    },
     "./utils": "./dist/utils.js",
     "./package.json": "./package.json"
   },

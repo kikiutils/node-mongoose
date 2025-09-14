@@ -1,5 +1,17 @@
 # Changelog
 
+## v5.1.1
+
+[compare changes](https://github.com/kikiutils/node-mongoose/compare/v5.1.0...v5.1.1)
+
+### 📦 Build
+
+- Clean up js files under `dist/types` after tsdown build and update exports config ([2affd31](https://github.com/kikiutils/node-mongoose/commit/2affd31))
+
+### ❤️ Contributors
+
+- kiki-kanri
+
 ## v5.1.0
 
 [compare changes](https://github.com/kikiutils/node-mongoose/compare/v5.0.1...v5.1.0)
