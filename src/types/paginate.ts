@@ -172,6 +172,4 @@ declare namespace _ {
     }
 }
 
-export type DoNotRemoveOrUseThisType = unknown;
-
 export default _;
