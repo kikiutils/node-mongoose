@@ -10,21 +10,18 @@ export default defineConfig({
     alias: { '@': resolve(import.meta.dirname, 'src') },
     clean: true,
     dts: true,
-    entry: [
-        './src/**/*.ts',
-        '!./src/**/_internals.ts',
-        '!./src/**/_internals/**',
-        '!./src/**/internals/**',
-    ],
+    entry: ['./src/**/*.ts'],
     exports: {
         customExports(exports) {
             Object.entries(exports).forEach(([key, value]: [string, string]) => {
-                if (value.startsWith('./dist/types')) exports[key] = { types: value.replace(/\.js$/, '.d.ts') };
+                if (value.includes('internals')) delete exports[key];
+                else if (value.startsWith('./dist/types')) exports[key] = { types: value.replace(/\.js$/, '.d.ts') };
             });
 
             return exports;
         },
     },
+    external: [/.*/],
     format: 'esm',
     plugins: [
         {
