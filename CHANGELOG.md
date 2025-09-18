@@ -1,5 +1,17 @@
 # Changelog
 
+## v5.2.0
+
+[compare changes](https://github.com/kikiutils/node-mongoose/compare/v5.1.6...v5.2.0)
+
+### 🚀 Enhancements
+
+- Enable deep registration of `normalizePlugin` for all schemas (including sub-schemas) in `buildMongooseModel` by default; add option to disable ([09068f0](https://github.com/kikiutils/node-mongoose/commit/09068f0))
+
+### ❤️ Contributors
+
+- kiki-kanri
+
 ## v5.1.6
 
 [compare changes](https://github.com/kikiutils/node-mongoose/compare/v5.1.5...v5.1.6)
