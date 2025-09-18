@@ -8,6 +8,12 @@ import { defineConfig } from 'tsdown';
 
 import packageJson from './package.json' with { type: 'json' };
 
+interface PackageJsonExportEntry {
+    import: null | string;
+    require: null | string;
+    types: null | string;
+}
+
 export default defineConfig({
     alias: { '@': resolve(import.meta.dirname, 'src') },
     clean: true,
@@ -16,20 +22,29 @@ export default defineConfig({
     exports: {
         customExports(exports) {
             Object.entries(exports).forEach(([key, value]: [string, string]) => {
-                if (!value.endsWith('.js')) return;
-                if (value.includes('internals')) return delete exports[key];
-                exports[key] = {
+                if (key === './package.json') return;
+                const newExports: PackageJsonExportEntry = {
                     /* eslint-disable perfectionist/sort-objects */
-                    types: value.replace(/\.js$/, '.d.ts'),
+                    types: null,
                     import: null,
                     require: null,
                     /* eslint-enable perfectionist/sort-objects */
                 };
 
-                if (!value.startsWith('./dist/types')) exports[key].import = value;
+                if (!value.includes('internals')) {
+                    if (!value.endsWith('index.js')) return delete exports[key];
+                    exports[`${key}/index`] = { ...newExports };
+                    newExports.types = value.replace(/\.js$/, '.d.ts');
+                    if (!value.startsWith('./dist/types')) newExports.import = value;
+                }
+
+                exports[key] = newExports;
             });
 
-            return exports;
+            exports['./*'] = './dist/*.js';
+            const sortedExports: Record<string, PackageJsonExportEntry> = {};
+            Object.entries(exports).sort().forEach(([key, value]) => sortedExports[key] = value);
+            return sortedExports;
         },
     },
     external: [
