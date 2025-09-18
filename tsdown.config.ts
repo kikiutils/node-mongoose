@@ -6,6 +6,8 @@ import { resolve } from 'node:path';
 
 import { defineConfig } from 'tsdown';
 
+import packageJson from './package.json' with { type: 'json' };
+
 export default defineConfig({
     alias: { '@': resolve(import.meta.dirname, 'src') },
     clean: true,
@@ -14,14 +16,33 @@ export default defineConfig({
     exports: {
         customExports(exports) {
             Object.entries(exports).forEach(([key, value]: [string, string]) => {
-                if (value.includes('internals')) delete exports[key];
-                else if (value.startsWith('./dist/types')) exports[key] = { types: value.replace(/\.js$/, '.d.ts') };
+                if (!value.endsWith('.js')) return;
+                if (value.includes('internals')) return delete exports[key];
+                exports[key] = {
+                    /* eslint-disable perfectionist/sort-objects */
+                    types: value.replace(/\.js$/, '.d.ts'),
+                    import: null,
+                    require: null,
+                    /* eslint-enable perfectionist/sort-objects */
+                };
+
+                if (!value.startsWith('./dist/types')) exports[key].import = value;
             });
 
             return exports;
         },
     },
-    external: [/.*/],
+    external: [
+        ...new Set([
+            // eslint-disable-next-line ts/ban-ts-comment
+            // @ts-ignore
+            ...Object.keys(packageJson.dependencies || {}),
+            ...Object.keys(packageJson.devDependencies || {}),
+            // eslint-disable-next-line ts/ban-ts-comment
+            // @ts-ignore
+            ...Object.keys(packageJson.peerDependencies || {}),
+        ]),
+    ],
     format: 'esm',
     plugins: [
         {
