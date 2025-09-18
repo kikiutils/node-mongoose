@@ -1,5 +1,39 @@
 # Changelog
 
+## v5.1.6
+
+[compare changes](https://github.com/kikiutils/node-mongoose/compare/v5.1.5...v5.1.6)
+
+### 🩹 Fixes
+
+- Ensure tsdown `customExports` returns after deleting keys containing internals ([7324bab](https://github.com/kikiutils/node-mongoose/commit/7324bab))
+
+### 💅 Refactors
+
+- Revert all import paths back to relative paths instead of using aliases ([0f6c1ae](https://github.com/kikiutils/node-mongoose/commit/0f6c1ae))
+
+### 📖 Documentation
+
+- Update README ([63ba464](https://github.com/kikiutils/node-mongoose/commit/63ba464))
+
+### 📦 Build
+
+- Clean up js files under `dist/types` after tsdown build and update exports config ([6fa1d2b](https://github.com/kikiutils/node-mongoose/commit/6fa1d2b))
+- Update tsdown config to treat all dependencies as external ([f5e4f7a](https://github.com/kikiutils/node-mongoose/commit/f5e4f7a))
+- Update tsdown customExports to remove entries with keys containing "internals" ([59b1622](https://github.com/kikiutils/node-mongoose/commit/59b1622))
+- Update tsdown entry ([2e67d6b](https://github.com/kikiutils/node-mongoose/commit/2e67d6b))
+- Set tsdown external from package.json instead of using wildcard * ([7dc5f28](https://github.com/kikiutils/node-mongoose/commit/7dc5f28))
+- Update `customExports` rules to enable IDE import hints for package usage ([e4111c0](https://github.com/kikiutils/node-mongoose/commit/e4111c0))
+- Update `customExports` rules to enable IDE import hints for package usage ([fa88888](https://github.com/kikiutils/node-mongoose/commit/fa88888))
+
+### 🏡 Chore
+
+- Set minimum supported version to 22.12.0 ([76e8cc1](https://github.com/kikiutils/node-mongoose/commit/76e8cc1))
+
+### ❤️ Contributors
+
+- kiki-kanri
+
 ## v5.1.5
 
 [compare changes](https://github.com/kikiutils/node-mongoose/compare/v5.1.4...v5.1.5)

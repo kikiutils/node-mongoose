@@ -1,7 +1,7 @@
 {
   "name": "@kikiutils/mongoose",
   "type": "module",
-  "version": "5.1.5",
+  "version": "5.1.6",
   "description": "A Mongoose plugin for enhanced JSON normalization and common schema creation, with built-in support for pagination and automatic Decimal128 conversion.",
   "author": "kiki-kanri",
   "license": "MIT",
@@ -21,38 +21,33 @@
   ],
   "sideEffects": false,
   "exports": {
-    "./constants": "./dist/constants.js",
-    "./options": "./dist/options.js",
-    "./plugins/normalize": "./dist/plugins/normalize.js",
-    "./schema-builders": "./dist/schema-builders/index.js",
-    "./schema-builders/base": "./dist/schema-builders/base.js",
-    "./schema-builders/boolean": "./dist/schema-builders/boolean.js",
-    "./schema-builders/date": "./dist/schema-builders/date.js",
-    "./schema-builders/decimal128": "./dist/schema-builders/decimal128.js",
-    "./schema-builders/number": "./dist/schema-builders/number.js",
-    "./schema-builders/object-id": "./dist/schema-builders/object-id.js",
-    "./schema-builders/ref": "./dist/schema-builders/ref.js",
-    "./schema-builders/string": "./dist/schema-builders/string.js",
+    "./*": "./dist/*.js",
+    "./_internals": {
+      "types": null,
+      "import": null,
+      "require": null
+    },
+    "./package.json": "./package.json",
+    "./schema-builders": {
+      "types": "./dist/schema-builders/index.d.ts",
+      "import": "./dist/schema-builders/index.js",
+      "require": null
+    },
+    "./schema-builders/index": {
+      "types": null,
+      "import": null,
+      "require": null
+    },
     "./types": {
-      "types": "./dist/types/index.d.ts"
+      "types": "./dist/types/index.d.ts",
+      "import": null,
+      "require": null
     },
-    "./types/aggregate-paginate": {
-      "types": "./dist/types/aggregate-paginate.d.ts"
-    },
-    "./types/data": {
-      "types": "./dist/types/data.d.ts"
-    },
-    "./types/options": {
-      "types": "./dist/types/options.d.ts"
-    },
-    "./types/paginate": {
-      "types": "./dist/types/paginate.d.ts"
-    },
-    "./types/utils": {
-      "types": "./dist/types/utils.d.ts"
-    },
-    "./utils": "./dist/utils.js",
-    "./package.json": "./package.json"
+    "./types/index": {
+      "types": null,
+      "import": null,
+      "require": null
+    }
   },
   "files": [
     "./dist",
