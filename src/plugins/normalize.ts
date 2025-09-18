@@ -41,17 +41,34 @@ export function mongooseNormalizePlugin<S extends Schema>(
     schema: S,
     pluginOptions?: MongooseNormalizePluginOptions,
 ) {
+    // Collect special paths (Decimal128 & private)
+    const decimalPaths: string[] = [];
+    const privatePaths: string[] = [];
+    for (const [path, schemaType] of Object.entries(schema.paths)) {
+        if (schemaType?.options?.private) privatePaths.push(path);
+        else if (schemaType?.instance === 'Decimal128') decimalPaths.push(path);
+    }
+
+    // Get original toJSON configuration
     const toJson = schema.get('toJSON');
     const toJsonTransform = toJson?.transform;
+
+    // Override toJSON with custom transform
     schema.set(
         'toJSON',
         {
             ...toJson,
             transform(doc, ret, options) {
-                // eslint-disable-next-line style/object-curly-newline
-                let { __v, _id, ...copiedRet } = ret;
-                if (pluginOptions?.toHexIdIfObjectId !== false) {
-                    _id = _id instanceof Types.ObjectId ? _id.toHexString() : _id;
+                // Copy object and remove __v
+                const copiedRet = { ...ret };
+                // @ts-expect-error Ignore this error
+                delete copiedRet.__v;
+
+                // Normalize _id (convert to hex and/or move to id)
+                let _id = copiedRet._id;
+                delete copiedRet._id;
+                if (pluginOptions?.toHexIdIfObjectId !== false && _id instanceof Types.ObjectId) {
+                    _id = _id.toHexString();
                 }
 
                 if (_id !== undefined) {
@@ -59,22 +76,21 @@ export function mongooseNormalizePlugin<S extends Schema>(
                     else copiedRet._id = _id;
                 }
 
-                for (const path in schema.paths) {
-                    if (schema.paths[path]?.options?.private) {
-                        unsetProp(copiedRet, path);
-                        continue;
-                    }
+                // Remove private fields
+                for (const path of privatePaths) unsetProp(copiedRet, path);
 
-                    if (schema.paths[path]?.instance === 'Decimal128') {
-                        const value = getProp(copiedRet, path) as Types.Decimal128 | undefined;
-                        if (value) setProp(copiedRet, path, value.toString());
-                    }
+                // Convert Decimal128 fields to string
+                for (const path of decimalPaths) {
+                    const value = getProp(copiedRet, path) as Types.Decimal128 | undefined;
+                    if (value) setProp(copiedRet, path, value.toString());
                 }
 
+                // Run original toJSON transform
                 if (toJsonTransform && typeof toJsonTransform !== 'boolean') {
                     return toJsonTransform(doc as any, copiedRet as any, options as any);
                 }
 
+                // Return normalized object
                 return copiedRet;
             },
         },
