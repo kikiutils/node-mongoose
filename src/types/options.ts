@@ -34,7 +34,21 @@ export interface BuildMongooseModelOptions {
      * @default true
      */
     enableNormalizePlugin?: boolean;
+
+    /**
+     * Options for the normalize plugin.
+     */
     normalizePluginOptions?: MongooseNormalizePluginOptions;
+
+    /**
+     * Whether to recursively register the normalize plugin on child schemas.
+     *
+     * If `true`, the plugin will be automatically applied to all nested schemas.
+     * If `false`, only the root schema will be affected.
+     *
+     * @default true
+     */
+    normalizePluginRecursive?: boolean;
 
     /**
      * Configures Mongoose timestamps.

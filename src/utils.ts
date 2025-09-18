@@ -10,9 +10,12 @@ import { customMongooseOptions } from './_internals';
 import { mongooseConnections } from './constants';
 import type { setCustomMongooseOptions } from './options';
 import { mongooseNormalizePlugin } from './plugins/normalize';
+import type { MongooseNormalizePluginOptions } from './plugins/normalize';
 import type { BuildMongooseModelOptions } from './types/options';
 
 export type DoNotRemoveOrUseThisType = typeof setCustomMongooseOptions;
+
+// const normalizePluginRegisteredSymbol = Symbol('normalizePluginRegistered');
 
 /**
  * Asserts that a Mongoose update operation was successful by checking that it was acknowledged
@@ -79,7 +82,7 @@ export function buildMongooseModel<
     options?: BuildMongooseModelOptions,
 ): Model {
     if (options?.enableNormalizePlugin !== false) {
-        schema.plugin(mongooseNormalizePlugin, options?.normalizePluginOptions);
+        registerMongooseNormalizePlugin(schema, options?.normalizePluginRecursive, options?.normalizePluginOptions);
     }
 
     schema.plugin(mongooseAggregatePaginate);
@@ -123,6 +126,25 @@ export async function mongooseDocumentOrObjectIdToDocument<
     }
 
     return documentOrObjectId;
+}
+
+export function registerMongooseNormalizePlugin<
+    DocType,
+    Model extends BaseMongoosePaginateModel<DocType, InstanceMethodsAndOverrides, QueryHelpers>,
+    InstanceMethodsAndOverrides = object,
+    QueryHelpers = object,
+>(
+    schema: Schema<DocType, Model, InstanceMethodsAndOverrides, QueryHelpers>,
+    recursive: boolean = true,
+    options?: MongooseNormalizePluginOptions,
+) {
+    // TODO: Check if plugin is already registered, Do you really need to check?
+    // if ((schema as any)[normalizePluginRegisteredSymbol]) return;
+    // (schema as any)[normalizePluginRegisteredSymbol] = true;
+    schema.plugin(mongooseNormalizePlugin, options);
+    if (recursive) {
+        schema.childSchemas.forEach(({ schema }) => registerMongooseNormalizePlugin(schema, recursive, options));
+    }
 }
 
 /**
