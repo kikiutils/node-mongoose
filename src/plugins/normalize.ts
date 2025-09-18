@@ -59,6 +59,7 @@ export function mongooseNormalizePlugin<S extends Schema>(
                     else copiedRet._id = _id;
                 }
 
+                // console.log(schema.childSchemas[0]?.schema.childSchemas);
                 for (const path in schema.paths) {
                     if (schema.paths[path]?.options?.private) {
                         unsetProp(copiedRet, path);

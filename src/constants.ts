@@ -1,4 +1,4 @@
-import type { MongooseConnections } from '@/types';
+import type { MongooseConnections } from './types';
 
 /**
  * Mongoose connections.

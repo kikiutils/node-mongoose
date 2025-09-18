@@ -1,6 +1,6 @@
-import { customMongooseOptions } from '@/_internals';
-import type { CustomMongooseOptions } from '@/types/options';
-import type { buildMongooseModel } from '@/utils';
+import { customMongooseOptions } from './_internals';
+import type { CustomMongooseOptions } from './types/options';
+import type { buildMongooseModel } from './utils';
 
 export type DoNotRemoveOrUseThisType = typeof buildMongooseModel;
 
