@@ -2,7 +2,6 @@ import {
     glob,
     rm,
 } from 'node:fs/promises';
-import { resolve } from 'node:path';
 
 import { defineConfig } from 'tsdown';
 
@@ -15,7 +14,6 @@ interface PackageJsonExportEntry {
 }
 
 export default defineConfig({
-    alias: { '@': resolve(import.meta.dirname, 'src') },
     clean: true,
     dts: true,
     entry: ['./src/**/*.ts'],
