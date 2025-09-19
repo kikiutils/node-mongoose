@@ -1,5 +1,8 @@
 import type {
+    mongo,
+    MongooseUpdateQueryOptions,
     QueryOptions,
+    RootFilterQuery,
     Schema,
     UpdateQuery,
     UpdateWithAggregationPipeline,
@@ -8,7 +11,7 @@ import type {
 import { assertMongooseUpdateSuccess } from '../assertions';
 
 declare module 'mongoose' {
-    export interface Document<
+    interface Document<
         T = unknown,
         TQueryHelpers = any,
         DocType = any,
@@ -24,6 +27,27 @@ declare module 'mongoose' {
             expectedModifiedCount?: number,
         ) => Promise<void>;
     }
+
+    interface Model<
+        TRawDocType,
+        // eslint-disable-next-line ts/no-empty-object-type
+        TQueryHelpers = {},
+        // eslint-disable-next-line ts/no-empty-object-type
+        TInstanceMethods = {},
+        // eslint-disable-next-line ts/no-empty-object-type
+        TVirtuals = {},
+        // eslint-disable-next-line unused-imports/no-unused-vars
+        THydratedDocumentType = HydratedDocument<TRawDocType, TInstanceMethods & TVirtuals, TQueryHelpers, TVirtuals>,
+        // eslint-disable-next-line unused-imports/no-unused-vars
+        TSchema = any,
+    > {
+        assertUpdateSuccess: (
+            filter: RootFilterQuery<TRawDocType>,
+            update: UpdateQuery<TRawDocType> | UpdateWithAggregationPipeline,
+            options?: (mongo.UpdateOptions & MongooseUpdateQueryOptions<TRawDocType>) | null,
+            expectedModifiedCount?: number,
+        ) => Promise<void>;
+    }
 }
 
 export function mongooseAssertionsPlugin<S extends Schema>(schema: S) {
@@ -35,6 +59,19 @@ export function mongooseAssertionsPlugin<S extends Schema>(schema: S) {
             expectedModifiedCount?: number,
         ) {
             return assertMongooseUpdateSuccess(this.updateOne(update, options), expectedModifiedCount);
+        },
+    );
+
+    schema.static(
+        'assertUpdateSuccess',
+        function (
+            filter: RootFilterQuery<any>,
+            update: UpdateQuery<any> | UpdateWithAggregationPipeline,
+            options?: (mongo.UpdateOptions & MongooseUpdateQueryOptions<any>) | null,
+            expectedModifiedCount?: number,
+        ) {
+            const query = expectedModifiedCount === 1 ? this.updateOne : this.updateMany;
+            return assertMongooseUpdateSuccess(query(filter, update, options), expectedModifiedCount);
         },
     );
 }
