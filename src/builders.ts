@@ -5,6 +5,7 @@ import mongoosePaginate from 'mongoose-paginate-v2';
 
 import { customMongooseOptions } from './_internals';
 import { mongooseConnections } from './constants';
+import { mongooseAssertionsPlugin } from './plugins/assertions';
 import { mongooseNormalizePlugin } from './plugins/normalize';
 import type { MongooseNormalizePluginOptions } from './plugins/normalize';
 import type { BaseMongoosePaginateModel } from './types';
@@ -26,6 +27,7 @@ export function buildMongooseModel<
     }
 
     schema.plugin(mongooseAggregatePaginate);
+    schema.plugin(mongooseAssertionsPlugin);
     schema.plugin(mongoosePaginate);
     schema.set('timestamps', options?.timestamps ?? schema.get('timestamps') ?? true);
     customMongooseOptions.beforeModelBuild?.(schema);
