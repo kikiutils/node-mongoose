@@ -43,6 +43,11 @@
       "import": null,
       "require": null
     },
+    "./types/_internals": {
+      "types": null,
+      "import": null,
+      "require": null
+    },
     "./types/index": {
       "types": null,
       "import": null,

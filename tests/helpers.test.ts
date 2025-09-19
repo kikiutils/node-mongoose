@@ -4,7 +4,7 @@ import {
     it,
 } from 'vitest';
 
-import { toObjectIdHexString } from '../src/utils';
+import { toObjectIdHexString } from '../src/helpers';
 
 describe.concurrent('toObjectIdHexString', () => {
     it('should return the hex string when input is ObjectId', ({ expect }) => {
