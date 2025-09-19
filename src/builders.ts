@@ -11,6 +11,8 @@ import type { MongooseNormalizePluginOptions } from './plugins/normalize';
 import type { BaseMongoosePaginateModel } from './types';
 import type { BuildMongooseModelOptions } from './types/options';
 
+export type DoNotRemoveOrUseThisType = typeof mongooseAssertionsPlugin;
+
 export function buildMongooseModel<
     DocType,
     Model extends BaseMongoosePaginateModel<DocType, InstanceMethodsAndOverrides, QueryHelpers>,
