@@ -1,5 +1,18 @@
 # Changelog
 
+## v6.0.1
+
+[compare changes](https://github.com/kikiutils/node-mongoose/compare/v6.0.0...v6.0.1)
+
+### 🩹 Fixes
+
+- Correct generic type error in `assertMongooseUpdateSuccess` ([ff92747](https://github.com/kikiutils/node-mongoose/commit/ff92747))
+- Export `typeof mongooseAssertionsPlugin` type in `builder.ts` for correct type loading ([304d9f7](https://github.com/kikiutils/node-mongoose/commit/304d9f7))
+
+### ❤️ Contributors
+
+- kiki-kanri
+
 ## v6.0.0
 
 [compare changes](https://github.com/kikiutils/node-mongoose/compare/v5.2.0...v6.0.0)
