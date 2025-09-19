@@ -1,5 +1,17 @@
 # Changelog
 
+## v6.1.1
+
+[compare changes](https://github.com/kikiutils/node-mongoose/compare/v6.1.0...v6.1.1)
+
+### 🩹 Fixes
+
+- Correct implementation error in `assertUpdateSuccess` static method of `mongooseAssertionsPlugin` ([95661c9](https://github.com/kikiutils/node-mongoose/commit/95661c9))
+
+### ❤️ Contributors
+
+- kiki-kanri
+
 ## v6.1.0
 
 [compare changes](https://github.com/kikiutils/node-mongoose/compare/v6.0.1...v6.1.0)

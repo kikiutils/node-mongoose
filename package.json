@@ -1,7 +1,7 @@
 {
   "name": "@kikiutils/mongoose",
   "type": "module",
-  "version": "6.1.0",
+  "version": "6.1.1",
   "description": "A Mongoose plugin for enhanced JSON normalization and common schema creation, with built-in support for pagination and automatic Decimal128 conversion.",
   "author": "kiki-kanri",
   "license": "MIT",
