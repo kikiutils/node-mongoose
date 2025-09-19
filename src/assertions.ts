@@ -1,6 +1,9 @@
-import type { mongo } from 'mongoose';
+import type {
+    Document,
+    mongo,
+} from 'mongoose';
 
-export async function assertMongooseUpdateSuccess<T extends mongo.BSON.Document>(
+export async function assertMongooseUpdateSuccess<T extends Document>(
     updatePromise: Promise<mongo.UpdateResult<T>>,
     expectedModifiedCount = 1,
 ) {
