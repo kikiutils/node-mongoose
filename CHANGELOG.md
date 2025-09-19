@@ -1,5 +1,17 @@
 # Changelog
 
+## v6.1.0
+
+[compare changes](https://github.com/kikiutils/node-mongoose/compare/v6.0.1...v6.1.0)
+
+### 🚀 Enhancements
+
+- `mongooseAssertionsPlugin` add `assertUpdateSuccess` static model method ([be7817a](https://github.com/kikiutils/node-mongoose/commit/be7817a))
+
+### ❤️ Contributors
+
+- kiki-kanri
+
 ## v6.0.1
 
 [compare changes](https://github.com/kikiutils/node-mongoose/compare/v6.0.0...v6.0.1)
