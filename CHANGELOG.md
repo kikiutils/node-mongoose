@@ -1,5 +1,37 @@
 # Changelog
 
+## v6.0.0
+
+[compare changes](https://github.com/kikiutils/node-mongoose/compare/v5.2.0...v6.0.0)
+
+### 🚀 Enhancements
+
+- Add assertions plugin and enforce it in `buildMongooseModel` ([2504e0e](https://github.com/kikiutils/node-mongoose/commit/2504e0e))
+
+### 🔥 Performance
+
+- **mongooseNormalizePlugin:** Pre-compute paths for conversion to improve performance and simplify code logic ([2399e8a](https://github.com/kikiutils/node-mongoose/commit/2399e8a))
+
+### 💅 Refactors
+
+- ⚠️ Restructure codebase ([bc590ed](https://github.com/kikiutils/node-mongoose/commit/bc590ed))
+- ⚠️ Remove `mongooseDocumentOrObjectIdToDocument` ([e94e6aa](https://github.com/kikiutils/node-mongoose/commit/e94e6aa))
+
+### 🏡 Chore
+
+- Remove alias config ([e353604](https://github.com/kikiutils/node-mongoose/commit/e353604))
+- Change `update-peer-dependencies-meta.ts` to non-executable permission file ([62a7690](https://github.com/kikiutils/node-mongoose/commit/62a7690))
+- Upgrade dependencies ([8e206cc](https://github.com/kikiutils/node-mongoose/commit/8e206cc))
+
+#### ⚠️ Breaking Changes
+
+- ⚠️ Restructure codebase ([bc590ed](https://github.com/kikiutils/node-mongoose/commit/bc590ed))
+- ⚠️ Remove `mongooseDocumentOrObjectIdToDocument` ([e94e6aa](https://github.com/kikiutils/node-mongoose/commit/e94e6aa))
+
+### ❤️ Contributors
+
+- kiki-kanri
+
 ## v5.2.0
 
 [compare changes](https://github.com/kikiutils/node-mongoose/compare/v5.1.6...v5.2.0)
