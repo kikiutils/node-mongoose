@@ -68,10 +68,14 @@ export function mongooseAssertionsPlugin<S extends Schema>(schema: S) {
             filter: RootFilterQuery<any>,
             update: UpdateQuery<any> | UpdateWithAggregationPipeline,
             options?: (mongo.UpdateOptions & MongooseUpdateQueryOptions<any>) | null,
-            expectedModifiedCount?: number,
+            expectedModifiedCount: number = 1,
         ) {
-            const query = expectedModifiedCount === 1 ? this.updateOne : this.updateMany;
-            return assertMongooseUpdateSuccess(query(filter, update, options), expectedModifiedCount);
+            return assertMongooseUpdateSuccess(
+                expectedModifiedCount === 1
+                    ? this.updateOne(filter, update, options)
+                    : this.updateMany(filter, update, options),
+                expectedModifiedCount,
+            );
         },
     );
 }
