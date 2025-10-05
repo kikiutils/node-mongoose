@@ -39,6 +39,7 @@ export default defineConfig({
                 exports[key] = newExports;
             });
 
+            // TODO: automatically add `./dist/*.js` from entry
             exports['./*'] = './dist/*.js';
             const sortedExports: Record<string, PackageJsonExportEntry> = {};
             Object.entries(exports).sort().forEach(([key, value]) => sortedExports[key] = value);
@@ -61,9 +62,9 @@ export default defineConfig({
         {
             name: 'remove-types-js',
             async writeBundle() {
-                const files = [];
-                for await (const file of glob('./dist/types/**/*.js')) files.push(file);
-                await Promise.all(files.map((file) => rm(file, { force: true })));
+                const filePaths = [];
+                for await (const filePath of glob('./dist/types/**/*.js')) filePaths.push(filePath);
+                await Promise.all(filePaths.map((filePath) => rm(filePath, { force: true })));
             },
         },
     ],
