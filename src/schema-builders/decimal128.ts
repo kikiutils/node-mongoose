@@ -48,6 +48,7 @@ export interface Decimal128SchemaBuilder<
         ExtraOmitFields
     >;
 
+    immutable: ExtendDecimal128SchemaBuilder<Merge<Props, { immutable: true }>, ExtraOmitFields>;
     index: <T extends boolean | IndexDirection | IndexOptions>(value: T) => ExtendDecimal128SchemaBuilder<
         Merge<Props, { index: T }>,
         ExtraOmitFields

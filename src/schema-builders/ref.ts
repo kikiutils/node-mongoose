@@ -48,6 +48,7 @@ export interface RefSchemaBuilder<
         ExtraOmitFields
     >;
 
+    immutable: ExtendRefSchemaBuilder<Merge<Props, { immutable: true }>, ExtraOmitFields>;
     index: <T extends boolean | IndexDirection | IndexOptions>(value: T) => ExtendRefSchemaBuilder<
         Merge<Props, { index: T }>,
         ExtraOmitFields

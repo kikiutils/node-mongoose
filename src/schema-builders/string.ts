@@ -56,6 +56,7 @@ export interface StringSchemaBuilder<
         ExtraOmitFields
     >;
 
+    immutable: ExtendStringSchemaBuilder<Merge<Props, { immutable: true }>, ExtraOmitFields>;
     index: <T extends boolean | IndexDirection | IndexOptions>(value: T) => ExtendStringSchemaBuilder<
         Merge<Props, { index: T }>,
         ExtraOmitFields

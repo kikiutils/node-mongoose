@@ -46,6 +46,7 @@ export interface DateSchemaBuilder<
         ExtraOmitFields
     >;
 
+    immutable: ExtendDateSchemaBuilder<Merge<Props, { immutable: true }>, ExtraOmitFields>;
     index: <T extends boolean | IndexDirection | IndexOptions>(value: T) => ExtendDateSchemaBuilder<
         Merge<Props, { index: T }>,
         ExtraOmitFields

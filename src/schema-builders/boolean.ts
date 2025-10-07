@@ -32,6 +32,7 @@ export interface BooleanSchemaBuilder<
         ExtraOmitFields
     >;
 
+    immutable: ExtendBooleanSchemaBuilder<Merge<Props, { immutable: true }>, ExtraOmitFields>;
     index: <T extends boolean | IndexDirection | IndexOptions>(value: T) => ExtendBooleanSchemaBuilder<
         Merge<Props, { index: T }>,
         ExtraOmitFields

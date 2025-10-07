@@ -46,6 +46,7 @@ export interface NumberSchemaBuilder<
         ExtraOmitFields
     >;
 
+    immutable: ExtendNumberSchemaBuilder<Merge<Props, { privaimmutablete: true }>, ExtraOmitFields>;
     index: <T extends boolean | IndexDirection | IndexOptions>(value: T) => ExtendNumberSchemaBuilder<
         Merge<Props, { index: T }>,
         ExtraOmitFields

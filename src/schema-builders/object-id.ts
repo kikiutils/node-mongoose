@@ -47,6 +47,7 @@ export interface ObjectIdSchemaBuilder<
         ExtraOmitFields
     >;
 
+    immutable: ExtendObjectIdSchemaBuilder<Merge<Props, { immutable: true }>, ExtraOmitFields>;
     index: <T extends boolean | IndexDirection | IndexOptions>(value: T) => ExtendObjectIdSchemaBuilder<
         Merge<Props, { index: T }>,
         ExtraOmitFields
