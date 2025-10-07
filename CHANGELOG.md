@@ -1,5 +1,31 @@
 # Changelog
 
+## v6.2.0
+
+[compare changes](https://github.com/kikiutils/node-mongoose/compare/v6.1.1...v6.2.0)
+
+### 🚀 Enhancements
+
+- Add `immutable` property to all schema builders ([a98bfcc](https://github.com/kikiutils/node-mongoose/commit/a98bfcc))
+
+### 💅 Refactors
+
+- Rename func parameters in `arr.map` and similar methods to `item` for consistency ([c5768ac](https://github.com/kikiutils/node-mongoose/commit/c5768ac))
+- Tidy up code ([1a92f2c](https://github.com/kikiutils/node-mongoose/commit/1a92f2c))
+- Remove exports for types that should not be exported in schema builders ([a7b7c5f](https://github.com/kikiutils/node-mongoose/commit/a7b7c5f))
+
+### 🏡 Chore
+
+- Update base tsconfig ([26f4158](https://github.com/kikiutils/node-mongoose/commit/26f4158))
+- Add `.editorconfig` ([11056ce](https://github.com/kikiutils/node-mongoose/commit/11056ce))
+- Upgrade dependencies ([dc0abef](https://github.com/kikiutils/node-mongoose/commit/dc0abef))
+- Upgrade devDependencies ([aca04e8](https://github.com/kikiutils/node-mongoose/commit/aca04e8))
+- Replace `@kikiutils/changelogen` with `changelogen` ([8d1d648](https://github.com/kikiutils/node-mongoose/commit/8d1d648))
+
+### ❤️ Contributors
+
+- Kiki-kanri
+
 ## v6.1.1
 
 [compare changes](https://github.com/kikiutils/node-mongoose/compare/v6.1.0...v6.1.1)
