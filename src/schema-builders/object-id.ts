@@ -11,7 +11,7 @@ import type { Readonlyable } from '../types/_internals';
 
 import { createBaseSchemaBuilderFactory } from './base';
 
-export type ExtendObjectIdSchemaBuilder<
+type ExtendSchemaBuilder<
     Props extends BaseProps,
     ExtraOmitFields extends string,
 > = Omit<
@@ -30,7 +30,7 @@ export interface ObjectIdSchemaBuilder<
     default: <
         T extends ((this: any, doc: any) => DefaultType<D>) | DefaultType<D> | null,
         D extends Types.ObjectId,
-    >(value: T) => ExtendObjectIdSchemaBuilder<
+    >(value: T) => ExtendSchemaBuilder<
         Merge<Props, { default: T }>,
         ExtraOmitFields
     >;
@@ -42,22 +42,22 @@ export interface ObjectIdSchemaBuilder<
         | { message?: M; values: Readonlyable<Array<null | O>> },
         M extends string,
         O extends Types.ObjectId,
-    >(value: T) => ExtendObjectIdSchemaBuilder<
+    >(value: T) => ExtendSchemaBuilder<
         Merge<Props, { enum: T }>,
         ExtraOmitFields
     >;
 
-    immutable: ExtendObjectIdSchemaBuilder<Merge<Props, { immutable: true }>, ExtraOmitFields>;
-    index: <T extends boolean | IndexDirection | IndexOptions>(value: T) => ExtendObjectIdSchemaBuilder<
+    immutable: ExtendSchemaBuilder<Merge<Props, { immutable: true }>, ExtraOmitFields>;
+    index: <T extends boolean | IndexDirection | IndexOptions>(value: T) => ExtendSchemaBuilder<
         Merge<Props, { index: T }>,
         ExtraOmitFields
     >;
 
     nonRequired: Props;
-    private: ExtendObjectIdSchemaBuilder<Merge<Props, { private: true }>, ExtraOmitFields>;
+    private: ExtendSchemaBuilder<Merge<Props, { private: true }>, ExtraOmitFields>;
     required: Merge<Props, { required: true }>;
-    sparse: ExtendObjectIdSchemaBuilder<Merge<Props, { sparse: true }>, ExtraOmitFields>;
-    unique: ExtendObjectIdSchemaBuilder<Merge<Props, { unique: true }>, ExtraOmitFields>;
+    sparse: ExtendSchemaBuilder<Merge<Props, { sparse: true }>, ExtraOmitFields>;
+    unique: ExtendSchemaBuilder<Merge<Props, { unique: true }>, ExtraOmitFields>;
 }
 
 export const objectIdSchemaBuilder = createBaseSchemaBuilderFactory<ObjectIdSchemaBuilder>(Schema.Types.ObjectId);

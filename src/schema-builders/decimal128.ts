@@ -12,7 +12,7 @@ import type { Readonlyable } from '../types/_internals';
 
 import { createBaseSchemaBuilderFactory } from './base';
 
-export type ExtendDecimal128SchemaBuilder<
+type ExtendSchemaBuilder<
     Props extends BaseProps,
     ExtraOmitFields extends string,
 > = Omit<
@@ -31,7 +31,7 @@ export interface Decimal128SchemaBuilder<
     default: <
         T extends ((this: any, doc: any) => DefaultType<D>) | DefaultType<D> | null,
         D extends Types.Decimal128,
-    >(value: T) => ExtendDecimal128SchemaBuilder<
+    >(value: T) => ExtendSchemaBuilder<
         Merge<Props, { default: T }>,
         ExtraOmitFields
     >;
@@ -43,19 +43,19 @@ export interface Decimal128SchemaBuilder<
         | { message?: M; values: Readonlyable<Array<D | null>> },
         D extends Types.Decimal128,
         M extends string,
-    >(value: T) => ExtendDecimal128SchemaBuilder<
+    >(value: T) => ExtendSchemaBuilder<
         Merge<Props, { enum: T }>,
         ExtraOmitFields
     >;
 
-    immutable: ExtendDecimal128SchemaBuilder<Merge<Props, { immutable: true }>, ExtraOmitFields>;
-    index: <T extends boolean | IndexDirection | IndexOptions>(value: T) => ExtendDecimal128SchemaBuilder<
+    immutable: ExtendSchemaBuilder<Merge<Props, { immutable: true }>, ExtraOmitFields>;
+    index: <T extends boolean | IndexDirection | IndexOptions>(value: T) => ExtendSchemaBuilder<
         Merge<Props, { index: T }>,
         ExtraOmitFields
     >;
 
     nonRequired: Props;
-    private: ExtendDecimal128SchemaBuilder<Merge<Props, { private: true }>, ExtraOmitFields>;
+    private: ExtendSchemaBuilder<Merge<Props, { private: true }>, ExtraOmitFields>;
     required: Merge<Props, { required: true }>;
 
     /**
@@ -68,7 +68,7 @@ export interface Decimal128SchemaBuilder<
      *
      * @returns A schema builder with the rounding and toFixed behavior applied to the `set` option in Mongoose.
      */
-    setRoundAndToFixedSetter: (places?: number, rounding?: Decimal.Rounding) => ExtendDecimal128SchemaBuilder<
+    setRoundAndToFixedSetter: (places?: number, rounding?: Decimal.Rounding) => ExtendSchemaBuilder<
         Merge<Props, ToStringSetterSchema>,
         'setRoundAndToFixedSetter' | ExtraOmitFields
     >;
@@ -82,13 +82,9 @@ export interface Decimal128SchemaBuilder<
      * @returns A schema builder with the custom `get` behavior applied to convert the Decimal128 field to a string
      * when accessed in the application.
      */
-    setToStringGetter: ExtendDecimal128SchemaBuilder<
-        Merge<Props, ToStringGetterSchema>,
-        'setToStringGetter' | ExtraOmitFields
-    >;
-
-    sparse: ExtendDecimal128SchemaBuilder<Merge<Props, { sparse: true }>, ExtraOmitFields>;
-    unique: ExtendDecimal128SchemaBuilder<Merge<Props, { unique: true }>, ExtraOmitFields>;
+    setToStringGetter: ExtendSchemaBuilder<Merge<Props, ToStringGetterSchema>, 'setToStringGetter' | ExtraOmitFields>;
+    sparse: ExtendSchemaBuilder<Merge<Props, { sparse: true }>, ExtraOmitFields>;
+    unique: ExtendSchemaBuilder<Merge<Props, { unique: true }>, ExtraOmitFields>;
 }
 
 interface ToStringGetterSchema {

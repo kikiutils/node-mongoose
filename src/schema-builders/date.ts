@@ -10,7 +10,7 @@ import type { Readonlyable } from '../types/_internals';
 
 import { createBaseSchemaBuilderFactory } from './base';
 
-export type ExtendDateSchemaBuilder<
+type ExtendSchemaBuilder<
     Props extends BaseProps,
     ExtraOmitFields extends string,
 > = Omit<
@@ -29,7 +29,7 @@ export interface DateSchemaBuilder<
     default: <
         T extends ((this: any, doc: any) => DefaultType<D>) | DefaultType<D> | null,
         D extends NativeDate,
-    >(value: T) => ExtendDateSchemaBuilder<
+    >(value: T) => ExtendSchemaBuilder<
         Merge<Props, { default: T }>,
         ExtraOmitFields
     >;
@@ -41,13 +41,13 @@ export interface DateSchemaBuilder<
         | { message?: M; values: Readonlyable<Array<D | null>> },
         D extends NativeDate,
         M extends string,
-    >(value: T) => ExtendDateSchemaBuilder<
+    >(value: T) => ExtendSchemaBuilder<
         Merge<Props, { enum: T }>,
         ExtraOmitFields
     >;
 
-    immutable: ExtendDateSchemaBuilder<Merge<Props, { immutable: true }>, ExtraOmitFields>;
-    index: <T extends boolean | IndexDirection | IndexOptions>(value: T) => ExtendDateSchemaBuilder<
+    immutable: ExtendSchemaBuilder<Merge<Props, { immutable: true }>, ExtraOmitFields>;
+    index: <T extends boolean | IndexDirection | IndexOptions>(value: T) => ExtendSchemaBuilder<
         Merge<Props, { index: T }>,
         ExtraOmitFields
     >;
@@ -56,7 +56,7 @@ export interface DateSchemaBuilder<
         T extends D | Readonlyable<[D, S]>,
         D extends NativeDate,
         S extends string,
-    >(value: T) => ExtendDateSchemaBuilder<
+    >(value: T) => ExtendSchemaBuilder<
         Merge<Props, { max: T }>,
         ExtraOmitFields
     >;
@@ -65,16 +65,16 @@ export interface DateSchemaBuilder<
         T extends D | Readonlyable<[D, S]>,
         D extends NativeDate,
         S extends string,
-    >(value: T) => ExtendDateSchemaBuilder<
+    >(value: T) => ExtendSchemaBuilder<
         Merge<Props, { min: T }>,
         ExtraOmitFields
     >;
 
     nonRequired: Props;
-    private: ExtendDateSchemaBuilder<Merge<Props, { private: true }>, ExtraOmitFields>;
+    private: ExtendSchemaBuilder<Merge<Props, { private: true }>, ExtraOmitFields>;
     required: Merge<Props, { required: true }>;
-    sparse: ExtendDateSchemaBuilder<Merge<Props, { sparse: true }>, ExtraOmitFields>;
-    unique: ExtendDateSchemaBuilder<Merge<Props, { unique: true }>, ExtraOmitFields>;
+    sparse: ExtendSchemaBuilder<Merge<Props, { sparse: true }>, ExtraOmitFields>;
+    unique: ExtendSchemaBuilder<Merge<Props, { unique: true }>, ExtraOmitFields>;
 }
 
 export const dateSchemaBuilder = createBaseSchemaBuilderFactory<DateSchemaBuilder>(Date);

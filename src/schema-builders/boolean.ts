@@ -8,41 +8,41 @@ import type { Merge } from 'type-fest';
 
 import { createBaseSchemaBuilderFactory } from './base';
 
-export type ExtendBooleanSchemaBuilder<
-    Props extends BaseBooleanSchemaProps,
+type ExtendSchemaBuilder<
+    Props extends BaseProps,
     ExtraOmitFields extends string,
 > = Omit<
     BooleanSchemaBuilder<Props, ExtraOmitFields>,
     ExtraOmitFields | keyof Props
 >;
 
-export interface BaseBooleanSchemaProps {
+interface BaseProps {
     type: BooleanSchemaDefinition;
 }
 
 export interface BooleanSchemaBuilder<
-    Props extends BaseBooleanSchemaProps = BaseBooleanSchemaProps,
+    Props extends BaseProps = BaseProps,
     ExtraOmitFields extends string = never,
 > {
     default: <
         T extends ((this: any, doc: any) => DefaultType<D>) | DefaultType<D> | null,
         D extends boolean,
-    >(value: T) => ExtendBooleanSchemaBuilder<
+    >(value: T) => ExtendSchemaBuilder<
         Merge<Props, { default: T }>,
         ExtraOmitFields
     >;
 
-    immutable: ExtendBooleanSchemaBuilder<Merge<Props, { immutable: true }>, ExtraOmitFields>;
-    index: <T extends boolean | IndexDirection | IndexOptions>(value: T) => ExtendBooleanSchemaBuilder<
+    immutable: ExtendSchemaBuilder<Merge<Props, { immutable: true }>, ExtraOmitFields>;
+    index: <T extends boolean | IndexDirection | IndexOptions>(value: T) => ExtendSchemaBuilder<
         Merge<Props, { index: T }>,
         ExtraOmitFields
     >;
 
     nonRequired: Props;
-    private: ExtendBooleanSchemaBuilder<Merge<Props, { private: true }>, ExtraOmitFields>;
+    private: ExtendSchemaBuilder<Merge<Props, { private: true }>, ExtraOmitFields>;
     required: Merge<Props, { required: true }>;
-    sparse: ExtendBooleanSchemaBuilder<Merge<Props, { sparse: true }>, ExtraOmitFields>;
-    unique: ExtendBooleanSchemaBuilder<Merge<Props, { unique: true }>, ExtraOmitFields>;
+    sparse: ExtendSchemaBuilder<Merge<Props, { sparse: true }>, ExtraOmitFields>;
+    unique: ExtendSchemaBuilder<Merge<Props, { unique: true }>, ExtraOmitFields>;
 }
 
 export const booleanSchemaBuilder = createBaseSchemaBuilderFactory<BooleanSchemaBuilder>(Boolean);

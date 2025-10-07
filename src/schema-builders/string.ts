@@ -15,7 +15,7 @@ import type { Readonlyable } from '../types/_internals';
 
 import { createBaseSchemaBuilderFactory } from './base';
 
-export type ExtendStringSchemaBuilder<
+type ExtendSchemaBuilder<
     Props extends BaseProps,
     ExtraOmitFields extends string,
 > = Omit<
@@ -39,7 +39,7 @@ export interface StringSchemaBuilder<
     default: <
         T extends ((this: any, doc: any) => DefaultType<D>) | DefaultType<D> | null,
         D extends string,
-    >(value: T) => ExtendStringSchemaBuilder<
+    >(value: T) => ExtendSchemaBuilder<
         Merge<Props, { default: T }>,
         ExtraOmitFields
     >;
@@ -51,13 +51,13 @@ export interface StringSchemaBuilder<
         | { message?: M; values: Readonlyable<Array<null | S>> },
         M extends string,
         S extends string,
-    >(value: T) => ExtendStringSchemaBuilder<
+    >(value: T) => ExtendSchemaBuilder<
         Merge<Props, { enum: T }>,
         ExtraOmitFields
     >;
 
-    immutable: ExtendStringSchemaBuilder<Merge<Props, { immutable: true }>, ExtraOmitFields>;
-    index: <T extends boolean | IndexDirection | IndexOptions>(value: T) => ExtendStringSchemaBuilder<
+    immutable: ExtendSchemaBuilder<Merge<Props, { immutable: true }>, ExtraOmitFields>;
+    index: <T extends boolean | IndexDirection | IndexOptions>(value: T) => ExtendSchemaBuilder<
         Merge<Props, { index: T }>,
         ExtraOmitFields
     >;
@@ -71,7 +71,7 @@ export interface StringSchemaBuilder<
      *
      * @returns A schema builder with IPv4 validation and the `trim` option enabled.
      */
-    ipv4: <T extends string = typeof defaultIpv4ValidateMessage>(message?: T) => ExtendStringSchemaBuilder<
+    ipv4: <T extends string = typeof defaultIpv4ValidateMessage>(message?: T) => ExtendSchemaBuilder<
         Merge<Props, IpSchema<T>>,
         'ipv4' | 'ipv6' | ExtraOmitFields
     >;
@@ -85,7 +85,7 @@ export interface StringSchemaBuilder<
      *
      * @returns A schema builder with IPv6 validation and the `trim` option enabled.
      */
-    ipv6: <T extends string = typeof defaultIpv6ValidateMessage>(message?: T) => ExtendStringSchemaBuilder<
+    ipv6: <T extends string = typeof defaultIpv6ValidateMessage>(message?: T) => ExtendSchemaBuilder<
         Merge<Props, IpSchema<T>>,
         'ipv4' | 'ipv6' | ExtraOmitFields
     >;
@@ -102,17 +102,17 @@ export interface StringSchemaBuilder<
         T extends L | Readonlyable<[L, S]>,
         L extends number,
         S extends string,
-    >(value: T) => ExtendStringSchemaBuilder<
+    >(value: T) => ExtendSchemaBuilder<
         Merge<Props, { maxlength: T; minlength: T }>,
         ExtraOmitFields
     >;
 
-    lowercase: ExtendStringSchemaBuilder<Merge<Props, { lowercase: true }>, ExtraOmitFields>;
+    lowercase: ExtendSchemaBuilder<Merge<Props, { lowercase: true }>, ExtraOmitFields>;
     maxlength: <
         T extends L | Readonlyable<[L, S]>,
         L extends number,
         S extends string,
-    >(value: T) => ExtendStringSchemaBuilder<
+    >(value: T) => ExtendSchemaBuilder<
         Merge<Props, { maxlength: T }>,
         ExtraOmitFields
     >;
@@ -121,19 +121,19 @@ export interface StringSchemaBuilder<
         T extends L | Readonlyable<[L, S]>,
         L extends number,
         S extends string,
-    >(value: T) => ExtendStringSchemaBuilder<
+    >(value: T) => ExtendSchemaBuilder<
         Merge<Props, { minlength: T }>,
         ExtraOmitFields
     >;
 
     nonRequired: Props;
-    private: ExtendStringSchemaBuilder<Merge<Props, { private: true }>, ExtraOmitFields>;
+    private: ExtendSchemaBuilder<Merge<Props, { private: true }>, ExtraOmitFields>;
     required: Merge<Props, { required: true }>;
-    sparse: ExtendStringSchemaBuilder<Merge<Props, { sparse: true }>, ExtraOmitFields>;
-    text: ExtendStringSchemaBuilder<Merge<Props, { text: true }>, ExtraOmitFields>;
-    trim: ExtendStringSchemaBuilder<Merge<Props, { trim: true }>, ExtraOmitFields>;
-    unique: ExtendStringSchemaBuilder<Merge<Props, { unique: true }>, ExtraOmitFields>;
-    uppercase: ExtendStringSchemaBuilder<Merge<Props, { uppercase: true }>, ExtraOmitFields>;
+    sparse: ExtendSchemaBuilder<Merge<Props, { sparse: true }>, ExtraOmitFields>;
+    text: ExtendSchemaBuilder<Merge<Props, { text: true }>, ExtraOmitFields>;
+    trim: ExtendSchemaBuilder<Merge<Props, { trim: true }>, ExtraOmitFields>;
+    unique: ExtendSchemaBuilder<Merge<Props, { unique: true }>, ExtraOmitFields>;
+    uppercase: ExtendSchemaBuilder<Merge<Props, { uppercase: true }>, ExtraOmitFields>;
 }
 
 const baseBuilderFactory = createBaseSchemaBuilderFactory(String);

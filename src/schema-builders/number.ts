@@ -10,7 +10,7 @@ import type { Readonlyable } from '../types/_internals';
 
 import { createBaseSchemaBuilderFactory } from './base';
 
-export type ExtendNumberSchemaBuilder<
+type ExtendSchemaBuilder<
     Props extends BaseProps,
     ExtraOmitFields extends string,
 > = Omit<
@@ -29,7 +29,7 @@ export interface NumberSchemaBuilder<
     default: <
         T extends ((this: any, doc: any) => DefaultType<D>) | DefaultType<D> | null,
         D extends number,
-    >(value: T) => ExtendNumberSchemaBuilder<
+    >(value: T) => ExtendSchemaBuilder<
         Merge<Props, { default: T }>,
         ExtraOmitFields
     >;
@@ -41,13 +41,13 @@ export interface NumberSchemaBuilder<
         | { message?: M; values: Readonlyable<Array<N | null>> },
         M extends string,
         N extends number,
-    >(value: T) => ExtendNumberSchemaBuilder<
+    >(value: T) => ExtendSchemaBuilder<
         Merge<Props, { enum: T }>,
         ExtraOmitFields
     >;
 
-    immutable: ExtendNumberSchemaBuilder<Merge<Props, { privaimmutablete: true }>, ExtraOmitFields>;
-    index: <T extends boolean | IndexDirection | IndexOptions>(value: T) => ExtendNumberSchemaBuilder<
+    immutable: ExtendSchemaBuilder<Merge<Props, { privaimmutablete: true }>, ExtraOmitFields>;
+    index: <T extends boolean | IndexDirection | IndexOptions>(value: T) => ExtendSchemaBuilder<
         Merge<Props, { index: T }>,
         ExtraOmitFields
     >;
@@ -56,7 +56,7 @@ export interface NumberSchemaBuilder<
         T extends N | Readonlyable<[N, S]>,
         N extends number,
         S extends string,
-    >(value: T) => ExtendNumberSchemaBuilder<
+    >(value: T) => ExtendSchemaBuilder<
         Merge<Props, { max: T }>,
         ExtraOmitFields
     >;
@@ -65,16 +65,16 @@ export interface NumberSchemaBuilder<
         T extends N | Readonlyable<[N, S]>,
         N extends number,
         S extends string,
-    >(value: T) => ExtendNumberSchemaBuilder<
+    >(value: T) => ExtendSchemaBuilder<
         Merge<Props, { min: T }>,
         ExtraOmitFields
     >;
 
     nonRequired: Props;
-    private: ExtendNumberSchemaBuilder<Merge<Props, { private: true }>, ExtraOmitFields>;
+    private: ExtendSchemaBuilder<Merge<Props, { private: true }>, ExtraOmitFields>;
     required: Merge<Props, { required: true }>;
-    sparse: ExtendNumberSchemaBuilder<Merge<Props, { sparse: true }>, ExtraOmitFields>;
-    unique: ExtendNumberSchemaBuilder<Merge<Props, { unique: true }>, ExtraOmitFields>;
+    sparse: ExtendSchemaBuilder<Merge<Props, { sparse: true }>, ExtraOmitFields>;
+    unique: ExtendSchemaBuilder<Merge<Props, { unique: true }>, ExtraOmitFields>;
 }
 
 export const numberSchemaBuilder = createBaseSchemaBuilderFactory<NumberSchemaBuilder>(Number);
