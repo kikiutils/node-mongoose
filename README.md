@@ -23,7 +23,7 @@ A Mongoose plugin for enhanced JSON normalization and common schema creation, wi
 
 ## Requirements
 
-- **Mongoose** `>=8`
+- **Mongoose** `>=9`
 - **Node.js** `>=22.12.0`
 
 ## Installation

@@ -1,9 +1,9 @@
 import type {
-    FilterQuery,
     HydratedDocument,
     Model,
     mongo,
     PopulateOptions,
+    QueryFilter,
     QueryOptions,
     Schema,
 } from 'mongoose';
@@ -38,31 +38,42 @@ export interface PaginateCustomLabels<T = boolean | string | undefined> {
     totalPages?: T;
 }
 
-export interface PaginateModel<T, TQueryHelpers = object, TMethods = object> extends Model<T, TQueryHelpers, TMethods> {
+export interface PaginateModel<RawDocType, QueryHelpers = object, InstanceMethodsAndOverrides = object> extends Model<
+    RawDocType,
+    QueryHelpers,
+    InstanceMethodsAndOverrides
+> {
     paginate: {
         <O extends PaginateOptions>(
-            query?: FilterQuery<T>,
-            options?: O,
-            callback?: (err: any, result: PaginateResult<PaginateDocument<T, TMethods, TQueryHelpers, O>>) => void
-        ): Promise<PaginateResult<PaginateDocument<T, TMethods, TQueryHelpers, O>>>;
-
-        <UserType = T, O extends PaginateOptions = PaginateOptions>(
-            query?: FilterQuery<T>,
+            query?: QueryFilter<RawDocType>,
             options?: O,
             callback?: (
                 err: any,
-                result: PaginateResult<PaginateDocument<UserType, TMethods, TQueryHelpers, O>>,
+                result: PaginateResult<PaginateDocument<RawDocType, InstanceMethodsAndOverrides, QueryHelpers, O>>,
             ) => void
-        ): Promise<PaginateResult<PaginateDocument<UserType, TMethods, TQueryHelpers, O>>>;
+        ): Promise<PaginateResult<PaginateDocument<RawDocType, InstanceMethodsAndOverrides, QueryHelpers, O>>>;
 
-        <UserType = T>(
-            query?: FilterQuery<T>,
+        <UserType = RawDocType, O extends PaginateOptions = PaginateOptions>(
+            query?: QueryFilter<RawDocType>,
+            options?: O,
+            callback?: (
+                err: any,
+                result: PaginateResult<PaginateDocument<UserType, InstanceMethodsAndOverrides, QueryHelpers, O>>,
+            ) => void
+        ): Promise<PaginateResult<PaginateDocument<UserType, InstanceMethodsAndOverrides, QueryHelpers, O>>>;
+
+        <UserType = RawDocType>(
+            query?: QueryFilter<RawDocType>,
             options?: PaginateOptions,
             callback?: (
                 err: any,
-                result: PaginateResult<PaginateDocument<UserType, TMethods, TQueryHelpers, PaginateOptions>>,
+                result: PaginateResult<
+                    PaginateDocument<UserType, InstanceMethodsAndOverrides, QueryHelpers, PaginateOptions>
+                >,
             ) => void
-        ): Promise<PaginateResult<PaginateDocument<UserType, TMethods, TQueryHelpers, PaginateOptions>>>;
+        ): Promise<
+            PaginateResult<PaginateDocument<UserType, InstanceMethodsAndOverrides, QueryHelpers, PaginateOptions>>
+        >;
     };
 }
 

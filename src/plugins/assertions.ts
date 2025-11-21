@@ -1,8 +1,8 @@
 import type {
     mongo,
     MongooseUpdateQueryOptions,
+    QueryFilter,
     QueryOptions,
-    RootFilterQuery,
     Schema,
     UpdateQuery,
     UpdateWithAggregationPipeline,
@@ -12,7 +12,7 @@ import { assertMongooseUpdateSuccess } from '../assertions';
 
 declare module 'mongoose' {
     interface Document<
-        T = unknown,
+        T = Types.ObjectId,
         TQueryHelpers = any,
         DocType = any,
         TVirtuals = Record<string, any>,
@@ -42,7 +42,7 @@ declare module 'mongoose' {
         TSchema = any,
     > {
         assertUpdateSuccess: (
-            filter: RootFilterQuery<TRawDocType>,
+            filter: QueryFilter<TRawDocType>,
             update: UpdateQuery<TRawDocType> | UpdateWithAggregationPipeline,
             options?: (mongo.UpdateOptions & MongooseUpdateQueryOptions<TRawDocType>) | null,
             expectedModifiedCount?: number,
@@ -65,7 +65,7 @@ export function mongooseAssertionsPlugin<S extends Schema>(schema: S) {
     schema.static(
         'assertUpdateSuccess',
         function (
-            filter: RootFilterQuery<any>,
+            filter: QueryFilter<any>,
             update: UpdateQuery<any> | UpdateWithAggregationPipeline,
             options?: (mongo.UpdateOptions & MongooseUpdateQueryOptions<any>) | null,
             expectedModifiedCount: number = 1,

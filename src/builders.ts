@@ -1,5 +1,8 @@
 import mongoose from 'mongoose';
-import type { Schema } from 'mongoose';
+import type {
+    Model as MongooseModel,
+    Schema,
+} from 'mongoose';
 import mongooseAggregatePaginate from 'mongoose-aggregate-paginate-v2';
 import mongoosePaginate from 'mongoose-paginate-v2';
 
@@ -45,7 +48,7 @@ export function buildMongooseModel<
 }
 export function registerMongooseNormalizePlugin<
     DocType,
-    Model extends BaseMongoosePaginateModel<DocType, InstanceMethodsAndOverrides, QueryHelpers>,
+    Model extends MongooseModel<DocType, QueryHelpers, InstanceMethodsAndOverrides>,
     InstanceMethodsAndOverrides = object,
     QueryHelpers = object,
 >(
