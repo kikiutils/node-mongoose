@@ -51,7 +51,7 @@ export interface PaginateModel<T, TQueryHelpers = object, TMethods = object> ext
             options?: O,
             callback?: (
                 err: any,
-                result: PaginateResult<PaginateDocument<UserType, TMethods, TQueryHelpers, O>>
+                result: PaginateResult<PaginateDocument<UserType, TMethods, TQueryHelpers, O>>,
             ) => void
         ): Promise<PaginateResult<PaginateDocument<UserType, TMethods, TQueryHelpers, O>>>;
 
@@ -60,7 +60,7 @@ export interface PaginateModel<T, TQueryHelpers = object, TMethods = object> ext
             options?: PaginateOptions,
             callback?: (
                 err: any,
-                result: PaginateResult<PaginateDocument<UserType, TMethods, TQueryHelpers, PaginateOptions>>
+                result: PaginateResult<PaginateDocument<UserType, TMethods, TQueryHelpers, PaginateOptions>>,
             ) => void
         ): Promise<PaginateResult<PaginateDocument<UserType, TMethods, TQueryHelpers, PaginateOptions>>>;
     };

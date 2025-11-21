@@ -28,6 +28,6 @@ export interface CustomMongooseOptions {
             Model,
             InstanceMethodsAndOverrides,
             QueryHelpers
-        >
+        >,
     ) => void;
 }
