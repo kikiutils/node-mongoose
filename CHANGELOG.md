@@ -1,5 +1,34 @@
 # Changelog
 
+## v7.0.0
+
+[compare changes](https://github.com/kikiutils/node-mongoose/compare/v6.2.0...v7.0.0)
+
+### 🏡 Chore
+
+- Update script ([44312fb](https://github.com/kikiutils/node-mongoose/commit/44312fb))
+- Update `pnpm.onlyBuiltDependencies` ([9788a78](https://github.com/kikiutils/node-mongoose/commit/9788a78))
+- Update tsdown config ([59407a9](https://github.com/kikiutils/node-mongoose/commit/59407a9))
+- Disable tsdown `fixedExtension` config ([9039405](https://github.com/kikiutils/node-mongoose/commit/9039405))
+- Update eslint config ([e75c3d7](https://github.com/kikiutils/node-mongoose/commit/e75c3d7))
+- ⚠️  Upgrade deps ([6d8ec00](https://github.com/kikiutils/node-mongoose/commit/6d8ec00))
+- Add missing dev deps ([1f893c4](https://github.com/kikiutils/node-mongoose/commit/1f893c4))
+- Lint code ([274d22b](https://github.com/kikiutils/node-mongoose/commit/274d22b))
+- ⚠️  Update codebase to support Mongoose 9 ([633ba5e](https://github.com/kikiutils/node-mongoose/commit/633ba5e))
+
+### 🤖 CI
+
+- Update config file ([cfba23c](https://github.com/kikiutils/node-mongoose/commit/cfba23c))
+
+#### ⚠️ Breaking Changes
+
+- ⚠️  Upgrade deps ([6d8ec00](https://github.com/kikiutils/node-mongoose/commit/6d8ec00))
+- ⚠️  Update codebase to support Mongoose 9 ([633ba5e](https://github.com/kikiutils/node-mongoose/commit/633ba5e))
+
+### ❤️ Contributors
+
+- Kiki-kanri
+
 ## v6.2.0
 
 [compare changes](https://github.com/kikiutils/node-mongoose/compare/v6.1.1...v6.2.0)
