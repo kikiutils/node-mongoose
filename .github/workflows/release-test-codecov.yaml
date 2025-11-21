@@ -1,4 +1,4 @@
-name: Test and Upload Coverage on Release
+name: Test and upload coverage on release
 
 on:
   push:
@@ -21,10 +21,10 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
-      - name: Set up Node.js
-        uses: actions/setup-node@v4
+      - name: Set up node.js
+        uses: actions/setup-node@v5
         with:
           node-version: ${{ matrix.node-version }}
 
@@ -39,10 +39,10 @@ jobs:
       - name: Run typecheck
         run: pnpm run typecheck
 
-      - name: Run tests with coverage
+      - name: Run tests and generate lcov report
         run: pnpm run test
 
-      - name: Upload coverage to Codecov
+      - name: Upload lcov report to codecov
         if: ${{ matrix.os == 'ubuntu-latest' && matrix.node-version == '24.0.0' }}
         uses: codecov/codecov-action@v5
         with:

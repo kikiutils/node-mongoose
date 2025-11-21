@@ -57,6 +57,7 @@ export default defineConfig({
             ...Object.keys(packageJson.peerDependencies || {}),
         ]),
     ],
+    fixedExtension: false,
     format: 'esm',
     plugins: [
         {
