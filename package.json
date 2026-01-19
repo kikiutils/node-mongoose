@@ -1,7 +1,7 @@
 {
   "name": "@kikiutils/mongoose",
   "type": "module",
-  "version": "7.0.0",
+  "version": "7.0.1",
   "description": "A Mongoose plugin for enhanced JSON normalization and common schema creation, with built-in support for pagination and automatic Decimal128 conversion.",
   "author": "kiki-kanri",
   "license": "MIT",
@@ -21,7 +21,6 @@
   ],
   "sideEffects": false,
   "exports": {
-    "./*": "./dist/*.js",
     "./_internals": {
       "types": null,
       "import": null,
@@ -52,7 +51,8 @@
       "types": null,
       "import": null,
       "require": null
-    }
+    },
+    "./*": "./dist/*.js"
   },
   "files": [
     "./dist",

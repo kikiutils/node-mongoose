@@ -1,5 +1,21 @@
 # Changelog
 
+## v7.0.1
+
+[compare changes](https://github.com/kikiutils/node-mongoose/compare/v7.0.0...v7.0.1)
+
+### 🩹 Fixes
+
+- Adjust `customExports` order in `tsdown.config` to move wildcard (`*`) exports to the end ([0b3f357](https://github.com/kikiutils/node-mongoose/commit/0b3f357))
+
+### 🏡 Chore
+
+- Update deps ([732a136](https://github.com/kikiutils/node-mongoose/commit/732a136))
+
+### ❤️ Contributors
+
+- Kiki-kanri
+
 ## v7.0.0
 
 [compare changes](https://github.com/kikiutils/node-mongoose/compare/v6.2.0...v7.0.0)
