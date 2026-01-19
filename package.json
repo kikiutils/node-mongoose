@@ -76,26 +76,26 @@
   },
   "dependencies": {
     "decimal.js": "^10.6.0",
-    "es-toolkit": "^1.42.0",
-    "mongoose": "^9.0.0",
+    "es-toolkit": "^1.44.0",
+    "mongoose": "^9.1.4",
     "mongoose-aggregate-paginate-v2": "^1.1.4",
     "mongoose-paginate-v2": "^1.9.1",
-    "type-fest": "^5.2.0"
+    "type-fest": "^5.4.1"
   },
   "devDependencies": {
-    "@antfu/eslint-config": "^6.2.0",
-    "@kikiutils/eslint-config": "^5.0.0",
+    "@antfu/eslint-config": "^7.0.1",
+    "@kikiutils/eslint-config": "^5.0.2",
     "@kikiutils/tsconfigs": "^5.0.5",
-    "@types/node": "^24.10.1",
-    "@vitest/coverage-v8": "^4.0.13",
+    "@types/node": "^25.0.9",
+    "@vitest/coverage-v8": "^4.0.17",
     "changelogen": "^0.6.2",
     "depcheck": "^1.4.7",
-    "publint": "^0.3.15",
+    "publint": "^0.3.16",
     "ts-unused-exports": "^11.0.1",
-    "tsdown": "^0.16.6",
+    "tsdown": "^0.19.0",
     "typescript": "^5.9.3",
     "unplugin-unused": "^0.5.6",
-    "vitest": "^4.0.13"
+    "vitest": "^4.0.17"
   },
   "pnpm": {
     "onlyBuiltDependencies": [
