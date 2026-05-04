@@ -15,6 +15,19 @@ interface PackageJsonExportEntry {
 
 export default defineConfig({
     clean: true,
+    deps: {
+        neverBundle: [
+            ...new Set([
+                // eslint-disable-next-line ts/ban-ts-comment
+                // @ts-ignore
+                ...Object.keys(packageJson.dependencies || {}),
+                ...Object.keys(packageJson.devDependencies || {}),
+                // eslint-disable-next-line ts/ban-ts-comment
+                // @ts-ignore
+                ...Object.keys(packageJson.peerDependencies || {}),
+            ]),
+        ],
+    },
     dts: true,
     entry: ['./src/**/*.ts'],
     exports: {
@@ -51,17 +64,6 @@ export default defineConfig({
             };
         },
     },
-    external: [
-        ...new Set([
-            // eslint-disable-next-line ts/ban-ts-comment
-            // @ts-ignore
-            ...Object.keys(packageJson.dependencies || {}),
-            ...Object.keys(packageJson.devDependencies || {}),
-            // eslint-disable-next-line ts/ban-ts-comment
-            // @ts-ignore
-            ...Object.keys(packageJson.peerDependencies || {}),
-        ]),
-    ],
     fixedExtension: false,
     format: 'esm',
     plugins: [
