@@ -1,5 +1,29 @@
 # Changelog
 
+## v7.0.2
+
+[compare changes](https://github.com/kikiutils/node-mongoose/compare/v7.0.1...v7.0.2)
+
+### 🔥 Performance
+
+- Replace `IfElse` type with `extends` to significantly reduce `tsc` memory usage and build time ([9899373](https://github.com/kikiutils/node-mongoose/commit/9899373))
+
+### 🩹 Fixes
+
+- Correct typo privaimmutablete → immutable in number schema builder ([17fe812](https://github.com/kikiutils/node-mongoose/commit/17fe812))
+
+### 🏡 Chore
+
+- Update vscode settings ([7b2f6f9](https://github.com/kikiutils/node-mongoose/commit/7b2f6f9))
+- Update eslint config ([77a5f00](https://github.com/kikiutils/node-mongoose/commit/77a5f00))
+- Update deps, tsdown config and package scripts ([5ada952](https://github.com/kikiutils/node-mongoose/commit/5ada952))
+- Update deps and configs ([6082b0e](https://github.com/kikiutils/node-mongoose/commit/6082b0e))
+- Upgrade deps ([b18a376](https://github.com/kikiutils/node-mongoose/commit/b18a376))
+
+### ❤️ Contributors
+
+- Kiki-kanri
+
 ## v7.0.1
 
 [compare changes](https://github.com/kikiutils/node-mongoose/compare/v7.0.0...v7.0.1)
