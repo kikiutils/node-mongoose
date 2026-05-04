@@ -1,15 +1,13 @@
 import type { SetFieldType } from 'type-fest';
 
-import type { IfElse } from './_internals';
-
 import type {
     BaseMongooseDocType,
     SetFieldsToObjectId,
 } from './';
 
 export type BaseMongooseModelData<CreatedAtField extends boolean = true, UpdatedAtField extends boolean = true> =
-  & IfElse<CreatedAtField, { createdAt: string }, unknown>
-  & IfElse<UpdatedAtField, { updatedAt: string }, unknown>
+  & (CreatedAtField extends true ? { createdAt: string } : unknown)
+  & (UpdatedAtField extends true ? { updatedAt: string } : unknown)
   & { id: string };
 
 export type DataToBaseMongooseDocType<

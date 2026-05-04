@@ -8,21 +8,21 @@ import type {
     Schema,
 } from 'mongoose';
 
-import type { IfElse } from './_internals';
+export type PaginateDocument<
+    T,
+    TMethods,
+    TQueryHelpers,
+    O extends PaginateOptions = object,
+> = O['lean'] extends true
+    ? PaginateDocumentLeanResult<T, O>
+    : HydratedDocument<T, TMethods, TQueryHelpers>;
 
-export type PaginateDocument<T, TMethods, TQueryHelpers, O extends PaginateOptions = object> = IfElse<
-    O['lean'],
-    IfElse<
-        O['leanWithId'],
-        T & { id: string },
-        IfElse<
-            O['leanWithVirtuals'],
-            T & { [key: string]: any },
-            T
-        >
-    >,
-    HydratedDocument<T, TMethods, TQueryHelpers>
->;
+type PaginateDocumentLeanResult<T, O extends PaginateOptions> =
+    O['leanWithId'] extends true
+        ? T & { id: string }
+        : O['leanWithVirtuals'] extends true
+            ? T & { [key: string]: any }
+            : T;
 
 export interface PaginateCustomLabels<T = boolean | string | undefined> {
     docs?: T;

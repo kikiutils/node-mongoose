@@ -6,14 +6,13 @@ import type {
 } from 'mongoose';
 import type { SetFieldType } from 'type-fest';
 
-import type { IfElse } from './_internals';
 import type { AggregatePaginateModel } from './aggregate-paginate';
 import type { PaginateModel } from './paginate';
 
 export type BaseMongooseDocType<T, CreatedAtField extends boolean = true, UpdatedAtField extends boolean = true> =
-  & IfElse<CreatedAtField, { createdAt: Date }, unknown>
-  & IfElse<UpdatedAtField, { updatedAt: Date }, unknown>
-  & Omit<T, 'createdAt' | 'id' | 'updatedAt'>;
+  & (CreatedAtField extends true ? { createdAt: Date } : unknown)
+  & Omit<T, 'createdAt' | 'id' | 'updatedAt'>
+  & (UpdatedAtField extends true ? { updatedAt: Date } : unknown);
 
 export type BaseMongoosePaginateModel<RawDocType, InstanceMethodsAndOverrides = object, QueryHelpers = object> =
   & AggregatePaginateModel<RawDocType, QueryHelpers, InstanceMethodsAndOverrides>
