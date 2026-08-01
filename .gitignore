@@ -156,8 +156,15 @@ dist
 
 # End of https://www.toptal.com/developers/gitignore/api/node
 
-# OMX
+# Local AI agent and code-indexing files
 .omx/
+.codegraph/
+.aider*
+CLAUDE.local.md
+**/.claude/settings.local.json
+.serena/cache/
+.serena/project.local.yml
+repomix-output.*
 
 # pnpm v8-compile-cache dependency
 # - https://github.com/pnpm/pnpm/issues/7330
