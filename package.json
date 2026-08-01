@@ -76,25 +76,25 @@
   },
   "dependencies": {
     "decimal.js": "^10.6.0",
-    "es-toolkit": "^1.49.0",
-    "mongoose": "^9.7.4",
+    "es-toolkit": "^1.50.0",
+    "mongoose": "^9.9.0",
     "mongoose-aggregate-paginate-v2": "^1.1.4",
     "mongoose-paginate-v2": "^1.9.5",
     "type-fest": "^5.8.0"
   },
   "devDependencies": {
-    "@antfu/eslint-config": "^9.1.0",
+    "@antfu/eslint-config": "^9.2.0",
     "@kikiutils/eslint-config": "^9.2.0",
-    "@kikiutils/tsconfigs": "^6.0.0",
-    "@types/node": "^26.1.1",
+    "@kikiutils/tsconfigs": "^7.0.0",
+    "@types/node": "^26.1.2",
     "@vitest/coverage-v8": "^4.1.10",
     "changelogen": "^0.6.2",
-    "eslint": "^10.6.0",
-    "knip": "^6.25.0",
-    "publint": "^0.3.21",
-    "tsdown": "^0.22.4",
+    "eslint": "^10.8.0",
+    "knip": "^6.30.0",
+    "publint": "^0.3.22",
+    "tsdown": "^0.22.14",
     "typescript": "^6.0.3",
-    "unplugin-unused": "^0.5.7",
+    "unplugin-unused": "^0.6.0",
     "vitest": "^4.1.10"
   }
 }
