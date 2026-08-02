@@ -92,7 +92,7 @@ interface ToStringGetterSchema {
 }
 
 interface ToStringSetterSchema {
-    set: (value?: { toString: () => string }) => string;
+    set: (value?: { toString: () => string }) => string | undefined;
 }
 
 const baseBuilderFactory = createBaseSchemaBuilderFactory(Schema.Types.Decimal128);
@@ -107,7 +107,9 @@ export function decimal128SchemaBuilder() {
                 if (key === 'setRoundAndToFixedSetter') {
                     return (places: number = 2, rounding: Decimal.Rounding = Decimal.ROUND_DOWN) => {
                         schema.set = (value?: { toString: () => string }) => {
-                            if (value) return new Decimal(value.toString()).toFixed(places, rounding);
+                            if (value !== undefined && value !== null) {
+                                return new Decimal(value.toString()).toFixed(places, rounding);
+                            }
                         };
 
                         return receiver;

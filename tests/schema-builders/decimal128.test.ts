@@ -28,6 +28,7 @@ describe.concurrent('decimal128SchemaBuilder', () => {
     it('should set the value correctly with rounding and fixed decimal places', ({ expect }) => {
         const schema1 = decimal128SchemaBuilder().setRoundAndToFixedSetter().nonRequired;
         expect(schema1.set('114514.1919810')).toEqual('114514.19');
+        expect(schema1.set(0)).toEqual('0.00');
         const schema2 = decimal128SchemaBuilder().setRoundAndToFixedSetter(1, Decimal.ROUND_UP).nonRequired;
         expect(schema2.set(114514.191981)).toEqual('114514.2');
         const schema3 = decimal128SchemaBuilder().setRoundAndToFixedSetter(undefined, Decimal.ROUND_UP).nonRequired;
