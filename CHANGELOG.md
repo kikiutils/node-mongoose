@@ -1,5 +1,34 @@
 # Changelog
 
+## v7.0.3
+
+[compare changes](https://github.com/kikiutils/node-mongoose/compare/v7.0.2...v7.0.3)
+
+### 🔥 Performance
+
+- **schema-builder:** Reuse Decimal instances ([4a9dfa2](https://github.com/kikiutils/node-mongoose/commit/4a9dfa2))
+
+### 🩹 Fixes
+
+- **schema-builder:** Preserve zero decimal values ([d6a06a0](https://github.com/kikiutils/node-mongoose/commit/d6a06a0))
+
+### 🏡 Chore
+
+- Add `.gitattributes` ([4645112](https://github.com/kikiutils/node-mongoose/commit/4645112))
+- Add `.omx/` to `.gitignore` ([a9a8cfa](https://github.com/kikiutils/node-mongoose/commit/a9a8cfa))
+- Update scripts ([723523c](https://github.com/kikiutils/node-mongoose/commit/723523c))
+- Upgrade deps ([68d33e8](https://github.com/kikiutils/node-mongoose/commit/68d33e8))
+- Ignore local AI tooling artifacts ([7cf272b](https://github.com/kikiutils/node-mongoose/commit/7cf272b))
+- Upgrade deps ([2713eae](https://github.com/kikiutils/node-mongoose/commit/2713eae))
+
+### 🤖 CI
+
+- Update node versions ([8f4edfd](https://github.com/kikiutils/node-mongoose/commit/8f4edfd))
+
+### ❤️ Contributors
+
+- Kiki-kanri
+
 ## v7.0.2
 
 [compare changes](https://github.com/kikiutils/node-mongoose/compare/v7.0.1...v7.0.2)
