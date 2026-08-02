@@ -108,7 +108,8 @@ export function decimal128SchemaBuilder() {
                     return (places: number = 2, rounding: Decimal.Rounding = Decimal.ROUND_DOWN) => {
                         schema.set = (value?: { toString: () => string }) => {
                             if (value !== undefined && value !== null) {
-                                return new Decimal(value.toString()).toFixed(places, rounding);
+                                const decimal = Decimal.isDecimal(value) ? value : new Decimal(value.toString());
+                                return decimal.toFixed(places, rounding);
                             }
                         };
 
