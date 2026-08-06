@@ -3,22 +3,39 @@
 set -euo pipefail
 
 SCRIPT_DIR="$(cd -P -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
-REPOSITORY_ROOT="$(git -C "${SCRIPT_DIR}" rev-parse --show-toplevel)"
+readonly SCRIPT_DIR
 
-git -C "${REPOSITORY_ROOT}" config --replace-all core.filemode true
+REPO_ROOT="$(git -C "${SCRIPT_DIR}" rev-parse --show-toplevel)"
+readonly REPO_ROOT
 
-find "${REPOSITORY_ROOT}" \
-    \( -name .git -o -name node_modules -o -name target \) -prune -o \
-    -type f -exec chmod 600 {} +
+# Functions
+apply_permissions() {
+    local directory="$1"
+    local entry relative_path
 
-find "${REPOSITORY_ROOT}" \
-    \( -name .git -o -name node_modules -o -name target \) -prune -o \
-    -type d -exec chmod 700 {} +
+    chmod 700 "${directory}"
 
-find "${REPOSITORY_ROOT}" \
-    \( -name .git -o -name node_modules -o -name target \) -prune -o \
-    \( -type f -path '*/bin/*' -exec chmod 700 {} + \)
+    for entry in "${directory}"/*; do
+        [[ "${entry##*/}" == '.git' ]] && continue
+        relative_path="${entry#"${REPO_ROOT}"/}"
 
-find "${REPOSITORY_ROOT}" \
-    \( -name .git -o -name node_modules -o -name target \) -prune -o \
+        if git -C "${REPO_ROOT}" check-ignore --quiet --no-index -- "${relative_path}"; then
+            continue
+        fi
+
+        if [[ -L "${entry}" ]]; then
+            continue
+        elif [[ -d "${entry}" ]]; then
+            apply_permissions "${entry}"
+        elif [[ -f "${entry}" ]]; then
+            chmod 600 "${entry}"
+        fi
+    done
+}
+
+# Run
+git -C "${REPO_ROOT}" config --replace-all core.filemode true
+shopt -s dotglob nullglob
+apply_permissions "${REPO_ROOT}"
+find "${REPO_ROOT}" -name .git -prune -o \
     \( -name '*.sh' -type f -exec chmod 700 {} + \)
