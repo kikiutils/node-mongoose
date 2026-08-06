@@ -3,10 +3,22 @@
 set -euo pipefail
 
 SCRIPT_DIR="$(cd -P -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
-cd "${SCRIPT_DIR}"
+REPOSITORY_ROOT="$(git -C "${SCRIPT_DIR}" rev-parse --show-toplevel)"
 
-git config --replace-all core.filemode true
-find . -name node_modules -prune -o \( -type f -exec chmod 600 {} + \)
-find . -name node_modules -prune -o \( -type d -exec chmod 700 {} + \)
-find . -type d -name bin -exec chmod 700 -R {} +
-find . -name node_modules -prune -o \( -name '*.sh' -type f -exec chmod 700 {} + \)
+git -C "${REPOSITORY_ROOT}" config --replace-all core.filemode true
+
+find "${REPOSITORY_ROOT}" \
+    \( -name .git -o -name node_modules -o -name target \) -prune -o \
+    -type f -exec chmod 600 {} +
+
+find "${REPOSITORY_ROOT}" \
+    \( -name .git -o -name node_modules -o -name target \) -prune -o \
+    -type d -exec chmod 700 {} +
+
+find "${REPOSITORY_ROOT}" \
+    \( -name .git -o -name node_modules -o -name target \) -prune -o \
+    \( -type f -path '*/bin/*' -exec chmod 700 {} + \)
+
+find "${REPOSITORY_ROOT}" \
+    \( -name .git -o -name node_modules -o -name target \) -prune -o \
+    \( -name '*.sh' -type f -exec chmod 700 {} + \)
