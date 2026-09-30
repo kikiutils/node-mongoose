@@ -108,6 +108,24 @@ export interface StringSchemaBuilder<
     >;
 
     lowercase: ExtendSchemaBuilder<Merge<Props, { lowercase: true }>, ExtraOmitFields>;
+
+    /**
+     * Adds regular expression validation to the string schema.
+     * The validation message can be customized.
+     *
+     * @param regex - The regular expression that the string must match.
+     * @param message - Optional custom validation message.
+     *
+     * @returns A schema builder with the Mongoose `match` option configured.
+     */
+    match: <
+        T extends RegExp,
+        M extends string | undefined = undefined,
+    >(regex: T,
+        message?: M) => ExtendSchemaBuilder<
+        Merge<Props, { match: M extends string ? Readonly<[T, M]> : T }>,
+        ExtraOmitFields
+    >;
     maxlength: <
         T extends L | Readonlyable<[L, S]>,
         L extends number,
@@ -195,6 +213,19 @@ export function stringSchemaBuilder() {
                 if (key === 'length') {
                     return (value: any) => {
                         schema.maxlength = schema.minlength = value;
+                        return receiver;
+                    };
+                }
+
+                if (key === 'match') {
+                    return (regex: RegExp, message?: string) => {
+                        schema.match = message === undefined
+                            ? regex
+                            : [
+                                regex,
+                                message,
+                            ];
+
                         return receiver;
                     };
                 }

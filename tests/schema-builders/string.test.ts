@@ -70,6 +70,34 @@ describe.concurrent('stringSchemaBuilder', () => {
         expect(schema.validate.message).toBe('Invalid URL');
     });
 
+    it('should correctly set a string match validator', ({ expect }) => {
+        const pattern = /^[a-z]+$/;
+        const schema = stringSchemaBuilder().match(pattern).nonRequired;
+
+        expect(schema).toEqual({
+            match: pattern,
+            type: String,
+        });
+    });
+
+    it('should allow customizing the match validation message', ({ expect }) => {
+        const pattern = /^[a-z]+$/;
+        const schema = stringSchemaBuilder().match(pattern, 'Invalid format').nonRequired;
+
+        expect(schema.match).toEqual([
+            pattern,
+            'Invalid format',
+        ]);
+    });
+
+    it('should allow combining match and URL validation', ({ expect }) => {
+        const pattern = /^https:/;
+        const schema = stringSchemaBuilder().match(pattern).url().nonRequired;
+
+        expect(schema.match).toBe(pattern);
+        expect(schema.validate.validator('https://example.com')).toBe(true);
+    });
+
     it('should set both maxlength and minlength to the specified length', ({ expect }) => {
         expect(stringSchemaBuilder().length(10).nonRequired).toEqual({
             maxlength: 10,
