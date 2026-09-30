@@ -74,6 +74,7 @@
     "test:watch": "vitest watch --coverage",
     "typecheck": "tsc -b --noEmit"
   },
+  "peerDependenciesMeta": {},
   "dependencies": {
     "decimal.js": "^10.6.0",
     "es-toolkit": "^1.52.0",
@@ -93,7 +94,7 @@
     "knip": "^6.38.0",
     "publint": "^0.3.24",
     "tsdown": "^0.23.0",
-    "typescript": "^7.0.2",
+    "typescript": "^6.0.3",
     "unplugin-unused": "^0.6.0",
     "vitest": "^5.0.2"
   }

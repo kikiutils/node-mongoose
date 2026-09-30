@@ -8,4 +8,5 @@ cd "${SCRIPT_DIR}"
 [[ " $@ " =~ ' -c ' ]] && rm -rf ./node_modules ./pnpm-lock.yaml
 
 pnpm upgrade -L
+pnpm add -D typescript@^6.0.3
 ./modify-files-permissions.sh
