@@ -1,5 +1,32 @@
 # Changelog
 
+## v7.1.0
+
+[compare changes](https://github.com/kikiutils/node-mongoose/compare/v7.0.3...v7.1.0)
+
+### 🚀 Enhancements
+
+- **schema-builders:** Add URL validation to strings ([9de23f1](https://github.com/kikiutils/node-mongoose/commit/9de23f1))
+- **schema-builders:** Add string match validator ([357fbc7](https://github.com/kikiutils/node-mongoose/commit/357fbc7))
+- **schema-builders:** Add Decimal128 min/max validation ([932e5b4](https://github.com/kikiutils/node-mongoose/commit/932e5b4))
+
+### 🏡 Chore
+
+- Update `modify-files-permissions.sh` ([c56f31f](https://github.com/kikiutils/node-mongoose/commit/c56f31f))
+- Update `modify-files-permissions.sh` ([249c4c8](https://github.com/kikiutils/node-mongoose/commit/249c4c8))
+- Update `modify-files-permissions.sh` ([4c193c3](https://github.com/kikiutils/node-mongoose/commit/4c193c3))
+- Update `.gitignore` ([5d5bbc5](https://github.com/kikiutils/node-mongoose/commit/5d5bbc5))
+- Add `pnpm-workspace.yaml` ([bcd3c17](https://github.com/kikiutils/node-mongoose/commit/bcd3c17))
+- Update `pnpm-workspace.yaml` ([fe5e43f](https://github.com/kikiutils/node-mongoose/commit/fe5e43f))
+- Update `pnpm-workspace.yaml` ([5f000dd](https://github.com/kikiutils/node-mongoose/commit/5f000dd))
+- Upgrade deps ([4f0b8da](https://github.com/kikiutils/node-mongoose/commit/4f0b8da))
+- Update `.gitignore` ([87bd40c](https://github.com/kikiutils/node-mongoose/commit/87bd40c))
+- Upgrade deps ([9a277f0](https://github.com/kikiutils/node-mongoose/commit/9a277f0))
+
+### ❤️ Contributors
+
+- Kiki-kanri
+
 ## v7.0.3
 
 [compare changes](https://github.com/kikiutils/node-mongoose/compare/v7.0.2...v7.0.3)
