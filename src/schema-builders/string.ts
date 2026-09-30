@@ -73,7 +73,7 @@ export interface StringSchemaBuilder<
      */
     ipv4: <T extends string = typeof defaultIpv4ValidateMessage>(message?: T) => ExtendSchemaBuilder<
         Merge<Props, IpSchema<T>>,
-        'ipv4' | 'ipv6' | ExtraOmitFields
+        'ipv4' | 'ipv6' | 'url' | ExtraOmitFields
     >;
 
     /**
@@ -87,7 +87,7 @@ export interface StringSchemaBuilder<
      */
     ipv6: <T extends string = typeof defaultIpv6ValidateMessage>(message?: T) => ExtendSchemaBuilder<
         Merge<Props, IpSchema<T>>,
-        'ipv4' | 'ipv6' | ExtraOmitFields
+        'ipv4' | 'ipv6' | 'url' | ExtraOmitFields
     >;
 
     /**
@@ -134,11 +134,32 @@ export interface StringSchemaBuilder<
     trim: ExtendSchemaBuilder<Merge<Props, { trim: true }>, ExtraOmitFields>;
     unique: ExtendSchemaBuilder<Merge<Props, { unique: true }>, ExtraOmitFields>;
     uppercase: ExtendSchemaBuilder<Merge<Props, { uppercase: true }>, ExtraOmitFields>;
+
+    /**
+     * Adds WHATWG URL validation to the string schema. Credentials and non-HTTP schemes are allowed.
+     * The input is parsed only; no DNS lookup or normalization is performed. The validation message can be customized.
+     *
+     * @param message - Custom validation error message. Defaults to the standard URL validation message.
+     *
+     * @returns A schema builder with URL validation enabled.
+     */
+    url: <T extends string = typeof defaultUrlValidateMessage>(message?: T) => ExtendSchemaBuilder<
+        Merge<Props, UrlSchema<T>>,
+        'ipv4' | 'ipv6' | 'url' | ExtraOmitFields
+    >;
 }
 
-const baseBuilderFactory = createBaseSchemaBuilderFactory(String);
+interface UrlSchema<T extends string> {
+    validate: { message: T; validator: (value: string) => boolean };
+}
+
+// Constants/Variables
 const defaultIpv4ValidateMessage = '`{VALUE}` is not a valid IPv4 address for path `{PATH}`';
 const defaultIpv6ValidateMessage = '`{VALUE}` is not a valid IPv6 address for path `{PATH}`';
+const defaultUrlValidateMessage = '`{VALUE}` is not a valid URL for path `{PATH}`';
+
+// Functions
+const baseBuilderFactory = createBaseSchemaBuilderFactory(String);
 
 export function stringSchemaBuilder() {
     const schema: Record<string, any> = {};
@@ -174,6 +195,17 @@ export function stringSchemaBuilder() {
                 if (key === 'length') {
                     return (value: any) => {
                         schema.maxlength = schema.minlength = value;
+                        return receiver;
+                    };
+                }
+
+                if (key === 'url') {
+                    return (message: string = defaultUrlValidateMessage) => {
+                        schema.validate = {
+                            message,
+                            validator: (value: string) => URL.canParse(value),
+                        };
+
                         return receiver;
                     };
                 }

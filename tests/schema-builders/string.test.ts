@@ -46,6 +46,30 @@ describe.concurrent('stringSchemaBuilder', () => {
         expect(schema.validate.validator('')).toBe(false);
     });
 
+    it('should correctly set URL validator and validate WHATWG URLs', ({ expect }) => {
+        const schema = stringSchemaBuilder().url().nonRequired;
+        expect(schema).toEqual({
+            type: String,
+            validate: {
+                message: '`{VALUE}` is not a valid URL for path `{PATH}`',
+                validator: expect.any(Function),
+            },
+        });
+
+        expect(schema.validate.validator('https://example.com')).toBe(true);
+        expect(schema.validate.validator('https://user:password@example.com')).toBe(true);
+        expect(schema.validate.validator('http://localhost')).toBe(true);
+        expect(schema.validate.validator('mailto:user@example.com')).toBe(true);
+        expect(schema.validate.validator('/relative/path')).toBe(false);
+        expect(schema.validate.validator('not a URL')).toBe(false);
+    });
+
+    it('should allow customizing the URL validation message', ({ expect }) => {
+        const schema = stringSchemaBuilder().url('Invalid URL').nonRequired;
+
+        expect(schema.validate.message).toBe('Invalid URL');
+    });
+
     it('should set both maxlength and minlength to the specified length', ({ expect }) => {
         expect(stringSchemaBuilder().length(10).nonRequired).toEqual({
             maxlength: 10,

@@ -7,6 +7,7 @@ type BaseSchemaType =
   | Schema.Types.ObjectId['constructor']
   | StringConstructor;
 
+// Constants/Variables
 const isFunctionKeys = new Set([
     'default',
     'enum',
@@ -17,6 +18,7 @@ const isFunctionKeys = new Set([
     'minlength',
 ]);
 
+// Functions
 export function createBaseSchemaBuilderFactory<Builder = Readonly<Record<string, any>>>(type: BaseSchemaType) {
     return (schema: Record<string, any> = {}) => {
         schema.type = type;
