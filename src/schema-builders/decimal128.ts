@@ -12,6 +12,7 @@ import type { Readonlyable } from '../types/_internals';
 
 import { createBaseSchemaBuilderFactory } from './base';
 
+type Decimal128Limit = Decimal.Value | Types.Decimal128 | { toString: () => string };
 type ExtendSchemaBuilder<
     Props extends BaseProps,
     ExtraOmitFields extends string,
@@ -22,6 +23,14 @@ type ExtendSchemaBuilder<
 
 interface BaseProps {
     type: typeof Schema.Types.Decimal128;
+}
+
+interface Decimal128LimitValidator {
+    max?: string;
+    message: string;
+    min?: string;
+    type: 'max' | 'min';
+    validator: (value: null | Types.Decimal128 | undefined) => boolean;
 }
 
 export interface Decimal128SchemaBuilder<
@@ -52,6 +61,24 @@ export interface Decimal128SchemaBuilder<
     index: <T extends boolean | IndexDirection | IndexOptions>(value: T) => ExtendSchemaBuilder<
         Merge<Props, { index: T }>,
         ExtraOmitFields
+    >;
+
+    max: <
+        T extends D | Readonlyable<[D, S]>,
+        D extends Decimal128Limit,
+        S extends string,
+    >(value: T) => ExtendSchemaBuilder<
+        Merge<Props, Decimal128ValidationSchema>,
+        'max' | ExtraOmitFields
+    >;
+
+    min: <
+        T extends D | Readonlyable<[D, S]>,
+        D extends Decimal128Limit,
+        S extends string,
+    >(value: T) => ExtendSchemaBuilder<
+        Merge<Props, Decimal128ValidationSchema>,
+        'min' | ExtraOmitFields
     >;
 
     nonRequired: Props;
@@ -87,6 +114,10 @@ export interface Decimal128SchemaBuilder<
     unique: ExtendSchemaBuilder<Merge<Props, { unique: true }>, ExtraOmitFields>;
 }
 
+interface Decimal128ValidationSchema {
+    validate: Decimal128LimitValidator[];
+}
+
 interface ToStringGetterSchema {
     get: (value?: Types.Decimal128) => string | undefined;
 }
@@ -95,7 +126,39 @@ interface ToStringSetterSchema {
     set: (value?: { toString: () => string }) => string | undefined;
 }
 
+// Constants/Variables
+const defaultMinValidateMessage = 'Path `{PATH}` ({VALUE}) is less than minimum allowed value ({MIN}).';
+const defaultMaxValidateMessage = 'Path `{PATH}` ({VALUE}) is more than maximum allowed value ({MAX}).';
+
+// Functions
 const baseBuilderFactory = createBaseSchemaBuilderFactory(Schema.Types.Decimal128);
+
+function createLimitValidator(
+    type: 'max' | 'min',
+    value: Decimal128Limit | Readonlyable<[Decimal128Limit, string]>,
+): Decimal128LimitValidator {
+    const [limit, message] = Array.isArray(value)
+        ? value as Readonly<[Decimal128Limit, string]>
+        : [
+            value,
+            undefined,
+        ];
+
+    const decimalLimit = new Decimal(limit.toString());
+    if (!decimalLimit.isFinite()) throw new RangeError(`Decimal128 ${type} limit must be finite`);
+
+    return {
+        message: message ?? (type === 'min' ? defaultMinValidateMessage : defaultMaxValidateMessage),
+        [type]: decimalLimit.toString(),
+        type,
+        validator: (value) => {
+            if (value === null || value === undefined) return true;
+
+            const decimalValue = new Decimal(value.toString());
+            return type === 'min' ? decimalValue.gte(decimalLimit) : decimalValue.lte(decimalLimit);
+        },
+    };
+}
 
 export function decimal128SchemaBuilder() {
     const schema: Record<string, any> = {};
@@ -104,6 +167,19 @@ export function decimal128SchemaBuilder() {
         baseBuilder,
         {
             get(target, key, receiver) {
+                if (key === 'max' || key === 'min') {
+                    return (value: Decimal128Limit | Readonlyable<[Decimal128Limit, string]>) => {
+                        const validator = createLimitValidator(key, value);
+                        const validators = Array.isArray(schema.validate) ? schema.validate : [];
+                        schema.validate = [
+                            ...validators.filter(({ type }) => type !== key),
+                            validator,
+                        ];
+
+                        return receiver;
+                    };
+                }
+
                 if (key === 'setRoundAndToFixedSetter') {
                     return (places: number = 2, rounding: Decimal.Rounding = Decimal.ROUND_DOWN) => {
                         schema.set = (value?: { toString: () => string }) => {
