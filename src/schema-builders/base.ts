@@ -8,7 +8,9 @@ type BaseSchemaType =
   | StringConstructor
   | typeof Schema.Types.BigInt
   | typeof Schema.Types.Double
-  | typeof Schema.Types.Int32;
+  | typeof Schema.Types.Int32
+  | typeof Schema.Types.Mixed
+  | typeof Schema.Types.UUID;
 
 // Constants/Variables
 const isFunctionKeys = new Set([

@@ -16,6 +16,9 @@ export * from './double';
 export { int32SchemaBuilder as int32 } from './int32';
 export * from './int32';
 
+export { mixedSchemaBuilder as mixed } from './mixed';
+export * from './mixed';
+
 export { numberSchemaBuilder as number } from './number';
 export * from './number';
 
@@ -27,3 +30,6 @@ export * from './ref';
 
 export { stringSchemaBuilder as string } from './string';
 export * from './string';
+
+export { uuidSchemaBuilder as uuid } from './uuid';
+export * from './uuid';
