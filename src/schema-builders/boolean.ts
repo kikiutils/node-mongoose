@@ -20,10 +20,7 @@ interface BaseProps {
     type: BooleanSchemaDefinition;
 }
 
-export interface BooleanSchemaBuilder<
-    Props extends BaseProps = BaseProps,
-    ExtraOmitFields extends string = never,
-> {
+export interface BooleanSchemaBuilder<Props extends BaseProps = BaseProps, ExtraOmitFields extends string = never> {
     default: <
         T extends ((this: any, doc: any) => DefaultType<D>) | DefaultType<D> | null,
         D extends boolean,

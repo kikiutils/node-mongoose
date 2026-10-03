@@ -5,7 +5,10 @@ type BaseSchemaType =
   | DateConstructor
   | NumberConstructor
   | Schema.Types.ObjectId['constructor']
-  | StringConstructor;
+  | StringConstructor
+  | typeof Schema.Types.BigInt
+  | typeof Schema.Types.Double
+  | typeof Schema.Types.Int32;
 
 // Constants/Variables
 const isFunctionKeys = new Set([

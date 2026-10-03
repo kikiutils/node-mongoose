@@ -1,3 +1,6 @@
+export { bigintSchemaBuilder as bigint } from './bigint';
+export * from './bigint';
+
 export { booleanSchemaBuilder as boolean } from './boolean';
 export * from './boolean';
 
@@ -6,6 +9,12 @@ export * from './date';
 
 export { decimal128SchemaBuilder as decimal128 } from './decimal128';
 export * from './decimal128';
+
+export { doubleSchemaBuilder as double } from './double';
+export * from './double';
+
+export { int32SchemaBuilder as int32 } from './int32';
+export * from './int32';
 
 export { numberSchemaBuilder as number } from './number';
 export * from './number';
