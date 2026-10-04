@@ -1,5 +1,6 @@
 import type {
     Connection,
+    ConnectOptions,
     Schema,
     SchemaTimestampsConfig,
 } from 'mongoose';
@@ -30,4 +31,6 @@ export interface CustomMongooseOptions {
             QueryHelpers
         >,
     ) => void;
+
+    defaultConnectionOptions?: ConnectOptions;
 }

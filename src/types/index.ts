@@ -1,5 +1,4 @@
 import type {
-    Connection,
     HydratedDocument,
     QueryWithHelpers,
     Types,
@@ -55,7 +54,3 @@ export type SetFieldsToObjectId<T, K extends keyof T> = SetFieldType<T, K, Types
 // @ts-expect-error Ignore this error.
 // eslint-disable-next-line unused-imports/no-unused-vars
 export interface BaseMongooseModelStatics<RawDocType, InstanceMethodsAndOverrides = object, QueryHelpers = object> {}
-
-export interface MongooseConnections {
-    default?: Connection;
-}

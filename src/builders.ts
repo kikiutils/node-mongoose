@@ -1,4 +1,3 @@
-import mongoose from 'mongoose';
 import type {
     Model as MongooseModel,
     Schema,
@@ -7,7 +6,7 @@ import mongooseAggregatePaginate from 'mongoose-aggregate-paginate-v2';
 import mongoosePaginate from 'mongoose-paginate-v2';
 
 import { customMongooseOptions } from './_internals';
-import { mongooseConnections } from './constants';
+import { getDefaultMongooseConnection } from './connection';
 import { mongooseAssertionsPlugin } from './plugins/assertions';
 import { mongooseNormalizePlugin } from './plugins/normalize';
 import type { MongooseNormalizePluginOptions } from './plugins/normalize';
@@ -36,16 +35,10 @@ export function buildMongooseModel<
     schema.plugin(mongoosePaginate);
     schema.set('timestamps', options?.timestamps ?? schema.get('timestamps') ?? true);
     customMongooseOptions.beforeModelBuild?.(schema);
-    const connection =
-        options?.connection
-        || (
-            mongooseConnections.default ||= mongoose.createConnection(
-                process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017',
-            )
-        );
-
+    const connection = options?.connection ?? getDefaultMongooseConnection();
     return connection.model<DocType, Model, QueryHelpers>(name, schema, collection);
 }
+
 export function registerMongooseNormalizePlugin<
     DocType,
     Model extends MongooseModel<DocType, QueryHelpers, InstanceMethodsAndOverrides>,
