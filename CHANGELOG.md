@@ -1,5 +1,43 @@
 # Changelog
 
+## v8.0.0
+
+[compare changes](https://github.com/kikiutils/node-mongoose/compare/v7.1.0...v8.0.0)
+
+### 🚀 Enhancements
+
+- **schema-builders:** Add int32, bigint and double builders ([2bb8823](https://github.com/kikiutils/node-mongoose/commit/2bb8823))
+- **schema-builders:** Add UUID and Mixed builders ([4bc266f](https://github.com/kikiutils/node-mongoose/commit/4bc266f))
+
+### 🩹 Fixes
+
+- **normalize:** Preserve output when existing transforms return undefined ([3609519](https://github.com/kikiutils/node-mongoose/commit/3609519))
+
+### 💅 Refactors
+
+- ⚠️  Replace connection registry with configurable default connection accessor ([5ed6c03](https://github.com/kikiutils/node-mongoose/commit/5ed6c03))
+
+### 📖 Documentation
+
+- Refresh package feature descriptions and metadata ([3491aba](https://github.com/kikiutils/node-mongoose/commit/3491aba))
+
+### 🏡 Chore
+
+- Update ignore files ([d91f81e](https://github.com/kikiutils/node-mongoose/commit/d91f81e))
+- Upgrade deps ([70fc4d0](https://github.com/kikiutils/node-mongoose/commit/70fc4d0))
+
+### ✅ Tests
+
+- Standardize and simplify unit test suites ([bb101d0](https://github.com/kikiutils/node-mongoose/commit/bb101d0))
+
+#### ⚠️ Breaking Changes
+
+- ⚠️  Replace connection registry with configurable default connection accessor ([5ed6c03](https://github.com/kikiutils/node-mongoose/commit/5ed6c03))
+
+### ❤️ Contributors
+
+- Kiki-kanri
+
 ## v7.1.0
 
 [compare changes](https://github.com/kikiutils/node-mongoose/compare/v7.0.3...v7.1.0)

@@ -1,7 +1,7 @@
 {
   "name": "@kikiutils/mongoose",
   "type": "module",
-  "version": "7.1.0",
+  "version": "8.0.0",
   "description": "Provides Mongoose schema builders and utilities for connections, pagination, JSON normalization, and update checks.",
   "author": "kiki-kanri",
   "license": "MIT",
