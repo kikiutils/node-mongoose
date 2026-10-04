@@ -7,19 +7,19 @@
 [![codecov][codecov-src]][codecov-href]
 [![License][license-src]][license-href]
 
-A Mongoose plugin for enhanced JSON normalization and common schema creation, with built-in support for pagination and automatic Decimal128 conversion.
+Provides Mongoose schema builders and utilities for connections, pagination, JSON normalization, and update checks.
 
 - [✨ Release Notes](./CHANGELOG.md)
 
 ## Features
 
-- ✨ Flexible Connections: Supports both default and custom connections, automatically creating connections when none are provided
-- 🔌 Plugin Integration: Automatically integrates `mongoose-aggregate-paginate-v2`, `mongoose-paginate-v2`, and custom normalization for cleaner JSON outputs
-- 🛠 Predefined & Customizable Schemas: Provides common schemas (boolean, date, decimal128, number, objectId, string) with the flexibility to customize attributes such as `private`, `required`, `unique`, `default`, and more
-- 🧮 Decimal Precision: Supports `Decimal128` fields with options for automatic rounding and fixed decimal precision
-- 🔄 Optimized JSON Output: Adds an `id` field, removes `_id` and `__v`, hides private fields, and converts `Decimal128` fields to strings in JSON responses
-- 🔄 Reference Management: Enables easy conversion of ObjectId references to fully populated documents with field selection and population options
-- 🔧 Utility Functions: Includes helper functions for converting and normalizing documents, handling ObjectId transformations, and processing schema fields
+- ✨ Supports custom connections and reuses an automatically created default connection with configurable creation options.
+- 🔌 Registers `mongoose-aggregate-paginate-v2`, `mongoose-paginate-v2`, and update-result assertion plugins, with optional recursive JSON normalization.
+- 🛠 Provides chainable schema builders for `bigint`, `boolean`, `date`, `decimal128`, `double`, `int32`, `mixed`, `number`, `objectId`, `ref`, `string`, and `uuid`, with field options tailored to each schema type.
+- 🧮 Provides `Decimal128` rounding, fixed-decimal formatting, string getters, and inclusive range validation.
+- 🔄 Normalizes JSON output by default: adds `id`, removes `_id`, `__v`, and private fields, and serializes `Decimal128` values as strings.
+- 🔗 Defines ObjectId reference fields using model names, model constructors, or callbacks.
+- 🔧 Checks update acknowledgment and a minimum modified-document count through function, model, and document APIs.
 
 ## Requirements
 

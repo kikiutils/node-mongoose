@@ -2,7 +2,7 @@
   "name": "@kikiutils/mongoose",
   "type": "module",
   "version": "7.1.0",
-  "description": "A Mongoose plugin for enhanced JSON normalization and common schema creation, with built-in support for pagination and automatic Decimal128 conversion.",
+  "description": "Provides Mongoose schema builders and utilities for connections, pagination, JSON normalization, and update checks.",
   "author": "kiki-kanri",
   "license": "MIT",
   "repository": {
@@ -10,14 +10,18 @@
     "url": "git+https://github.com/kikiutils/node-mongoose.git"
   },
   "keywords": [
-    "Decimal128",
+    "bson",
+    "decimal128",
     "json",
-    "mongo",
+    "mongodb",
     "mongoose",
     "normalization",
     "pagination",
     "plugin",
-    "schema"
+    "schema",
+    "schema-builder",
+    "typescript",
+    "uuid"
   ],
   "sideEffects": false,
   "exports": {
