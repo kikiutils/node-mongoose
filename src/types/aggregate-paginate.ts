@@ -49,9 +49,13 @@ export interface AggregatePaginateOptions {
     page?: number;
 
     /**
-     *  If pagination is set to `false`, it will return all docs without adding limit condition.
+     * Whether to apply pagination to the aggregation results.
      *
-     * @default true
+     * @remarks
+     * If `false`, the pagination plugin adds no pagination `$skip` or `$limit` stages. Existing pipeline stages
+     * still apply.
+     *
+     * @defaultValue `true`, unless overridden by plugin-wide defaults.
      */
     pagination?: boolean;
     sort?: object | string;
@@ -59,17 +63,34 @@ export interface AggregatePaginateOptions {
 }
 
 export interface AggregatePaginateQueryPopulateOptions {
-    /** optional query conditions to match */
+    /**
+     * The query conditions used to filter populated documents.
+     */
     match?: any;
-    /** optional model to use for population */
+
+    /**
+     * The model or model name used to populate the referenced documents.
+     */
     model?: Model<any> | string;
-    /** optional query options like sort, limit, etc */
+
+    /**
+     * The query options applied when retrieving populated documents, such as sorting and limits.
+     */
     options?: any;
-    /** space delimited path(s) to populate */
+
+    /**
+     * The path or space-delimited paths to populate.
+     */
     path: string;
-    /** deep populate */
+
+    /**
+     * The nested population options applied to the populated documents.
+     */
     populate?: AggregatePaginateQueryPopulateOptions | AggregatePaginateQueryPopulateOptions[];
-    /** optional fields to select */
+
+    /**
+     * The field projection used when retrieving populated documents.
+     */
     select?: any;
 }
 

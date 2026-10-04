@@ -8,34 +8,41 @@ import type { Schema } from 'mongoose';
 
 export interface MongooseNormalizePluginOptions {
     /**
-     * Whether to convert `_id` field to `id`.
-     * If true, the `_id` field will be replaced with `id`.
+     * Whether to move the serialized `_id` value to `id`.
      *
-     * @default true
+     * @remarks
+     * If `false`, preserves the value under `_id` instead. Only values other than `undefined` are copied.
+     *
+     * @defaultValue `true`.
      */
     convertIdField?: boolean;
 
     /**
-     * Whether to convert the `_id` field to a hex string if it's an ObjectId.
+     * Whether to convert a serialized `ObjectId` identifier to its hexadecimal string.
      *
-     * @default true
+     * @remarks
+     * Applies before choosing the `id` or `_id` output key. Identifiers of other types are unchanged.
+     *
+     * @defaultValue `true`.
      */
     toHexIdIfObjectId?: boolean;
 }
 
 /**
- * Mongoose plugin to normalize the JSON output of documents.
+ * Registers JSON normalization on a Mongoose schema.
  *
- * This plugin modifies the `toJSON` method of Mongoose schemas to:
- * - Add an `id` field equal to the string representation of `_id`
- * - Remove the `_id` field
- * - Exclude fields marked as `private` from the JSON output
- * - Convert `Decimal128` fields to strings
- * - Remove the `__v` version key
+ * @remarks
+ * Mutates the schema's `toJSON` configuration while preserving its other options. The transform removes `__v`,
+ * normalizes `_id` according to the plugin options, removes schema paths marked `private`, and converts
+ * truthy serialized values at registered `Decimal128` paths to strings.
  *
- * @template S - The type of the schema.
+ * If an existing transform is a function, invokes it after normalization. If it returns `undefined`,
+ * preserves the normalized output and any mutations made by that transform; otherwise, uses its return value.
+ * That transform can change the normalized output, and its errors propagate during serialization.
+ * This plugin does not configure `toObject` or recursively register itself on child schemas.
  *
- * @param schema - The Mongoose schema to apply the plugin to.
+ * @param schema - The schema whose JSON serialization configuration is modified.
+ * @param pluginOptions - The identifier normalization options; omitted options use their documented defaults.
  */
 export function mongooseNormalizePlugin<S extends Schema>(
     schema: S,
@@ -87,7 +94,8 @@ export function mongooseNormalizePlugin<S extends Schema>(
 
                 // Run original toJSON transform
                 if (toJsonTransform && typeof toJsonTransform !== 'boolean') {
-                    return toJsonTransform(doc as any, copiedRet as any, options as any);
+                    const transformed = toJsonTransform(doc as any, copiedRet as any, options as any);
+                    return transformed === undefined ? copiedRet : transformed;
                 }
 
                 // Return normalized object

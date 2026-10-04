@@ -63,13 +63,14 @@ export interface StringSchemaBuilder<
     >;
 
     /**
-     * Adds IPv4 validation to the string schema.
-     * Ensures the string is a valid IPv4 address and trims the input. The validation message can be customized.
+     * Adds IPv4 address validation and enables input trimming.
      *
-     * @param message - The custom error message to return if validation fails. Defaults to a standard
-     * IPv4 validation message.
+     * @remarks
+     * Replaces the configured custom validator and sets `trim` to `true` on this builder.
      *
-     * @returns A schema builder with IPv4 validation and the `trim` option enabled.
+     * @param message - The validation error message. Defaults to the built-in IPv4 validation message.
+     *
+     * @returns This instance for chaining.
      */
     ipv4: <T extends string = typeof defaultIpv4ValidateMessage>(message?: T) => ExtendSchemaBuilder<
         Merge<Props, IpSchema<T>>,
@@ -77,13 +78,14 @@ export interface StringSchemaBuilder<
     >;
 
     /**
-     * Adds IPv6 validation to the string schema.
-     * Ensures the string is a valid IPv6 address and trims the input. The validation message can be customized.
+     * Adds IPv6 address validation and enables input trimming.
      *
-     * @param message - The custom error message to return if validation fails. Defaults to a standard
-     * IPv6 validation message.
+     * @remarks
+     * Replaces the configured custom validator and sets `trim` to `true` on this builder.
      *
-     * @returns A schema builder with IPv6 validation and the `trim` option enabled.
+     * @param message - The validation error message. Defaults to the built-in IPv6 validation message.
+     *
+     * @returns This instance for chaining.
      */
     ipv6: <T extends string = typeof defaultIpv6ValidateMessage>(message?: T) => ExtendSchemaBuilder<
         Merge<Props, IpSchema<T>>,
@@ -91,12 +93,15 @@ export interface StringSchemaBuilder<
     >;
 
     /**
-     * Sets both the maximum and minimum length of the string.
-     * This method ensures the string length is exactly or within a specified range.
+     * Sets equal minimum and maximum string lengths.
      *
-     * @param value - A number representing the exact length or an array specifying [minimum, maximum] length.
+     * @remarks
+     * Assigns the same value to `minlength` and `maxlength`, replacing any previously configured limits.
      *
-     * @returns A schema builder with both `maxlength` and `minlength` options applied.
+     * @param value - The exact length in UTF-16 code units, or a tuple containing the length and a validation
+     * error message.
+     *
+     * @returns This instance for chaining.
      */
     length: <
         T extends L | Readonlyable<[L, S]>,
@@ -110,13 +115,15 @@ export interface StringSchemaBuilder<
     lowercase: ExtendSchemaBuilder<Merge<Props, { lowercase: true }>, ExtraOmitFields>;
 
     /**
-     * Adds regular expression validation to the string schema.
-     * The validation message can be customized.
+     * Configures regular expression validation for the string field.
      *
-     * @param regex - The regular expression that the string must match.
-     * @param message - Optional custom validation message.
+     * @remarks
+     * Replaces any previously configured `match` option.
      *
-     * @returns A schema builder with the Mongoose `match` option configured.
+     * @param regex - The regular expression used by Mongoose to validate the string.
+     * @param message - The validation error message. If omitted, Mongoose uses its default message.
+     *
+     * @returns This instance for chaining.
      */
     match: <
         T extends RegExp,
@@ -154,12 +161,15 @@ export interface StringSchemaBuilder<
     uppercase: ExtendSchemaBuilder<Merge<Props, { uppercase: true }>, ExtraOmitFields>;
 
     /**
-     * Adds WHATWG URL validation to the string schema. Credentials and non-HTTP schemes are allowed.
-     * The input is parsed only; no DNS lookup or normalization is performed. The validation message can be customized.
+     * Adds WHATWG URL parseability validation.
      *
-     * @param message - Custom validation error message. Defaults to the standard URL validation message.
+     * @remarks
+     * Accepts URLs with credentials and non-HTTP schemes. Performs no DNS lookup or stored-value normalization,
+     * and does not enable trimming. Replaces the configured custom validator on this builder.
      *
-     * @returns A schema builder with URL validation enabled.
+     * @param message - The validation error message. Defaults to the built-in URL validation message.
+     *
+     * @returns This instance for chaining.
      */
     url: <T extends string = typeof defaultUrlValidateMessage>(message?: T) => ExtendSchemaBuilder<
         Merge<Props, UrlSchema<T>>,

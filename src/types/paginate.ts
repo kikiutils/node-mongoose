@@ -91,9 +91,13 @@ export interface PaginateOptions {
     page?: number;
 
     /**
-     *  If pagination is set to `false`, it will return all docs without adding limit condition.
+     * Whether to apply pagination to the query results.
      *
-     * @default true
+     * @remarks
+     * If `false`, the pagination plugin does not apply its page-based `skip` or `limit`. Explicit query options
+     * and other query conditions still apply.
+     *
+     * @defaultValue `true`, unless overridden by plugin-wide defaults.
      */
     pagination?: boolean;
     populate?: PopulateOptions | PopulateOptions[] | string | string[];
