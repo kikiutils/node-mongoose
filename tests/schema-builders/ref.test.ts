@@ -1,18 +1,23 @@
 import {
+    deleteModel,
     model,
     Schema,
 } from 'mongoose';
 import {
+    afterEach,
     describe,
     it,
 } from 'vitest';
 
 import { refSchemaBuilder } from '../../src/schema-builders';
 
-describe.concurrent('refSchemaBuilder', () => {
+describe('refSchemaBuilder', () => {
+    afterEach(() => deleteModel(/^RefBuilder/));
+
     it('should create a schema with the correct ref for a function returning a model', ({ expect }) => {
         const schema = new Schema({ name: { type: String } });
-        const getModelFunction = () => model('Model', schema);
+        const getModelFunction = () => model('RefBuilderModel', schema);
+
         expect(refSchemaBuilder(getModelFunction).nonRequired).toEqual({
             ref: getModelFunction,
             type: Schema.Types.ObjectId,
@@ -21,6 +26,7 @@ describe.concurrent('refSchemaBuilder', () => {
 
     it('should create a schema with the correct ref for a function returning a model name', ({ expect }) => {
         const getModelNameFunction = () => 'Model';
+
         expect(refSchemaBuilder(getModelNameFunction).nonRequired).toEqual({
             ref: getModelNameFunction,
             type: Schema.Types.ObjectId,
@@ -29,7 +35,8 @@ describe.concurrent('refSchemaBuilder', () => {
 
     it('should create a schema with the correct ref for a model reference', ({ expect }) => {
         const schema = new Schema({ name: { type: String } });
-        const Model = model('Model', schema);
+        const Model = model('RefBuilderModel', schema);
+
         expect(refSchemaBuilder(Model).nonRequired).toEqual({
             ref: Model,
             type: Schema.Types.ObjectId,

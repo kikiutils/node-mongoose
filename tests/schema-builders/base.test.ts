@@ -6,15 +6,34 @@ import {
 
 import { createBaseSchemaBuilderFactory } from '../../src/schema-builders/base';
 
-describe.concurrent('createBaseSchemaBuilderFactory', () => {
-    it('should create a schema with correct type for various constructors', ({ expect }) => {
-        expect(createBaseSchemaBuilderFactory(Boolean)().nonRequired).toEqual({ type: Boolean });
-        expect(createBaseSchemaBuilderFactory(Date)().nonRequired).toEqual({ type: Date });
-        expect(createBaseSchemaBuilderFactory(Number)().nonRequired).toEqual({ type: Number });
-        // eslint-disable-next-line style/max-len
-        expect(createBaseSchemaBuilderFactory(Schema.Types.ObjectId)().nonRequired).toEqual({ type: Schema.Types.ObjectId });
-        expect(createBaseSchemaBuilderFactory(String)().nonRequired).toEqual({ type: String });
-    });
+describe('createBaseSchemaBuilderFactory', () => {
+    it.for([
+        {
+            name: 'Boolean',
+            type: Boolean,
+        },
+        {
+            name: 'Date',
+            type: Date,
+        },
+        {
+            name: 'Number',
+            type: Number,
+        },
+        {
+            name: 'ObjectId',
+            type: Schema.Types.ObjectId,
+        },
+        {
+            name: 'String',
+            type: String,
+        },
+    ])(
+        'should preserve the $name constructor in the schema definition',
+        ({ type }, { expect }) => {
+            expect(createBaseSchemaBuilderFactory(type)().nonRequired).toEqual({ type });
+        },
+    );
 
     it('should set any additional key in the schema to true', ({ expect }) => {
         expect(createBaseSchemaBuilderFactory(String)().private.unique.nonRequired).toEqual({
@@ -33,7 +52,7 @@ describe.concurrent('createBaseSchemaBuilderFactory', () => {
 
     it('should set default attribute in the schema using a function', ({ expect }) => {
         function newDateFunction() {
-            return new Date();
+            return new Date('2026-01-01T00:00:00.000Z');
         }
 
         expect(createBaseSchemaBuilderFactory(Date)().default(newDateFunction).nonRequired).toEqual({
@@ -57,28 +76,31 @@ describe.concurrent('createBaseSchemaBuilderFactory', () => {
         });
     });
 
-    it('should set index attribute in the schema', ({ expect }) => {
-        expect(createBaseSchemaBuilderFactory(Number)().index(1).nonRequired).toEqual({
+    it.for([
+        {
             index: 1,
-            type: Number,
-        });
-
-        expect(createBaseSchemaBuilderFactory(Number)().index('asc').nonRequired).toEqual({
+            name: 'numeric direction',
+        },
+        {
             index: 'asc',
-            type: Number,
-        });
-
-        expect(createBaseSchemaBuilderFactory(Number)().index({
-            sparse: true,
-            unique: true,
-        }).nonRequired).toEqual({
+            name: 'named direction',
+        },
+        {
             index: {
                 sparse: true,
                 unique: true,
             },
-            type: Number,
-        });
-    });
+            name: 'index options',
+        },
+    ])(
+        'should preserve $name in the index attribute',
+        ({ index }, { expect }) => {
+            expect(createBaseSchemaBuilderFactory(Number)().index(index).nonRequired).toEqual({
+                index,
+                type: Number,
+            });
+        },
+    );
 
     it('should set max attribute in the schema', ({ expect }) => {
         expect(createBaseSchemaBuilderFactory(Number)().max(1024).nonRequired).toEqual({
@@ -95,10 +117,14 @@ describe.concurrent('createBaseSchemaBuilderFactory', () => {
     });
 
     it('should set min attribute in the schema', ({ expect }) => {
-        expect(createBaseSchemaBuilderFactory(Number)().min([
-            0,
-            'min',
-        ]).nonRequired).toEqual({
+        expect(
+            createBaseSchemaBuilderFactory(Number)()
+                .min([
+                    0,
+                    'min',
+                ])
+                .nonRequired,
+        ).toEqual({
             min: [
                 0,
                 'min',
@@ -108,10 +134,14 @@ describe.concurrent('createBaseSchemaBuilderFactory', () => {
     });
 
     it('should set minlength attribute in the schema', ({ expect }) => {
-        expect(createBaseSchemaBuilderFactory(String)().minlength([
-            0,
-            'minlength',
-        ]).nonRequired).toEqual({
+        expect(
+            createBaseSchemaBuilderFactory(String)()
+                .minlength([
+                    0,
+                    'minlength',
+                ])
+                .nonRequired,
+        ).toEqual({
             minlength: [
                 0,
                 'minlength',
@@ -129,12 +159,14 @@ describe.concurrent('createBaseSchemaBuilderFactory', () => {
 
     it('should throw an error when a duplicate schema attribute is set', ({ expect }) => {
         const schemaBuilder = createBaseSchemaBuilderFactory(Boolean)();
+
         expect(() => schemaBuilder.default(false).default(true)).toThrow('Duplicate schema attribute: default');
     });
 
     it('should throw an error when using a symbol as a schema attribute', ({ expect }) => {
         const schemaBuilder = createBaseSchemaBuilderFactory(Boolean)();
-        // @ts-expect-error Ignore this error.
+
+        // @ts-expect-error A symbol key deliberately bypasses the builder attribute type.
         expect(() => schemaBuilder[Symbol('test')]).toThrow('Cannot use symbol as a schema attribute');
     });
 });

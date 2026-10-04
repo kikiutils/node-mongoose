@@ -1,8 +1,10 @@
 import {
+    deleteModel,
     model,
     Schema,
 } from 'mongoose';
 import {
+    afterEach,
     describe,
     expectTypeOf,
     it,
@@ -13,135 +15,178 @@ import {
     mixedSchemaBuilder,
 } from '../../src/schema-builders';
 
-describe.concurrent('mixedSchemaBuilder', () => {
-    it('should export an alias and create required or optional Mixed paths', ({ expect }) => {
-        expect(mixed).toBe(mixedSchemaBuilder);
-        expect(mixed().nonRequired).toEqual({ type: Schema.Types.Mixed });
-        expect(mixed().required).toEqual({
-            required: true,
-            type: Schema.Types.Mixed,
+describe('mixedSchemaBuilder', () => {
+    afterEach(() => deleteModel(/^BuilderMixed/));
+
+    describe('schema definitions', () => {
+        it('should export an alias and create required or optional Mixed paths', ({ expect }) => {
+            expect(mixed).toBe(mixedSchemaBuilder);
+            expect(mixed().nonRequired).toEqual({ type: Schema.Types.Mixed });
+            expect(mixed().required).toEqual({
+                required: true,
+                type: Schema.Types.Mixed,
+            });
         });
     });
 
-    it('should behave like an empty schema definition without casting values', async ({ expect }) => {
-        const schema = new Schema({
-            explicit: mixed().nonRequired,
-            implicit: {},
-        });
-
-        const TestModel = model('BuilderMixedUncast', schema);
-        expect(schema.path('explicit')).toBeInstanceOf(Schema.Types.Mixed);
-        expect(schema.path('implicit')).toBeInstanceOf(Schema.Types.Mixed);
-        for (
-            const value of [
-                { nested: { enabled: true } },
-                [
+    describe('defaults and casting', () => {
+        it.for([
+            {
+                name: 'object',
+                value: { nested: { enabled: true } },
+            },
+            {
+                name: 'array',
+                value: [
                     1,
                     'two',
                 ],
-                '42',
-                42,
-                false,
-                null,
-                undefined,
-            ]
-        ) {
-            const doc = new TestModel({
-                explicit: value,
-                implicit: value,
-            });
+            },
+            {
+                name: 'string',
+                value: '42',
+            },
+            {
+                name: 'number',
+                value: 42,
+            },
+            {
+                name: 'boolean',
+                value: false,
+            },
+            {
+                name: 'null',
+                value: null,
+            },
+            {
+                name: 'undefined',
+                value: undefined,
+            },
+        ])(
+            'should preserve a $name value like an empty schema definition',
+            async ({ value }, { expect }) => {
+                const schema = new Schema({
+                    explicit: mixed().nonRequired,
+                    implicit: {},
+                });
 
-            expect(doc.explicit).toEqual(value);
-            expect(doc.explicit).toEqual(doc.implicit);
-            await expect(doc.validate()).resolves.toBeUndefined();
-        }
-    });
+                const TestModel = model('BuilderMixedUncast', schema);
 
-    it('should support arbitrary defaults and common options', ({ expect }) => {
-        const value = { enabled: true };
-        const definition = mixed().default(value).immutable.index(1).private.sparse.unique.required;
-        expect(definition).toEqual({
-            default: value,
-            immutable: true,
-            index: 1,
-            private: true,
-            required: true,
-            sparse: true,
-            type: Schema.Types.Mixed,
-            unique: true,
+                const doc = new TestModel({
+                    explicit: value,
+                    implicit: value,
+                });
+
+                expect(schema.path('explicit')).toBeInstanceOf(Schema.Types.Mixed);
+                expect(doc.explicit).toEqual(value);
+                expect(doc.explicit).toEqual(doc.implicit);
+                await expect(doc.validate()).resolves.toBeUndefined();
+            },
+        );
+
+        it('should apply object and callback defaults independently for each document', async ({ expect }) => {
+            const TestModel = model(
+                'BuilderMixedDefaults',
+                new Schema({
+                    callback: mixed().default(() => ({ values: [] })).required,
+                    literal: mixed().default({ values: [] }).required,
+                }),
+            );
+
+            const original = new TestModel();
+            const copy = new TestModel();
+
+            expect(original.literal).toEqual({ values: [] });
+            expect(original.callback).toEqual({ values: [] });
+            expect(original.literal).not.toBe(copy.literal);
+            expect(original.callback).not.toBe(copy.callback);
+            await expect(original.validate()).resolves.toBeUndefined();
         });
 
-        expectTypeOf(definition.default).toEqualTypeOf<typeof value>();
-        expectTypeOf(mixed().default(42).nonRequired.default).toBeNumber();
-        expectTypeOf(mixed().default('text').nonRequired.default).toBeString();
-    });
+        it('should allow nullish defaults on optional paths', async ({ expect }) => {
+            const TestModel = model(
+                'BuilderMixedNullish',
+                new Schema({
+                    callbackNull: mixed().default(() => null).nonRequired,
+                    callbackUndefined: mixed().default(() => undefined).nonRequired,
+                    literalNull: mixed().default(null).nonRequired,
+                    literalUndefined: mixed().default(undefined).nonRequired,
+                }),
+            );
 
-    it('should apply object and callback defaults independently for each document', async ({ expect }) => {
-        const TestModel = model(
-            'BuilderMixedDefaults',
-            new Schema({
-                callback: mixed().default(() => ({ values: [] })).required,
-                literal: mixed().default({ values: [] }).required,
-            }),
+            const doc = new TestModel();
+
+            expect(doc.callbackNull).toBeNull();
+            expect(doc.literalNull).toBeNull();
+            expect(doc.callbackUndefined).toBeUndefined();
+            expect(doc.literalUndefined).toBeUndefined();
+            await expect(doc.validate()).resolves.toBeUndefined();
+        });
+
+        it.for([
+            undefined,
+            null,
+        ])(
+            'should reject %s on a required Mixed path',
+            async (value, { expect }) => {
+                const TestModel = model('BuilderMixedRequired', new Schema({ value: mixed().required }));
+
+                await expect(new TestModel({ value }).validate())
+                    .rejects
+                    .toMatchObject({ errors: { value: { kind: 'required' } } });
+            },
         );
 
-        const first = new TestModel();
-        const second = new TestModel();
-        expect(first.literal).toEqual({ values: [] });
-        expect(first.callback).toEqual({ values: [] });
-        expect(first.literal).not.toBe(second.literal);
-        expect(first.callback).not.toBe(second.callback);
-        await expect(first.validate()).resolves.toBeUndefined();
-    });
+        it.for([
+            {
+                name: 'empty object',
+                value: {},
+            },
+            {
+                name: 'empty array',
+                value: [],
+            },
+            {
+                name: 'false',
+                value: false,
+            },
+            {
+                name: 'zero',
+                value: 0,
+            },
+            {
+                name: 'empty string',
+                value: '',
+            },
+        ])(
+            'should accept $name on a required Mixed path',
+            async ({ value }, { expect }) => {
+                const TestModel = model('BuilderMixedRequired', new Schema({ value: mixed().required }));
 
-    it('should allow nullish defaults on optional paths', async ({ expect }) => {
-        const TestModel = model(
-            'BuilderMixedNullish',
-            new Schema({
-                callbackNull: mixed().default(() => null).nonRequired,
-                callbackUndefined: mixed().default(() => undefined).nonRequired,
-                literalNull: mixed().default(null).nonRequired,
-                literalUndefined: mixed().default(undefined).nonRequired,
-            }),
+                await expect(new TestModel({ value }).validate()).resolves.toBeUndefined();
+            },
         );
-
-        const doc = new TestModel();
-        expect(doc.callbackNull).toBeNull();
-        expect(doc.literalNull).toBeNull();
-        expect(doc.callbackUndefined).toBeUndefined();
-        expect(doc.literalUndefined).toBeUndefined();
-        await expect(doc.validate()).resolves.toBeUndefined();
     });
 
-    it('should require presence rather than a specific value type', async ({ expect }) => {
-        const TestModel = model('BuilderMixedRequired', new Schema({ value: mixed().required }));
-        for (
-            const value of [
-                undefined,
-                null,
-            ]
-        ) {
-            const doc = new TestModel({ value });
-            await expect(doc.validate()).rejects.toMatchObject({ errors: { value: { kind: 'required' } } });
-        }
+    describe('builder types', () => {
+        it('should preserve default types through common option chaining', () => {
+            const value = { enabled: true };
 
-        for (
-            const value of [
-                {},
-                [],
-                false,
-                0,
-                '',
-            ]
-        ) await expect(new TestModel({ value }).validate()).resolves.toBeUndefined();
-    });
+            const definition = mixed().default(value).immutable.index(1).private.sparse.unique.required;
 
-    it('should omit configured methods and unsupported validators', () => {
-        const builder = mixed().default({});
-        expectTypeOf(builder).not.toHaveProperty('default');
-        expectTypeOf(builder).not.toHaveProperty('min');
-        expectTypeOf(builder).not.toHaveProperty('max');
-        expectTypeOf(builder).not.toHaveProperty('enum');
-        expectTypeOf(builder.nonRequired.type).toEqualTypeOf<typeof Schema.Types.Mixed>();
+            expectTypeOf(definition.default).toEqualTypeOf<typeof value>();
+            expectTypeOf(mixed().default(42).nonRequired.default).toBeNumber();
+            expectTypeOf(mixed().default('text').nonRequired.default).toBeString();
+        });
+
+        it('should omit configured methods and unsupported validators', () => {
+            const builder = mixed().default({});
+
+            expectTypeOf(builder).not.toHaveProperty('default');
+            expectTypeOf(builder).not.toHaveProperty('min');
+            expectTypeOf(builder).not.toHaveProperty('max');
+            expectTypeOf(builder).not.toHaveProperty('enum');
+            expectTypeOf(builder.nonRequired.type).toEqualTypeOf<typeof Schema.Types.Mixed>();
+        });
     });
 });

@@ -6,7 +6,7 @@ import {
 
 import { objectIdSchemaBuilder } from '../../src/schema-builders';
 
-describe.concurrent('objectIdSchemaBuilder', () => {
+describe('objectIdSchemaBuilder', () => {
     it('should create a schema with the correct type for ObjectId', ({ expect }) => {
         expect(objectIdSchemaBuilder().nonRequired).toEqual({ type: Schema.Types.ObjectId });
     });

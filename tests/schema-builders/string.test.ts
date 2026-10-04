@@ -5,13 +5,14 @@ import {
 
 import { stringSchemaBuilder } from '../../src/schema-builders';
 
-describe.concurrent('stringSchemaBuilder', () => {
+describe('stringSchemaBuilder', () => {
     it('should create a schema with the correct type for String', ({ expect }) => {
         expect(stringSchemaBuilder().nonRequired).toEqual({ type: String });
     });
 
-    it('should correctly set IPv4 validator and validate IPv4 addresses', ({ expect }) => {
+    it('should configure trimming and IPv4 validation', ({ expect }) => {
         const schema = stringSchemaBuilder().ipv4().nonRequired;
+
         expect(schema).toEqual({
             trim: true,
             type: String,
@@ -28,8 +29,9 @@ describe.concurrent('stringSchemaBuilder', () => {
         expect(schema.validate.validator('')).toBe(false);
     });
 
-    it('should correctly set IPv6 validator and validate IPv6 addresses', ({ expect }) => {
+    it('should configure trimming and IPv6 validation', ({ expect }) => {
         const schema = stringSchemaBuilder().ipv6().nonRequired;
+
         expect(schema).toEqual({
             trim: true,
             type: String,
@@ -46,8 +48,9 @@ describe.concurrent('stringSchemaBuilder', () => {
         expect(schema.validate.validator('')).toBe(false);
     });
 
-    it('should correctly set URL validator and validate WHATWG URLs', ({ expect }) => {
+    it('should configure WHATWG URL validation', ({ expect }) => {
         const schema = stringSchemaBuilder().url().nonRequired;
+
         expect(schema).toEqual({
             type: String,
             validate: {
@@ -70,7 +73,7 @@ describe.concurrent('stringSchemaBuilder', () => {
         expect(schema.validate.message).toBe('Invalid URL');
     });
 
-    it('should correctly set a string match validator', ({ expect }) => {
+    it('should preserve the match pattern', ({ expect }) => {
         const pattern = /^[a-z]+$/;
         const schema = stringSchemaBuilder().match(pattern).nonRequired;
 

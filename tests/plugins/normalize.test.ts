@@ -1,16 +1,38 @@
 import {
+    deleteModel,
     model,
     Schema,
     Types,
 } from 'mongoose';
 import {
+    afterEach,
     describe,
     it,
 } from 'vitest';
 
 import { mongooseNormalizePlugin } from '../../src/plugins/normalize';
 
-describe.concurrent('mongooseNormalizePlugin', () => {
+describe('mongooseNormalizePlugin', () => {
+    afterEach(() => deleteModel(/^Normalize/));
+
+    it('should normalize output when no original transform exists', ({ expect }) => {
+        const schema = new Schema({
+            secret: {
+                private: true,
+                type: String,
+            },
+        });
+
+        schema.plugin(mongooseNormalizePlugin);
+        const TestModel = model('NormalizeWithoutTransform', schema);
+        const doc = new TestModel({
+            __v: 1,
+            secret: 'hidden',
+        });
+
+        expect(doc.toJSON()).toEqual({ id: doc._id.toHexString() });
+    });
+
     it('should preserve normalization and mutations when the original transform returns undefined', ({ expect }) => {
         const schema = new Schema(
             {
@@ -39,6 +61,7 @@ describe.concurrent('mongooseNormalizePlugin', () => {
         });
 
         const result = doc.toJSON();
+
         expect(result).toEqual({
             amount: '1.23',
             extra: 'retained',
@@ -65,6 +88,7 @@ describe.concurrent('mongooseNormalizePlugin', () => {
                         expect(ret).not.toHaveProperty('_id');
                         expect(ret).not.toHaveProperty('__v');
                         expect(ret).not.toHaveProperty('secret');
+
                         return replacement;
                     },
                 },
@@ -73,6 +97,7 @@ describe.concurrent('mongooseNormalizePlugin', () => {
 
         schema.plugin(mongooseNormalizePlugin);
         const TestModel = model('NormalizeReplacementTransform', schema);
+
         expect(
             new TestModel({
                 __v: 1,
@@ -92,6 +117,7 @@ describe.concurrent('mongooseNormalizePlugin', () => {
             const schema = new Schema({}, { toJSON: { transform: () => value } });
             schema.plugin(mongooseNormalizePlugin);
             const TestModel = model(`NormalizeExplicitReturn${String(value)}`, schema);
+
             expect(new TestModel().toJSON()).toBe(value);
         },
     );
@@ -111,24 +137,15 @@ describe.concurrent('mongooseNormalizePlugin', () => {
 
         schema.plugin(mongooseNormalizePlugin);
         const TestModel = model('NormalizeThrowingTransform', schema);
-        expect(() => new TestModel().toJSON()).toThrow(error);
-    });
 
-    it('should normalize output when no original transform exists', ({ expect }) => {
-        const schema = new Schema({
-            secret: {
-                private: true,
-                type: String,
-            },
-        });
+        // Capture the error to verify reference identity rather than only its type or message.
+        let caught: unknown;
+        try {
+            new TestModel().toJSON();
+        } catch (originalError) {
+            caught = originalError;
+        }
 
-        schema.plugin(mongooseNormalizePlugin);
-        const TestModel = model('NormalizeWithoutTransform', schema);
-        const doc = new TestModel({
-            __v: 1,
-            secret: 'hidden',
-        });
-
-        expect(doc.toJSON()).toEqual({ id: doc._id.toHexString() });
+        expect(caught).toBe(error);
     });
 });

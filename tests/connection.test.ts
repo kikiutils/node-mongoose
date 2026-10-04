@@ -16,7 +16,7 @@ interface TestDoc {
     name?: null | string;
 }
 
-describe('default Mongoose connection', () => {
+describe('default connection', () => {
     let connection: Connection;
 
     beforeEach(() => {
@@ -32,21 +32,23 @@ describe('default Mongoose connection', () => {
         await connection.destroy();
     });
 
-    it('does not create a connection on import', async ({ expect }) => {
+    it('should not create a connection on import', async ({ expect }) => {
         await import('../src/connection');
         await import('../src/options');
         await import('../src/builders');
+
         expect(mongoose.createConnection).not.toHaveBeenCalled();
     });
 
-    it('creates and reuses the default connection with the fallback URI', async ({ expect }) => {
+    it('should create and reuse the default connection with the fallback URI', async ({ expect }) => {
         const { getDefaultMongooseConnection } = await import('../src/connection');
+
         expect(getDefaultMongooseConnection()).toBe(connection);
         expect(getDefaultMongooseConnection()).toBe(connection);
         expect(mongoose.createConnection).toHaveBeenCalledExactlyOnceWith('mongodb://127.0.0.1:27017', undefined);
     });
 
-    it('uses the environment URI and configured connection options', async ({ expect }) => {
+    it('should use the environment URI and configured connection options', async ({ expect }) => {
         vi.stubEnv('MONGODB_URI', 'mongodb://127.0.0.1:27017/custom');
         const { setCustomMongooseOptions } = await import('../src/options');
         const { getDefaultMongooseConnection } = await import('../src/connection');
@@ -57,31 +59,67 @@ describe('default Mongoose connection', () => {
 
         setCustomMongooseOptions('defaultConnectionOptions', options);
         getDefaultMongooseConnection();
+
         expect(mongoose.createConnection).toHaveBeenCalledExactlyOnceWith(process.env.MONGODB_URI, options);
     });
 
-    it('allows replacing and clearing options before creation', async ({ expect }) => {
-        const { setCustomMongooseOptions } = await import('../src/options');
+    it.for([
+        {
+            name: 'replacement',
+            options: { maxPoolSize: 10 },
+        },
+        {
+            name: 'clearing',
+            options: undefined,
+        },
+    ])(
+        'should apply options $name before the default connection is created',
+        async ({ options }, { expect }) => {
+            const { setCustomMongooseOptions } = await import('../src/options');
+            const { getDefaultMongooseConnection } = await import('../src/connection');
+            setCustomMongooseOptions('defaultConnectionOptions', { maxPoolSize: 20 });
+
+            setCustomMongooseOptions('defaultConnectionOptions', options);
+            const result = getDefaultMongooseConnection();
+
+            expect(result).toBe(connection);
+            expect(mongoose.createConnection).toHaveBeenCalledExactlyOnceWith('mongodb://127.0.0.1:27017', options);
+        },
+    );
+
+    it('should allow beforeModelBuild changes after the default connection is created', async ({ expect }) => {
         const { getDefaultMongooseConnection } = await import('../src/connection');
-        setCustomMongooseOptions('defaultConnectionOptions', { maxPoolSize: 20 });
-        setCustomMongooseOptions('defaultConnectionOptions', { maxPoolSize: 10 });
-        setCustomMongooseOptions('defaultConnectionOptions', undefined);
+        const { setCustomMongooseOptions } = await import('../src/options');
+        const { buildMongooseModel } = await import('../src/builders');
         getDefaultMongooseConnection();
-        expect(mongoose.createConnection).toHaveBeenCalledExactlyOnceWith('mongodb://127.0.0.1:27017', undefined);
+        const schema = new Schema<TestDoc, TestModel>(
+            { name: String },
+            {
+                autoCreate: false,
+                autoIndex: false,
+            },
+        );
+
+        setCustomMongooseOptions('beforeModelBuild', (schema) => schema.set('versionKey', false));
+
+        const model = buildMongooseModel('configured', 'Configured', schema);
+
+        expect(model.schema.get('versionKey')).toBe(false);
     });
 
-    it('rejects setting or clearing connection options after creation', async ({ expect }) => {
+    it('should reject setting or clearing connection options after creation', async ({ expect }) => {
         const { setCustomMongooseOptions } = await import('../src/options');
         const { getDefaultMongooseConnection } = await import('../src/connection');
         getDefaultMongooseConnection();
+
         expect(() => setCustomMongooseOptions('defaultConnectionOptions', { maxPoolSize: 20 }))
             .toThrow('Default connection options must be set before the default connection is created.');
 
-        expect(() => setCustomMongooseOptions('defaultConnectionOptions', undefined)).toThrow();
-        expect(() => setCustomMongooseOptions('beforeModelBuild', () => {})).not.toThrow();
+        expect(() => setCustomMongooseOptions('defaultConnectionOptions', undefined))
+            .toThrow('Default connection options must be set before the default connection is created.');
     });
 
-    it('does not cache a connection when creation throws', async ({ expect }) => {
+    it('should not cache a connection when creation throws', async ({ expect }) => {
         const { setCustomMongooseOptions } = await import('../src/options');
         const { getDefaultMongooseConnection } = await import('../src/connection');
         vi.mocked(mongoose.createConnection).mockImplementationOnce(() => {
@@ -89,11 +127,13 @@ describe('default Mongoose connection', () => {
         });
 
         expect(getDefaultMongooseConnection).toThrow('creation failed');
+
         setCustomMongooseOptions('defaultConnectionOptions', { maxPoolSize: 10 });
+
         expect(getDefaultMongooseConnection()).toBe(connection);
     });
 
-    it('creates the default connection during model building and reuses it', async ({ expect }) => {
+    it('should create the default connection during model building and reuse it', async ({ expect }) => {
         const { buildMongooseModel } = await import('../src/builders');
         const schema = () => new Schema<TestDoc, TestModel>(
             { name: String },
@@ -103,14 +143,15 @@ describe('default Mongoose connection', () => {
             },
         );
 
-        const first = buildMongooseModel('first', 'First', schema());
-        const second = buildMongooseModel('second', 'Second', schema());
-        expect(first.db).toBe(connection);
-        expect(second.db).toBe(connection);
+        const original = buildMongooseModel('first', 'First', schema());
+        const copy = buildMongooseModel('second', 'Second', schema());
+
+        expect(original.db).toBe(connection);
+        expect(copy.db).toBe(connection);
         expect(mongoose.createConnection).toHaveBeenCalledTimes(1);
     });
 
-    it('does not initialize or lock default options when an explicit connection is used', async ({ expect }) => {
+    it('should not initialize or lock default options when an explicit connection is used', async ({ expect }) => {
         const { buildMongooseModel } = await import('../src/builders');
         const { setCustomMongooseOptions } = await import('../src/options');
         setCustomMongooseOptions('defaultConnectionOptions', { maxPoolSize: 20 });
@@ -123,8 +164,15 @@ describe('default Mongoose connection', () => {
         );
 
         const model = buildMongooseModel('custom', 'Custom', schema, { connection });
+
         expect(model.db).toBe(connection);
         expect(mongoose.createConnection).not.toHaveBeenCalled();
-        expect(() => setCustomMongooseOptions('defaultConnectionOptions', { maxPoolSize: 10 })).not.toThrow();
+
+        setCustomMongooseOptions('defaultConnectionOptions', { maxPoolSize: 10 });
+        const { getDefaultMongooseConnection } = await import('../src/connection');
+
+        expect(getDefaultMongooseConnection()).toBe(connection);
+        expect(mongoose.createConnection)
+            .toHaveBeenCalledExactlyOnceWith('mongodb://127.0.0.1:27017', { maxPoolSize: 10 });
     });
 });
