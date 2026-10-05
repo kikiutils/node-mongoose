@@ -24,7 +24,7 @@ interface BaseProps {
 }
 
 interface DoubleEnumValidator {
-    enumValues: Array<null | number | Types.Double>;
+    enumValues: (null | number | Types.Double)[];
     message: string;
     type: 'enum';
     validator: (value: null | Types.Double | undefined) => boolean;
@@ -49,9 +49,9 @@ export interface DoubleSchemaBuilder<Props extends BaseProps = BaseProps, ExtraO
 
     enum: <
         T extends
-        | Readonlyable<Array<N | null>>
+        | Readonlyable<(N | null)[]>
         | { [path: string]: N | null }
-        | { message?: M; values: Readonlyable<Array<N | null>> },
+        | { message?: M; values: Readonlyable<(N | null)[]> },
         M extends string,
         N extends number | Types.Double,
     >(value: T) => ExtendSchemaBuilder<
@@ -91,7 +91,7 @@ export interface DoubleSchemaBuilder<Props extends BaseProps = BaseProps, ExtraO
 }
 
 interface DoubleValidationSchema {
-    validate: Array<DoubleEnumValidator | DoubleLimitValidator>;
+    validate: (DoubleEnumValidator | DoubleLimitValidator)[];
 }
 
 // Constants/Variables
@@ -141,11 +141,11 @@ export function doubleSchemaBuilder() {
                     }
 
                     return (
-                        value: Readonlyable<Array<null | number | Types.Double>>
+                        value: Readonlyable<(null | number | Types.Double)[]>
                           | { [path: string]: null | number | Types.Double }
-                          | { message?: string; values: Readonlyable<Array<null | number | Types.Double>> },
+                          | { message?: string; values: Readonlyable<(null | number | Types.Double)[]> },
                     ) => {
-                        let enumValues: Array<null | number | Types.Double>;
+                        let enumValues: (null | number | Types.Double)[];
                         let message: string | undefined;
 
                         if (Array.isArray(value)) enumValues = [...value];

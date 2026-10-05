@@ -46,9 +46,9 @@ export interface StringSchemaBuilder<
 
     enum: <
         T extends
-        | Readonlyable<Array<null | S>>
+        | Readonlyable<(null | S)[]>
         | { [path: string]: null | S }
-        | { message?: M; values: Readonlyable<Array<null | S>> },
+        | { message?: M; values: Readonlyable<(null | S)[]> },
         M extends string,
         S extends string,
     >(value: T) => ExtendSchemaBuilder<

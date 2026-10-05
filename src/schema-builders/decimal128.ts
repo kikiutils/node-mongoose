@@ -47,9 +47,9 @@ export interface Decimal128SchemaBuilder<
 
     enum: <
         T extends
-        | Readonlyable<Array<D | null>>
+        | Readonlyable<(D | null)[]>
         | { [path: string]: D | null }
-        | { message?: M; values: Readonlyable<Array<D | null>> },
+        | { message?: M; values: Readonlyable<(D | null)[]> },
         D extends Types.Decimal128,
         M extends string,
     >(value: T) => ExtendSchemaBuilder<

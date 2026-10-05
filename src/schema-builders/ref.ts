@@ -38,9 +38,9 @@ export interface RefSchemaBuilder<
 
     enum: <
         T extends
-        | Readonlyable<Array<null | O>>
+        | Readonlyable<(null | O)[]>
         | { [path: string]: null | O }
-        | { message?: M; values: Readonlyable<Array<null | O>> },
+        | { message?: M; values: Readonlyable<(null | O)[]> },
         M extends string,
         O extends Types.ObjectId,
     >(value: T) => ExtendSchemaBuilder<

@@ -25,7 +25,7 @@ interface BaseProps {
 }
 
 interface Int32EnumValidator {
-    enumValues: Array<null | number>;
+    enumValues: (null | number)[];
     message: string;
     type: 'enum';
     validator: (value: null | number | undefined) => boolean;
@@ -50,9 +50,9 @@ export interface Int32SchemaBuilder<Props extends BaseProps = BaseProps, ExtraOm
 
     enum: <
         T extends
-        | Readonlyable<Array<N | null>>
+        | Readonlyable<(N | null)[]>
         | { [path: string]: N | null }
-        | { message?: M; values: Readonlyable<Array<N | null>> },
+        | { message?: M; values: Readonlyable<(N | null)[]> },
         M extends string,
         N extends number,
     >(value: T) => ExtendSchemaBuilder<
@@ -92,7 +92,7 @@ export interface Int32SchemaBuilder<Props extends BaseProps = BaseProps, ExtraOm
 }
 
 interface Int32ValidationSchema {
-    validate: Array<Int32EnumValidator | Int32LimitValidator>;
+    validate: (Int32EnumValidator | Int32LimitValidator)[];
 }
 
 // Constants/Variables
@@ -141,11 +141,11 @@ export function int32SchemaBuilder() {
                     }
 
                     return (
-                        value: Readonlyable<Array<null | number>>
+                        value: Readonlyable<(null | number)[]>
                           | { [path: string]: null | number }
-                          | { message?: string; values: Readonlyable<Array<null | number>> },
+                          | { message?: string; values: Readonlyable<(null | number)[]> },
                     ) => {
-                        let enumValues: Array<null | number>;
+                        let enumValues: (null | number)[];
                         let message: string | undefined;
 
                         if (Array.isArray(value)) enumValues = [...value];
