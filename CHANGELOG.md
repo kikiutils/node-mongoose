@@ -1,5 +1,31 @@
 # Changelog
 
+## v9.0.0
+
+[compare changes](https://github.com/kikiutils/node-mongoose/compare/v8.0.0...v9.0.0)
+
+### 🚀 Enhancements
+
+- ⚠️  Convert marked Decimal128 fields in lean queries ([8832a14](https://github.com/kikiutils/node-mongoose/commit/8832a14))
+- **schema-builders:** Add enum validation for Int32, BigInt and Double ([9b64c37](https://github.com/kikiutils/node-mongoose/commit/9b64c37))
+
+### 💅 Refactors
+
+- ⚠️  Consolidate normalization plugin configuration ([400994c](https://github.com/kikiutils/node-mongoose/commit/400994c))
+
+### 🎨 Styles
+
+- **schema-builders:** Use bracket syntax for array types ([39c1c94](https://github.com/kikiutils/node-mongoose/commit/39c1c94))
+
+#### ⚠️ Breaking Changes
+
+- ⚠️  Convert marked Decimal128 fields in lean queries ([8832a14](https://github.com/kikiutils/node-mongoose/commit/8832a14))
+- ⚠️  Consolidate normalization plugin configuration ([400994c](https://github.com/kikiutils/node-mongoose/commit/400994c))
+
+### ❤️ Contributors
+
+- Kiki-kanri
+
 ## v8.0.0
 
 [compare changes](https://github.com/kikiutils/node-mongoose/compare/v7.1.0...v8.0.0)
