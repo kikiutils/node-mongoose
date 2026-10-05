@@ -23,6 +23,13 @@ interface BaseProps {
     type: typeof Schema.Types.BigInt;
 }
 
+interface BigIntEnumValidator {
+    enumValues: Array<bigint | null>;
+    message: string;
+    type: 'enum';
+    validator: (value: bigint | null | undefined) => boolean;
+}
+
 interface BigIntLimitValidator {
     max?: bigint;
     message: string;
@@ -38,6 +45,18 @@ export interface BigIntSchemaBuilder<Props extends BaseProps = BaseProps, ExtraO
     >(value: T) => ExtendSchemaBuilder<
         Merge<Props, { default: T }>,
         ExtraOmitFields
+    >;
+
+    enum: <
+        T extends
+        | Readonlyable<Array<N | null>>
+        | { [path: string]: N | null }
+        | { message?: M; values: Readonlyable<Array<N | null>> },
+        M extends string,
+        N extends bigint,
+    >(value: T) => ExtendSchemaBuilder<
+        Merge<Props, BigIntValidationSchema>,
+        'enum' | ExtraOmitFields
     >;
 
     immutable: ExtendSchemaBuilder<Merge<Props, { immutable: true }>, ExtraOmitFields>;
@@ -72,10 +91,11 @@ export interface BigIntSchemaBuilder<Props extends BaseProps = BaseProps, ExtraO
 }
 
 interface BigIntValidationSchema {
-    validate: BigIntLimitValidator[];
+    validate: Array<BigIntEnumValidator | BigIntLimitValidator>;
 }
 
 // Constants/Variables
+const defaultEnumValidateMessage = 'Path `{PATH}` ({VALUE}) is not a valid enum value.';
 const defaultMinValidateMessage = 'Path `{PATH}` ({VALUE}) is less than minimum allowed value ({MIN}).';
 const defaultMaxValidateMessage = 'Path `{PATH}` ({VALUE}) is more than maximum allowed value ({MAX}).';
 
@@ -89,6 +109,42 @@ export function bigintSchemaBuilder() {
         baseBuilder,
         {
             get(target, key, receiver) {
+                if (key === 'enum') {
+                    if (schema.validate?.some(({ type }: { type: string }) => type === 'enum')) {
+                        throw new Error('Duplicate schema attribute: enum');
+                    }
+
+                    return (
+                        value: Readonlyable<Array<bigint | null>>
+                          | { [path: string]: bigint | null }
+                          | { message?: string; values: Readonlyable<Array<bigint | null>> },
+                    ) => {
+                        let enumValues: Array<bigint | null>;
+                        let message: string | undefined;
+
+                        if (Array.isArray(value)) enumValues = [...value];
+                        else if ('values' in value && Array.isArray(value.values)) {
+                            enumValues = [...value.values];
+                            if ('message' in value && typeof value.message === 'string') message = value.message;
+                        } else enumValues = Object.values(value);
+
+                        const allowedValues = new Set(enumValues);
+                        const validator: BigIntEnumValidator = {
+                            enumValues,
+                            message: message ?? defaultEnumValidateMessage,
+                            type: 'enum',
+                            validator: (value) => value === null || value === undefined || allowedValues.has(value),
+                        };
+
+                        schema.validate = [
+                            ...schema.validate ?? [],
+                            validator,
+                        ];
+
+                        return receiver;
+                    };
+                }
+
                 if (key === 'max' || key === 'min') {
                     return (value: BigIntLimit | Readonlyable<[BigIntLimit, string]>) => {
                         const validator = createLimitValidator(key, value);

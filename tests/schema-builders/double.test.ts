@@ -18,6 +18,16 @@ import {
 
 // Checked by the project's TypeScript validation, not executed at runtime.
 function checkBuilderTypes() {
+    // @ts-expect-error Enum values must match the supported numeric type.
+    double().enum([1n]);
+    // @ts-expect-error Enum values must match the supported value type.
+    double().enum(['invalid']);
+    // @ts-expect-error Enum configuration must match the supported value type.
+    double().enum({ values: ['invalid'] });
+    // @ts-expect-error Enum record values must match the supported value type.
+    double().enum({ invalid: 'invalid' });
+    // @ts-expect-error Enum can only be configured once.
+    double().enum([1.5]).enum([2.5]);
     // @ts-expect-error Limits must match the supported bound type.
     double().min(1n);
     const invalidLimit = [
@@ -119,6 +129,113 @@ describe('doubleSchemaBuilder', () => {
 
             expect(doc.value.valueOf()).toBe(4.2);
             await expect(doc.validate()).resolves.toBeUndefined();
+        });
+    });
+
+    describe('enum validation', () => {
+        it('should accept arrays, records and custom-message configurations', async ({ expect }) => {
+            const values = [
+                1.5,
+                3.5,
+                null,
+            ] as const;
+
+            const definitions = [
+                double().enum(values).nonRequired,
+                double()
+                    .enum({
+                        first: 1.5,
+                        last: 3.5,
+                    })
+                    .nonRequired,
+                double()
+                    .enum({
+                        message: 'not allowed',
+                        values,
+                    })
+                    .nonRequired,
+            ];
+
+            for (const [index, definition] of definitions.entries()) {
+                const TestModel = model(`BuilderDoubleEnum${index}`, new Schema({ value: definition }));
+
+                for (const value of [
+                    1.5,
+                    3.5,
+                    null,
+                    undefined,
+                ]) await expect(new TestModel({ value }).validate()).resolves.toBeUndefined();
+
+                await expect(new TestModel({ value: 2.5 }).validate()).rejects.toMatchObject({
+                    errors: {
+                        value: {
+                            kind: 'enum',
+                            message: index === 2
+                                ? 'not allowed'
+                                : 'Path `value` (2.5) is not a valid enum value.',
+                        },
+                    },
+                });
+            }
+
+            expectTypeOf(double().enum(values)).not.toHaveProperty('enum');
+        });
+
+        it('should coexist with range, default and required validation in either order', async ({ expect }) => {
+            const values = [
+                1.5,
+                3.5,
+            ] as const;
+
+            const definitions = [
+                double().enum(values).min(2.5).max(3.5).default(new Types.Double(3.5)).required,
+                double().min(2.5).max(3.5).enum(values).required,
+            ];
+
+            for (const [index, definition] of definitions.entries()) {
+                const TestModel = model(`BuilderDoubleEnumRange${index}`, new Schema({ value: definition }));
+
+                expect(definition.validate.map((validator) => validator.type).sort()).toEqual([
+                    'enum',
+                    'max',
+                    'min',
+                ]);
+
+                await expect(new TestModel({ value: 3.5 }).validate()).resolves.toBeUndefined();
+                await expect(new TestModel({ value: 1.5 }).validate())
+                    .rejects
+                    .toMatchObject({ errors: { value: { kind: 'min' } } });
+
+                await expect(new TestModel({ value: 2.5 }).validate())
+                    .rejects
+                    .toMatchObject({ errors: { value: { kind: 'enum' } } });
+
+                await expect(new TestModel({ value: null }).validate())
+                    .rejects
+                    .toMatchObject({ errors: { value: { kind: 'required' } } });
+            }
+        });
+
+        it('should reject duplicate enum configuration at runtime', ({ expect }) => {
+            const builder = double();
+            builder.enum([1.5]);
+
+            expect(() => builder.enum([3.5])).toThrow('Duplicate schema attribute: enum');
+        });
+
+        it('should compare BSON Double values numerically rather than by object identity', async ({ expect }) => {
+            const definition = double().enum([
+                new Types.Double(1.5),
+                3.5,
+            ]).required;
+
+            const TestModel = model('BuilderDoubleEnumBson', new Schema({ value: definition }));
+
+            await expect(new TestModel({ value: new Types.Double(1.5) }).validate()).resolves.toBeUndefined();
+            await expect(new TestModel({ value: 3.5 }).validate()).resolves.toBeUndefined();
+            await expect(new TestModel({ value: new Types.Double(2.5) }).validate())
+                .rejects
+                .toMatchObject({ errors: { value: { kind: 'enum' } } });
         });
     });
 
@@ -364,7 +481,7 @@ describe('doubleSchemaBuilder', () => {
 
             expectTypeOf<typeof builder>().toHaveProperty('min');
             expectTypeOf<typeof builder>().toHaveProperty('max');
-            expectTypeOf<typeof builder>().not.toHaveProperty('enum');
+            expectTypeOf<typeof builder>().toHaveProperty('enum');
 
             const withDefault = builder.default(new Types.Double(4.2));
 

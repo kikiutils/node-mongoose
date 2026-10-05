@@ -17,6 +17,16 @@ import {
 
 // Checked by the project's TypeScript validation, not executed at runtime.
 function checkBuilderTypes() {
+    // @ts-expect-error Enum values must match the supported numeric type.
+    int32().enum([1n]);
+    // @ts-expect-error Enum values must match the supported value type.
+    int32().enum(['invalid']);
+    // @ts-expect-error Enum configuration must match the supported value type.
+    int32().enum({ values: ['invalid'] });
+    // @ts-expect-error Enum record values must match the supported value type.
+    int32().enum({ invalid: 'invalid' });
+    // @ts-expect-error Enum can only be configured once.
+    int32().enum([1]).enum([2]);
     // @ts-expect-error Limits must match the supported bound type.
     int32().min(1n);
     const invalidLimit = [
@@ -142,6 +152,98 @@ describe('int32SchemaBuilder', () => {
                     .toMatchObject({ errors: { value: { name: 'CastError' } } });
             },
         );
+    });
+
+    describe('enum validation', () => {
+        it('should accept arrays, records and custom-message configurations', async ({ expect }) => {
+            const values = [
+                1,
+                3,
+                null,
+            ] as const;
+
+            const definitions = [
+                int32().enum(values).nonRequired,
+                int32()
+                    .enum({
+                        first: 1,
+                        last: 3,
+                    })
+                    .nonRequired,
+                int32()
+                    .enum({
+                        message: 'not allowed',
+                        values,
+                    })
+                    .nonRequired,
+            ];
+
+            for (const [index, definition] of definitions.entries()) {
+                const TestModel = model(`BuilderInt32Enum${index}`, new Schema({ value: definition }));
+
+                for (const value of [
+                    1,
+                    3,
+                    null,
+                    undefined,
+                ]) await expect(new TestModel({ value }).validate()).resolves.toBeUndefined();
+
+                await expect(new TestModel({ value: 2 }).validate()).rejects.toMatchObject({
+                    errors: {
+                        value: {
+                            kind: 'enum',
+                            message: index === 2
+                                ? 'not allowed'
+                                : 'Path `value` (2) is not a valid enum value.',
+                        },
+                    },
+                });
+            }
+
+            expectTypeOf(int32().enum(values)).not.toHaveProperty('enum');
+        });
+
+        it('should coexist with range, default and required validation in either order', async ({ expect }) => {
+            const values = [
+                1,
+                3,
+            ] as const;
+
+            const definitions = [
+                int32().enum(values).min(2).max(3).default(3).required,
+                int32().min(2).max(3).enum(values).required,
+            ];
+
+            for (const [index, definition] of definitions.entries()) {
+                const TestModel = model(`BuilderInt32EnumRange${index}`, new Schema({ value: definition }));
+
+                expect(definition.validate.map((validator) => validator.type).sort()).toEqual([
+                    'enum',
+                    'max',
+                    'min',
+                ]);
+
+                await expect(new TestModel({ value: 3 }).validate()).resolves.toBeUndefined();
+                await expect(new TestModel({ value: 1 }).validate())
+                    .rejects
+                    .toMatchObject({ errors: { value: { kind: 'min' } } });
+
+                await expect(new TestModel({ value: 2 }).validate())
+                    .rejects
+                    .toMatchObject({ errors: { value: { kind: 'enum' } } });
+
+                await expect(new TestModel({ value: null }).validate())
+                    .rejects
+                    .toMatchObject({ errors: { value: { kind: 'required' } } });
+            }
+        });
+
+        it('should reject duplicate enum configuration at runtime', ({ expect }) => {
+            const builder = int32();
+            builder.enum([1]);
+
+            expect(() => builder.enum([3])).toThrow('Duplicate schema attribute: enum');
+        });
     });
 
     describe('range validation', () => {
@@ -334,7 +436,7 @@ describe('int32SchemaBuilder', () => {
 
             expectTypeOf<typeof builder>().toHaveProperty('min');
             expectTypeOf<typeof builder>().toHaveProperty('max');
-            expectTypeOf<typeof builder>().not.toHaveProperty('enum');
+            expectTypeOf<typeof builder>().toHaveProperty('enum');
 
             const withDefault = builder.default(42);
 

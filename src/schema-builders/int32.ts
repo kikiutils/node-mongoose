@@ -24,6 +24,13 @@ interface BaseProps {
     type: typeof Schema.Types.Int32;
 }
 
+interface Int32EnumValidator {
+    enumValues: Array<null | number>;
+    message: string;
+    type: 'enum';
+    validator: (value: null | number | undefined) => boolean;
+}
+
 interface Int32LimitValidator {
     max?: number;
     message: string;
@@ -39,6 +46,18 @@ export interface Int32SchemaBuilder<Props extends BaseProps = BaseProps, ExtraOm
     >(value: T) => ExtendSchemaBuilder<
         Merge<Props, { default: T }>,
         ExtraOmitFields
+    >;
+
+    enum: <
+        T extends
+        | Readonlyable<Array<N | null>>
+        | { [path: string]: N | null }
+        | { message?: M; values: Readonlyable<Array<N | null>> },
+        M extends string,
+        N extends number,
+    >(value: T) => ExtendSchemaBuilder<
+        Merge<Props, Int32ValidationSchema>,
+        'enum' | ExtraOmitFields
     >;
 
     immutable: ExtendSchemaBuilder<Merge<Props, { immutable: true }>, ExtraOmitFields>;
@@ -73,10 +92,11 @@ export interface Int32SchemaBuilder<Props extends BaseProps = BaseProps, ExtraOm
 }
 
 interface Int32ValidationSchema {
-    validate: Int32LimitValidator[];
+    validate: Array<Int32EnumValidator | Int32LimitValidator>;
 }
 
 // Constants/Variables
+const defaultEnumValidateMessage = 'Path `{PATH}` ({VALUE}) is not a valid enum value.';
 const defaultMinValidateMessage = 'Path `{PATH}` ({VALUE}) is less than minimum allowed value ({MIN}).';
 const defaultMaxValidateMessage = 'Path `{PATH}` ({VALUE}) is more than maximum allowed value ({MAX}).';
 
@@ -115,6 +135,42 @@ export function int32SchemaBuilder() {
         baseBuilder,
         {
             get(target, key, receiver) {
+                if (key === 'enum') {
+                    if (schema.validate?.some(({ type }: { type: string }) => type === 'enum')) {
+                        throw new Error('Duplicate schema attribute: enum');
+                    }
+
+                    return (
+                        value: Readonlyable<Array<null | number>>
+                          | { [path: string]: null | number }
+                          | { message?: string; values: Readonlyable<Array<null | number>> },
+                    ) => {
+                        let enumValues: Array<null | number>;
+                        let message: string | undefined;
+
+                        if (Array.isArray(value)) enumValues = [...value];
+                        else if ('values' in value && Array.isArray(value.values)) {
+                            enumValues = [...value.values];
+                            if ('message' in value && typeof value.message === 'string') message = value.message;
+                        } else enumValues = Object.values(value);
+
+                        const allowedValues = new Set(enumValues);
+                        const validator: Int32EnumValidator = {
+                            enumValues,
+                            message: message ?? defaultEnumValidateMessage,
+                            type: 'enum',
+                            validator: (value) => value === null || value === undefined || allowedValues.has(value),
+                        };
+
+                        schema.validate = [
+                            ...schema.validate ?? [],
+                            validator,
+                        ];
+
+                        return receiver;
+                    };
+                }
+
                 if (key === 'max' || key === 'min') {
                     return (value: Int32Limit | Readonlyable<[Int32Limit, string]>) => {
                         const validator = createLimitValidator(key, value);

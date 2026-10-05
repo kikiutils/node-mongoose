@@ -23,6 +23,13 @@ interface BaseProps {
     type: typeof Schema.Types.Double;
 }
 
+interface DoubleEnumValidator {
+    enumValues: Array<null | number | Types.Double>;
+    message: string;
+    type: 'enum';
+    validator: (value: null | Types.Double | undefined) => boolean;
+}
+
 interface DoubleLimitValidator {
     max?: number;
     message: string;
@@ -38,6 +45,18 @@ export interface DoubleSchemaBuilder<Props extends BaseProps = BaseProps, ExtraO
     >(value: T) => ExtendSchemaBuilder<
         Merge<Props, { default: T }>,
         ExtraOmitFields
+    >;
+
+    enum: <
+        T extends
+        | Readonlyable<Array<N | null>>
+        | { [path: string]: N | null }
+        | { message?: M; values: Readonlyable<Array<N | null>> },
+        M extends string,
+        N extends number | Types.Double,
+    >(value: T) => ExtendSchemaBuilder<
+        Merge<Props, DoubleValidationSchema>,
+        'enum' | ExtraOmitFields
     >;
 
     immutable: ExtendSchemaBuilder<Merge<Props, { immutable: true }>, ExtraOmitFields>;
@@ -72,10 +91,11 @@ export interface DoubleSchemaBuilder<Props extends BaseProps = BaseProps, ExtraO
 }
 
 interface DoubleValidationSchema {
-    validate: DoubleLimitValidator[];
+    validate: Array<DoubleEnumValidator | DoubleLimitValidator>;
 }
 
 // Constants/Variables
+const defaultEnumValidateMessage = 'Path `{PATH}` ({VALUE}) is not a valid enum value.';
 const defaultMinValidateMessage = 'Path `{PATH}` ({VALUE}) is less than minimum allowed value ({MIN}).';
 const defaultMaxValidateMessage = 'Path `{PATH}` ({VALUE}) is more than maximum allowed value ({MAX}).';
 
@@ -115,6 +135,49 @@ export function doubleSchemaBuilder() {
         baseBuilder,
         {
             get(target, key, receiver) {
+                if (key === 'enum') {
+                    if (schema.validate?.some(({ type }: { type: string }) => type === 'enum')) {
+                        throw new Error('Duplicate schema attribute: enum');
+                    }
+
+                    return (
+                        value: Readonlyable<Array<null | number | Types.Double>>
+                          | { [path: string]: null | number | Types.Double }
+                          | { message?: string; values: Readonlyable<Array<null | number | Types.Double>> },
+                    ) => {
+                        let enumValues: Array<null | number | Types.Double>;
+                        let message: string | undefined;
+
+                        if (Array.isArray(value)) enumValues = [...value];
+                        else if ('values' in value && Array.isArray(value.values)) {
+                            enumValues = [...value.values];
+                            if ('message' in value && typeof value.message === 'string') message = value.message;
+                        } else enumValues = Object.values(value);
+
+                        const allowedValues = new Set(
+                            enumValues.map((value) => value === null ? null : value.valueOf()),
+                        );
+
+                        const validator: DoubleEnumValidator = {
+                            enumValues,
+                            message: message ?? defaultEnumValidateMessage,
+                            type: 'enum',
+                            validator: (value) => {
+                                if (value === null || value === undefined) return true;
+
+                                return allowedValues.has(value.valueOf());
+                            },
+                        };
+
+                        schema.validate = [
+                            ...schema.validate ?? [],
+                            validator,
+                        ];
+
+                        return receiver;
+                    };
+                }
+
                 if (key === 'max' || key === 'min') {
                     return (value: DoubleLimit | Readonlyable<[DoubleLimit, string]>) => {
                         const validator = createLimitValidator(key, value);

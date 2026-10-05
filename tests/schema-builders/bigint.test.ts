@@ -17,6 +17,16 @@ import {
 
 // Checked by the project's TypeScript validation, not executed at runtime.
 function checkBuilderTypes() {
+    // @ts-expect-error Enum values must match the supported numeric type.
+    bigint().enum([1]);
+    // @ts-expect-error Enum values must match the supported value type.
+    bigint().enum(['invalid']);
+    // @ts-expect-error Enum configuration must match the supported value type.
+    bigint().enum({ values: ['invalid'] });
+    // @ts-expect-error Enum record values must match the supported value type.
+    bigint().enum({ invalid: 'invalid' });
+    // @ts-expect-error Enum can only be configured once.
+    bigint().enum([9007199254740993n]).enum([9007199254740994n]);
     // @ts-expect-error Limits must match the supported bound type.
     bigint().min(1);
     const invalidLimit = [
@@ -141,6 +151,98 @@ describe('bigintSchemaBuilder', () => {
                     .toMatchObject({ errors: { value: { name: 'CastError' } } });
             },
         );
+    });
+
+    describe('enum validation', () => {
+        it('should accept arrays, records and custom-message configurations', async ({ expect }) => {
+            const values = [
+                9007199254740993n,
+                9007199254740995n,
+                null,
+            ] as const;
+
+            const definitions = [
+                bigint().enum(values).nonRequired,
+                bigint()
+                    .enum({
+                        first: 9007199254740993n,
+                        last: 9007199254740995n,
+                    })
+                    .nonRequired,
+                bigint()
+                    .enum({
+                        message: 'not allowed',
+                        values,
+                    })
+                    .nonRequired,
+            ];
+
+            for (const [index, definition] of definitions.entries()) {
+                const TestModel = model(`BuilderBigIntEnum${index}`, new Schema({ value: definition }));
+
+                for (const value of [
+                    9007199254740993n,
+                    9007199254740995n,
+                    null,
+                    undefined,
+                ]) await expect(new TestModel({ value }).validate()).resolves.toBeUndefined();
+
+                await expect(new TestModel({ value: 9007199254740994n }).validate()).rejects.toMatchObject({
+                    errors: {
+                        value: {
+                            kind: 'enum',
+                            message: index === 2
+                                ? 'not allowed'
+                                : 'Path `value` (9007199254740994) is not a valid enum value.',
+                        },
+                    },
+                });
+            }
+
+            expectTypeOf(bigint().enum(values)).not.toHaveProperty('enum');
+        });
+
+        it('should coexist with range, default and required validation in either order', async ({ expect }) => {
+            const values = [
+                9007199254740993n,
+                9007199254740995n,
+            ] as const;
+
+            const definitions = [
+                bigint().enum(values).min(9007199254740994n).max(9007199254740995n).default(9007199254740995n).required,
+                bigint().min(9007199254740994n).max(9007199254740995n).enum(values).required,
+            ];
+
+            for (const [index, definition] of definitions.entries()) {
+                const TestModel = model(`BuilderBigIntEnumRange${index}`, new Schema({ value: definition }));
+
+                expect(definition.validate.map((validator) => validator.type).sort()).toEqual([
+                    'enum',
+                    'max',
+                    'min',
+                ]);
+
+                await expect(new TestModel({ value: 9007199254740995n }).validate()).resolves.toBeUndefined();
+                await expect(new TestModel({ value: 9007199254740993n }).validate())
+                    .rejects
+                    .toMatchObject({ errors: { value: { kind: 'min' } } });
+
+                await expect(new TestModel({ value: 9007199254740994n }).validate())
+                    .rejects
+                    .toMatchObject({ errors: { value: { kind: 'enum' } } });
+
+                await expect(new TestModel({ value: null }).validate())
+                    .rejects
+                    .toMatchObject({ errors: { value: { kind: 'required' } } });
+            }
+        });
+
+        it('should reject duplicate enum configuration at runtime', ({ expect }) => {
+            const builder = bigint();
+            builder.enum([9007199254740993n]);
+
+            expect(() => builder.enum([9007199254740995n])).toThrow('Duplicate schema attribute: enum');
+        });
     });
 
     describe('range validation', () => {
@@ -315,7 +417,7 @@ describe('bigintSchemaBuilder', () => {
 
             expectTypeOf<typeof builder>().toHaveProperty('min');
             expectTypeOf<typeof builder>().toHaveProperty('max');
-            expectTypeOf<typeof builder>().not.toHaveProperty('enum');
+            expectTypeOf<typeof builder>().toHaveProperty('enum');
 
             const withDefault = builder.default(42n);
 
