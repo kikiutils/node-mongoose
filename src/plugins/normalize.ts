@@ -17,6 +17,9 @@ export interface MongooseNormalizePluginOptions {
      */
     convertIdField?: boolean;
 
+    /** Register normalization on child schemas too. Defaults to true. */
+    recursive?: boolean;
+
     /**
      * Whether to convert a serialized `ObjectId` identifier to its hexadecimal string.
      *
@@ -27,6 +30,11 @@ export interface MongooseNormalizePluginOptions {
      */
     toHexIdIfObjectId?: boolean;
 }
+
+// Constants/Variables
+const registeredSchemas = new WeakSet<Schema>();
+
+// Functions
 
 /**
  * Registers JSON normalization on a Mongoose schema.
@@ -39,15 +47,19 @@ export interface MongooseNormalizePluginOptions {
  * If an existing transform is a function, invokes it after normalization. If it returns `undefined`,
  * preserves the normalized output and any mutations made by that transform; otherwise, uses its return value.
  * That transform can change the normalized output, and its errors propagate during serialization.
- * This plugin does not configure `toObject` or recursively register itself on child schemas.
+ * Registers itself on child schemas unless `recursive` is false. Does not configure `toObject`.
+ * Registration is idempotent per schema; the first registration's options take precedence.
  *
  * @param schema - The schema whose JSON serialization configuration is modified.
- * @param pluginOptions - The identifier normalization options; omitted options use their documented defaults.
+ * @param pluginOptions - The normalization and registration options; omitted options use their documented defaults.
  */
 export function mongooseNormalizePlugin<S extends Schema>(
     schema: S,
     pluginOptions?: MongooseNormalizePluginOptions,
 ) {
+    if (registeredSchemas.has(schema)) return;
+    registeredSchemas.add(schema);
+
     // Collect special paths (Decimal128 & private)
     const decimalPaths: string[] = [];
     const privatePaths: string[] = [];
@@ -103,4 +115,8 @@ export function mongooseNormalizePlugin<S extends Schema>(
             },
         },
     );
+
+    if (pluginOptions?.recursive !== false) {
+        schema.childSchemas.forEach(({ schema: child }) => child.plugin(mongooseNormalizePlugin, pluginOptions));
+    }
 }

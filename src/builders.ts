@@ -1,7 +1,4 @@
-import type {
-    Model as MongooseModel,
-    Schema,
-} from 'mongoose';
+import type { Schema } from 'mongoose';
 import mongooseAggregatePaginate from 'mongoose-aggregate-paginate-v2';
 import mongoosePaginate from 'mongoose-paginate-v2';
 
@@ -26,8 +23,12 @@ export function buildMongooseModel<
     schema: Schema<DocType, Model, InstanceMethodsAndOverrides, QueryHelpers>,
     options?: BuildMongooseModelOptions,
 ): Model {
-    if (options?.enableNormalizePlugin !== false) {
-        registerMongooseNormalizePlugin(schema, options?.normalizePluginRecursive, options?.normalizePluginOptions);
+    const normalizePluginOptions = options?.plugins?.normalize;
+    if (normalizePluginOptions !== false) {
+        schema.plugin(
+            mongooseNormalizePlugin,
+            typeof normalizePluginOptions === 'object' ? normalizePluginOptions : undefined,
+        );
     }
 
     schema.plugin(mongooseAggregatePaginate);
@@ -37,20 +38,4 @@ export function buildMongooseModel<
     customMongooseOptions.beforeModelBuild?.(schema);
     const connection = options?.connection ?? getDefaultMongooseConnection();
     return connection.model<DocType, Model, QueryHelpers>(name, schema, collection);
-}
-
-export function registerMongooseNormalizePlugin<
-    DocType,
-    Model extends MongooseModel<DocType, QueryHelpers, InstanceMethodsAndOverrides>,
-    InstanceMethodsAndOverrides = object,
-    QueryHelpers = object,
->(
-    schema: Schema<DocType, Model, InstanceMethodsAndOverrides, QueryHelpers>,
-    recursive: boolean = true,
-    options?: MongooseNormalizePluginOptions,
-) {
-    schema.plugin(mongooseNormalizePlugin, options);
-    if (recursive) {
-        schema.childSchemas.forEach(({ schema }) => registerMongooseNormalizePlugin(schema, recursive, options));
-    }
 }

@@ -11,9 +11,11 @@ import type { BaseMongoosePaginateModel } from './';
 
 export interface BuildMongooseModelOptions {
     connection?: Connection;
-    enableNormalizePlugin?: boolean;
-    normalizePluginOptions?: MongooseNormalizePluginOptions;
-    normalizePluginRecursive?: boolean;
+    plugins?: {
+        /** Register JSON normalization. Defaults to true; an object enables it with custom options. */
+        normalize?: boolean | MongooseNormalizePluginOptions;
+    };
+
     timestamps?: boolean | SchemaTimestampsConfig;
 }
 
