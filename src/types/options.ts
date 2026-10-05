@@ -5,6 +5,7 @@ import type {
     SchemaTimestampsConfig,
 } from 'mongoose';
 
+import type { MongooseLeanDecimal128ToStringPluginOptions } from '../plugins/lean-decimal128-to-string';
 import type { MongooseNormalizePluginOptions } from '../plugins/normalize';
 
 import type { BaseMongoosePaginateModel } from './';
@@ -12,6 +13,9 @@ import type { BaseMongoosePaginateModel } from './';
 export interface BuildMongooseModelOptions {
     connection?: Connection;
     plugins?: {
+        /** Register lean conversion for marked Decimal128 fields. Defaults to true. */
+        leanDecimal128ToString?: boolean | MongooseLeanDecimal128ToStringPluginOptions;
+
         /** Register JSON normalization. Defaults to true; an object enables it with custom options. */
         normalize?: boolean | MongooseNormalizePluginOptions;
     };

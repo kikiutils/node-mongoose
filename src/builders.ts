@@ -5,8 +5,8 @@ import mongoosePaginate from 'mongoose-paginate-v2';
 import { customMongooseOptions } from './_internals';
 import { getDefaultMongooseConnection } from './connection';
 import { mongooseAssertionsPlugin } from './plugins/assertions';
+import { mongooseLeanDecimal128ToStringPlugin } from './plugins/lean-decimal128-to-string';
 import { mongooseNormalizePlugin } from './plugins/normalize';
-import type { MongooseNormalizePluginOptions } from './plugins/normalize';
 import type { BaseMongoosePaginateModel } from './types';
 import type { BuildMongooseModelOptions } from './types/options';
 
@@ -23,6 +23,14 @@ export function buildMongooseModel<
     schema: Schema<DocType, Model, InstanceMethodsAndOverrides, QueryHelpers>,
     options?: BuildMongooseModelOptions,
 ): Model {
+    const leanDecimal128ToStringPluginOptions = options?.plugins?.leanDecimal128ToString;
+    if (leanDecimal128ToStringPluginOptions !== false) {
+        schema.plugin(
+            mongooseLeanDecimal128ToStringPlugin,
+            typeof leanDecimal128ToStringPluginOptions === 'object' ? leanDecimal128ToStringPluginOptions : undefined,
+        );
+    }
+
     const normalizePluginOptions = options?.plugins?.normalize;
     if (normalizePluginOptions !== false) {
         schema.plugin(

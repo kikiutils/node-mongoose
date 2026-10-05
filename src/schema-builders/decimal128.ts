@@ -110,6 +110,7 @@ export interface Decimal128SchemaBuilder<
      * @remarks
      * Replaces the configured getter on this builder. The getter returns the value's string representation,
      * or `undefined` for `null` or `undefined`. It changes the read representation, not the stored BSON type.
+     * Marks this path for the lean Decimal128-to-string plugin; the plugin does not invoke this getter.
      *
      * @returns This instance for chaining.
      */
@@ -124,6 +125,7 @@ interface Decimal128ValidationSchema {
 
 interface ToStringGetterSchema {
     get: (value?: Types.Decimal128) => string | undefined;
+    leanDecimal128ToString: true;
 }
 
 interface ToStringSetterSchema {
@@ -199,6 +201,7 @@ export function decimal128SchemaBuilder() {
 
                 if (key === 'setToStringGetter') {
                     schema.get = (value?: Types.Decimal128) => value?.toString();
+                    schema.leanDecimal128ToString = true;
                     return receiver;
                 }
 
