@@ -221,15 +221,13 @@ describe('mongooseLeanDecimal128ToStringPlugin', () => {
     });
 
     it('registers through buildMongooseModel by default and supports model opt-out', async ({ expect }) => {
-        for (
-            const enabled of [
-                undefined,
-                true,
-                false,
-                {},
-                { enabledByDefault: false },
-            ]
-        ) {
+        for (const enabled of [
+            undefined,
+            true,
+            false,
+            {},
+            { enabledByDefault: false },
+        ]) {
             const schema = new Schema<any, BaseMongoosePaginateModel<any>>(
                 { amount: marked() },
                 {
@@ -285,13 +283,11 @@ describe('mongooseLeanDecimal128ToStringPlugin', () => {
         expect(await TestModel.findOne().lean()).toBeNull();
     });
 
-    for (
-        const operation of [
-            'findOneAndUpdate',
-            'findOneAndReplace',
-            'findOneAndDelete',
-        ] as const
-    ) {
+    for (const operation of [
+        'findOneAndUpdate',
+        'findOneAndReplace',
+        'findOneAndDelete',
+    ] as const) {
         it(`converts ${operation} metadata results without touching metadata`, async ({ expect }) => {
             const schema = new Schema({ amount: marked() });
             schema.plugin(mongooseLeanDecimal128ToStringPlugin);

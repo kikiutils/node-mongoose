@@ -50,6 +50,7 @@ describe('document _id types', () => {
             children: BaseMongooseDocType<{ _id: number }, false, false>[];
             metadata: { label: string };
         }
+
         type Doc = BaseMongooseDocType<Fields>;
         expectTypeOf<Doc['child']>().toEqualTypeOf<Child>();
         expectTypeOf<Doc['children'][number]['_id']>().toEqualTypeOf<number>();

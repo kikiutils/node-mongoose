@@ -150,13 +150,11 @@ describe('mongooseNormalizePlugin', () => {
         expect(caught).toBe(error);
     });
 
-    for (
-        const recursive of [
-            undefined,
-            true,
-            false,
-        ]
-    ) {
+    for (const recursive of [
+        undefined,
+        true,
+        false,
+    ]) {
         it(`supports direct recursive=${recursive} registration`, ({ expect }) => {
             const leaf = new Schema({
                 amount: Schema.Types.Decimal128,
