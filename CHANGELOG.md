@@ -1,5 +1,22 @@
 # Changelog
 
+## v9.0.1
+
+[compare changes](https://github.com/kikiutils/node-mongoose/compare/v9.0.0...v9.0.1)
+
+### 🩹 Fixes
+
+- **deps:** Pin TypeScript ESLint plugin to avoid false positives ([eadca5a](https://github.com/kikiutils/node-mongoose/commit/eadca5a))
+- **types:** Support configurable document _id fields ([c39ee88](https://github.com/kikiutils/node-mongoose/commit/c39ee88))
+
+### 🏡 Chore
+
+- Upgrade deps ([6c42a7f](https://github.com/kikiutils/node-mongoose/commit/6c42a7f))
+
+### ❤️ Contributors
+
+- Kiki-kanri
+
 ## v9.0.0
 
 [compare changes](https://github.com/kikiutils/node-mongoose/compare/v8.0.0...v9.0.0)
