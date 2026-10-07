@@ -1,6 +1,7 @@
 import type {
     HydratedDocument,
     QueryWithHelpers,
+    Require_id,
     Types,
 } from 'mongoose';
 import type { SetFieldType } from 'type-fest';
@@ -8,9 +9,22 @@ import type { SetFieldType } from 'type-fest';
 import type { AggregatePaginateModel } from './aggregate-paginate';
 import type { PaginateModel } from './paginate';
 
-export type BaseMongooseDocType<T, CreatedAtField extends boolean = true, UpdatedAtField extends boolean = true> =
+/**
+ * Raw document type with an ObjectId by default, or the `_id` type declared in T.
+ * Set IdField to false for schemas with `_id: false`. Nested fields are left unchanged.
+ */
+export type BaseMongooseDocType<
+    T,
+    CreatedAtField extends boolean = true,
+    UpdatedAtField extends boolean = true,
+    IdField extends boolean = true,
+> =
   & (CreatedAtField extends true ? { createdAt: Date } : unknown)
-  & Omit<T, 'createdAt' | 'id' | 'updatedAt'>
+  & (
+    IdField extends true
+        ? Require_id<Omit<T, 'createdAt' | 'id' | 'updatedAt'>>
+        : Omit<T, '_id' | 'createdAt' | 'id' | 'updatedAt'>
+  )
   & (UpdatedAtField extends true ? { updatedAt: Date } : unknown);
 
 export type BaseMongoosePaginateModel<RawDocType, InstanceMethodsAndOverrides = object, QueryHelpers = object> =
