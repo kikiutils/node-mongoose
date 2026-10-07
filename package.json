@@ -82,14 +82,14 @@
   "dependencies": {
     "decimal.js": "^10.6.0",
     "es-toolkit": "^1.52.0",
-    "mongoose": "^9.10.4",
+    "mongoose": "^9.11.0",
     "mongoose-aggregate-paginate-v2": "^1.1.5",
     "mongoose-paginate-v2": "^1.9.5",
     "type-fest": "^5.10.0"
   },
   "devDependencies": {
     "@antfu/eslint-config": "^9.5.1",
-    "@kikiutils/eslint-config": "^9.2.1",
+    "@kikiutils/eslint-config": "^9.3.0",
     "@kikiutils/tsconfigs": "^7.0.0",
     "@types/node": "^26.6.4",
     "@vitest/coverage-v8": "^5.0.3",
