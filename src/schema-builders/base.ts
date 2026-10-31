@@ -31,7 +31,7 @@ export function createBaseSchemaBuilderFactory<Builder = Readonly<Record<string,
             Object.freeze({}),
             {
                 get(_, key, receiver) {
-                    if (typeof key === 'symbol') throw new Error('Cannot use symbol as a schema attribute');
+                    if (typeof key === 'symbol') throw new TypeError('Cannot use symbol as a schema attribute');
                     if (key in schema) throw new Error(`Duplicate schema attribute: ${key}`);
                     if (isFunctionKeys.has(key)) {
                         return (value: any) => {
