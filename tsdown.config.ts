@@ -9,7 +9,7 @@ export default defineConfig({
     deps: { onlyBundle: [] },
     dts: true,
     entry: ['./src/index.ts'],
-    exports: { exclude: [/internals/] },
+    exports: { exclude: [/(^|\/)_?internals?(\/|$)/] },
     fixedExtension: false,
     format: 'esm',
     publint: true,
