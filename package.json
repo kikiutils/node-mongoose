@@ -25,38 +25,33 @@
   ],
   "sideEffects": false,
   "exports": {
-    "./_internals": {
-      "types": null,
-      "import": null,
-      "require": null
-    },
-    "./package.json": "./package.json",
-    "./schema-builders": {
-      "types": "./dist/schema-builders/index.d.ts",
-      "import": "./dist/schema-builders/index.js",
-      "require": null
-    },
-    "./schema-builders/index": {
-      "types": null,
-      "import": null,
-      "require": null
-    },
-    "./types": {
-      "types": "./dist/types/index.d.ts",
-      "import": null,
-      "require": null
-    },
-    "./types/_internals": {
-      "types": null,
-      "import": null,
-      "require": null
-    },
-    "./types/index": {
-      "types": null,
-      "import": null,
-      "require": null
-    },
-    "./*": "./dist/*.js"
+    "./assertions": "./dist/assertions.js",
+    "./builders": "./dist/builders.js",
+    "./connection": "./dist/connection.js",
+    "./options": "./dist/options.js",
+    "./plugins/assertions": "./dist/plugins/assertions.js",
+    "./plugins/lean-decimal128-to-string": "./dist/plugins/lean-decimal128-to-string.js",
+    "./plugins/normalize": "./dist/plugins/normalize.js",
+    "./schema-builders": "./dist/schema-builders/index.js",
+    "./schema-builders/base": "./dist/schema-builders/base.js",
+    "./schema-builders/bigint": "./dist/schema-builders/bigint.js",
+    "./schema-builders/boolean": "./dist/schema-builders/boolean.js",
+    "./schema-builders/date": "./dist/schema-builders/date.js",
+    "./schema-builders/decimal128": "./dist/schema-builders/decimal128.js",
+    "./schema-builders/double": "./dist/schema-builders/double.js",
+    "./schema-builders/int32": "./dist/schema-builders/int32.js",
+    "./schema-builders/mixed": "./dist/schema-builders/mixed.js",
+    "./schema-builders/number": "./dist/schema-builders/number.js",
+    "./schema-builders/object-id": "./dist/schema-builders/object-id.js",
+    "./schema-builders/ref": "./dist/schema-builders/ref.js",
+    "./schema-builders/string": "./dist/schema-builders/string.js",
+    "./schema-builders/uuid": "./dist/schema-builders/uuid.js",
+    "./types": "./dist/types/index.js",
+    "./types/aggregate-paginate": "./dist/types/aggregate-paginate.js",
+    "./types/data": "./dist/types/data.js",
+    "./types/options": "./dist/types/options.js",
+    "./types/paginate": "./dist/types/paginate.js",
+    "./package.json": "./package.json"
   },
   "files": [
     "./dist",
