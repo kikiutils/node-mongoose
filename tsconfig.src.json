@@ -4,5 +4,8 @@
     "composite": true,
     "isolatedDeclarations": false
   },
-  "include": ["./src"]
+  "include": [
+    "./scripts/*.ts",
+    "./src"
+  ]
 }
