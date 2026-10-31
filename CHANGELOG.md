@@ -1,5 +1,29 @@
 # Changelog
 
+## v9.0.2
+
+[compare changes](https://github.com/kikiutils/node-mongoose/compare/v9.0.1...v9.0.2)
+
+### 📦 Build
+
+- Pin TypeScript override and organize maintenance scripts ([b878c55](https://github.com/kikiutils/node-mongoose/commit/b878c55))
+- Simplify tsdown configuration and add type validation ([5ba0dcb](https://github.com/kikiutils/node-mongoose/commit/5ba0dcb))
+
+### 🏡 Chore
+
+- Lint code ([8db5b04](https://github.com/kikiutils/node-mongoose/commit/8db5b04))
+- Update `modify-files-permissions.sh` ([e5d2bee](https://github.com/kikiutils/node-mongoose/commit/e5d2bee))
+- Update `pnpm-workspace.yaml` ([307ba57](https://github.com/kikiutils/node-mongoose/commit/307ba57))
+- Remove `@typescript-eslint/eslint-plugin` from `overrides` ([9a7922a](https://github.com/kikiutils/node-mongoose/commit/9a7922a))
+- Update `minimumReleaseAgeExcludes` ([362ebd7](https://github.com/kikiutils/node-mongoose/commit/362ebd7))
+- Update pnpm config ([17fefba](https://github.com/kikiutils/node-mongoose/commit/17fefba))
+- Lint code ([b0791e7](https://github.com/kikiutils/node-mongoose/commit/b0791e7))
+- Refresh `exports` define ([fd9e182](https://github.com/kikiutils/node-mongoose/commit/fd9e182))
+
+### ❤️ Contributors
+
+- Kiki-kanri
+
 ## v9.0.1
 
 [compare changes](https://github.com/kikiutils/node-mongoose/compare/v9.0.0...v9.0.1)
