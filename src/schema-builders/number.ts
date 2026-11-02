@@ -36,9 +36,9 @@ export interface NumberSchemaBuilder<
 
     enum: <
         T extends
-        | Readonlyable<(N | null)[]>
+        | Readonlyable<Array<N | null>>
         | { [path: string]: N | null }
-        | { message?: M; values: Readonlyable<(N | null)[]> },
+        | { message?: M; values: Readonlyable<Array<N | null>> },
         M extends string,
         N extends number,
     >(value: T) => ExtendSchemaBuilder<

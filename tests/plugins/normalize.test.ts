@@ -150,12 +150,13 @@ describe('mongooseNormalizePlugin', () => {
         expect(caught).toBe(error);
     });
 
-    for (const recursive of [
+    it.for([
         undefined,
         true,
         false,
-    ]) {
-        it(`supports direct recursive=${recursive} registration`, ({ expect }) => {
+    ])(
+        'should support direct recursive=%s registration',
+        (recursive, { expect }) => {
             const leaf = new Schema({
                 amount: Schema.Types.Decimal128,
                 secret: {
@@ -214,10 +215,10 @@ describe('mongooseNormalizePlugin', () => {
                     expect(entry?.leaf).not.toHaveProperty('id');
                 }
             }
-        });
-    }
+        },
+    );
 
-    it('does not rewrap shared child schemas or overwrite their first options', ({ expect }) => {
+    it('should not rewrap shared child schemas or overwrite their first options', ({ expect }) => {
         const originalTransform = vi.fn((_doc, ret) => ret);
         const child = new Schema({}, { toJSON: { transform: originalTransform } });
         child.plugin(mongooseNormalizePlugin, { convertIdField: false });

@@ -17,7 +17,9 @@ export interface MongooseNormalizePluginOptions {
      */
     convertIdField?: boolean;
 
-    /** Register normalization on child schemas too. Defaults to true. */
+    /**
+     * Register normalization on child schemas too. Defaults to true.
+     */
     recursive?: boolean;
 
     /**

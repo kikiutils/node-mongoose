@@ -13,10 +13,14 @@ import type { BaseMongoosePaginateModel } from './';
 export interface BuildMongooseModelOptions {
     connection?: Connection;
     plugins?: {
-        /** Register lean conversion for marked Decimal128 fields. Defaults to true. */
+        /**
+         * Register lean conversion for marked Decimal128 fields. Defaults to true.
+         */
         leanDecimal128ToString?: boolean | MongooseLeanDecimal128ToStringPluginOptions;
 
-        /** Register JSON normalization. Defaults to true; an object enables it with custom options. */
+        /**
+         * Register JSON normalization. Defaults to true; an object enables it with custom options.
+         */
         normalize?: boolean | MongooseNormalizePluginOptions;
     };
 

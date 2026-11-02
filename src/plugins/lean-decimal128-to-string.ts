@@ -2,11 +2,14 @@ import type {
     Query,
     Schema,
     SchemaType,
+    Types,
 } from 'mongoose';
 
 declare module 'mongoose' {
     interface LeanOptions {
-        /** Override conversion of marked Decimal128 fields. Defaults to the plugin's enabledByDefault setting. */
+        /**
+         * Override conversion of marked Decimal128 fields. Defaults to the plugin's enabledByDefault setting.
+         */
         decimal128ToString?: boolean;
     }
 }
@@ -14,7 +17,9 @@ declare module 'mongoose' {
 type QueryWithOptionalMap = Query<unknown, unknown> & { map?: (transform: (result: unknown) => unknown) => unknown };
 
 export interface MongooseLeanDecimal128ToStringPluginOptions {
-    /** Whether marked fields are converted on lean queries by default. Defaults to true. */
+    /**
+     * Whether marked fields are converted on lean queries by default. Defaults to true.
+     */
     enabledByDefault?: boolean;
 }
 
@@ -86,7 +91,7 @@ function convertValue(value: unknown, schemaType: SchemaType): unknown {
         && isNonNullObject(value)
         && value._bsontype === 'Decimal128'
         && typeof value.toString === 'function'
-    ) return value.toString();
+    ) return (value as Types.Decimal128).toString();
 
     return value;
 }

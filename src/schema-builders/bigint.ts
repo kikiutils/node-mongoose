@@ -24,7 +24,7 @@ interface BaseProps {
 }
 
 interface BigIntEnumValidator {
-    enumValues: (bigint | null)[];
+    enumValues: Array<bigint | null>;
     message: string;
     type: 'enum';
     validator: (value: bigint | null | undefined) => boolean;
@@ -49,9 +49,9 @@ export interface BigIntSchemaBuilder<Props extends BaseProps = BaseProps, ExtraO
 
     enum: <
         T extends
-        | Readonlyable<(N | null)[]>
+        | Readonlyable<Array<N | null>>
         | { [path: string]: N | null }
-        | { message?: M; values: Readonlyable<(N | null)[]> },
+        | { message?: M; values: Readonlyable<Array<N | null>> },
         M extends string,
         N extends bigint,
     >(value: T) => ExtendSchemaBuilder<
@@ -91,7 +91,7 @@ export interface BigIntSchemaBuilder<Props extends BaseProps = BaseProps, ExtraO
 }
 
 interface BigIntValidationSchema {
-    validate: (BigIntEnumValidator | BigIntLimitValidator)[];
+    validate: Array<BigIntEnumValidator | BigIntLimitValidator>;
 }
 
 // Constants/Variables
@@ -115,11 +115,11 @@ export function bigintSchemaBuilder() {
                     }
 
                     return (
-                        value: Readonlyable<(bigint | null)[]>
+                        value: Readonlyable<Array<bigint | null>>
                           | { [path: string]: bigint | null }
-                          | { message?: string; values: Readonlyable<(bigint | null)[]> },
+                          | { message?: string; values: Readonlyable<Array<bigint | null>> },
                     ) => {
-                        let enumValues: (bigint | null)[];
+                        let enumValues: Array<bigint | null>;
                         let message: string | undefined;
 
                         if (Array.isArray(value)) enumValues = [...value];

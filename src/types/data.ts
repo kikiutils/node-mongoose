@@ -10,7 +10,9 @@ export type BaseMongooseModelData<CreatedAtField extends boolean = true, Updated
   & (UpdatedAtField extends true ? { updatedAt: string } : unknown)
   & { id: string };
 
-/** Converts data fields to document fields using the same `_id` rules as BaseMongooseDocType. */
+/**
+ * Converts data fields to document fields using the same `_id` rules as BaseMongooseDocType.
+ */
 export type DataToBaseMongooseDocType<
     T,
     ObjectIdFields extends keyof T = never,

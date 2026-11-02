@@ -18,14 +18,15 @@ let modelIndex = 0;
 describe('buildMongooseModel plugin options', () => {
     afterEach(() => deleteModel(/^PluginOptions/));
 
-    for (const normalizePlugin of [
+    it.for([
         undefined,
         true,
         false,
         {},
         { convertIdField: false },
-    ]) {
-        it(`accepts normalizePlugin=${JSON.stringify(normalizePlugin)}`, ({ expect }) => {
+    ])(
+        'should accept normalizePlugin=%j',
+        (normalizePlugin, { expect }) => {
             const schema = new Schema<any, BaseMongoosePaginateModel<any>>(
                 { name: String },
                 {
@@ -62,15 +63,16 @@ describe('buildMongooseModel plugin options', () => {
                 expect(result.id).toBe(_id.toHexString());
                 expect(result).not.toHaveProperty('_id');
             }
-        });
-    }
+        },
+    );
 
-    for (const recursive of [
+    it.for([
         undefined,
         true,
         false,
-    ]) {
-        it(`preserves plugins.normalize.recursive=${recursive}`, ({ expect }) => {
+    ])(
+        'should preserve plugins.normalize.recursive=%s',
+        (recursive, { expect }) => {
             const child = new Schema({ name: String });
             const schema = new Schema<any, BaseMongoosePaginateModel<any>>(
                 { child },
@@ -104,6 +106,6 @@ describe('buildMongooseModel plugin options', () => {
                 expect(result.child.id).toEqual(_id);
                 expect(result.child).not.toHaveProperty('_id');
             }
-        });
-    }
+        },
+    );
 });

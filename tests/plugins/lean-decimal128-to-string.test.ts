@@ -31,7 +31,7 @@ function createModel(schema: Schema) {
     return model(`LeanDecimal${modelIndex++}`, schema);
 }
 
-function mockFind(TestModel: Pick<ReturnType<typeof createModel>, 'collection'>, results: Record<string, any>[]) {
+function mockFind(TestModel: Pick<ReturnType<typeof createModel>, 'collection'>, results: Array<Record<string, any>>) {
     let index = 0;
     const cursor = {
         close: vi.fn(() => Promise.resolve()),
@@ -43,16 +43,16 @@ function mockFind(TestModel: Pick<ReturnType<typeof createModel>, 'collection'>,
 }
 
 describe('mongooseLeanDecimal128ToStringPlugin', () => {
-    it('declares the lean override as an optional boolean', () => {
-        expectTypeOf<LeanOptions['decimal128ToString']>().toEqualTypeOf<boolean | undefined>();
-    });
-
     afterEach(() => {
         vi.restoreAllMocks();
         deleteModel(/^LeanDecimal/);
     });
 
-    it('marks builder output and converts only marked paths without running other getters', async ({ expect }) => {
+    it('should declare the lean override as an optional boolean', () => {
+        expectTypeOf<LeanOptions['decimal128ToString']>().toEqualTypeOf<boolean | undefined>();
+    });
+
+    it('should mark builder output and convert only marked paths without running other getters', async ({ expect }) => {
         const getter = vi.fn((value) => `getter:${value}`);
         const schema = new Schema({
             amount: marked(),
@@ -86,7 +86,7 @@ describe('mongooseLeanDecimal128ToStringPlugin', () => {
         expect(document.get('amount', null, { getters: false })).toBeInstanceOf(Types.Decimal128);
     });
 
-    it('handles nested schemas, dotted paths, arrays, maps and nullish/projected values', async ({ expect }) => {
+    it('should handle nested schemas, dotted paths, arrays, maps and nullish/projected values', async ({ expect }) => {
         const child = new Schema({ amount: marked() }, { _id: false });
         const schema = new Schema({
             amount: marked(),
@@ -171,7 +171,7 @@ describe('mongooseLeanDecimal128ToStringPlugin', () => {
         expect(result?.children?.[2]).not.toHaveProperty('amount');
     });
 
-    it('supports find results and streaming cursors', async ({ expect }) => {
+    it('should support find results and streaming cursors', async ({ expect }) => {
         const schema = new Schema({ amount: marked() });
         schema.plugin(mongooseLeanDecimal128ToStringPlugin);
         const TestModel = createModel(schema);
@@ -205,7 +205,7 @@ describe('mongooseLeanDecimal128ToStringPlugin', () => {
         ]);
     });
 
-    it('allows defaults and query overrides without converting hydrated documents', async ({ expect }) => {
+    it('should allow defaults and query overrides without converting hydrated documents', async ({ expect }) => {
         const schema = new Schema({ amount: marked() });
         schema.plugin(mongooseLeanDecimal128ToStringPlugin, { enabledByDefault: false });
         schema.plugin(mongooseLeanDecimal128ToStringPlugin); // First registration wins.
@@ -220,7 +220,7 @@ describe('mongooseLeanDecimal128ToStringPlugin', () => {
         expect(document?.get('amount', null, { getters: false })).toBeInstanceOf(Types.Decimal128);
     });
 
-    it('registers through buildMongooseModel by default and supports model opt-out', async ({ expect }) => {
+    it('should register through buildMongooseModel by default and support model opt-out', async ({ expect }) => {
         for (const enabled of [
             undefined,
             true,
@@ -261,7 +261,7 @@ describe('mongooseLeanDecimal128ToStringPlugin', () => {
         }
     });
 
-    it('converts discriminator-only paths when the discriminator key is projected out', async ({ expect }) => {
+    it('should convert discriminator-only paths when the discriminator key is projected out', async ({ expect }) => {
         const schema = new Schema({});
         schema.plugin(mongooseLeanDecimal128ToStringPlugin);
         const BaseModel = createModel(schema);
@@ -275,7 +275,7 @@ describe('mongooseLeanDecimal128ToStringPlugin', () => {
         expect(await ChildModel.find().select('-__t').lean()).toMatchObject([{ amount: '12.34' }]);
     });
 
-    it('preserves missing query results', async ({ expect }) => {
+    it('should preserve missing query results', async ({ expect }) => {
         const schema = new Schema({ amount: marked() });
         schema.plugin(mongooseLeanDecimal128ToStringPlugin);
         const TestModel = createModel(schema);
@@ -283,12 +283,13 @@ describe('mongooseLeanDecimal128ToStringPlugin', () => {
         expect(await TestModel.findOne().lean()).toBeNull();
     });
 
-    for (const operation of [
+    it.for([
         'findOneAndUpdate',
         'findOneAndReplace',
         'findOneAndDelete',
-    ] as const) {
-        it(`converts ${operation} metadata results without touching metadata`, async ({ expect }) => {
+    ] as const)(
+        'should convert %s metadata results without touching metadata',
+        async (operation, { expect }) => {
             const schema = new Schema({ amount: marked() });
             schema.plugin(mongooseLeanDecimal128ToStringPlugin);
             const TestModel = createModel(schema);
@@ -307,75 +308,79 @@ describe('mongooseLeanDecimal128ToStringPlugin', () => {
                 ok: 1,
                 value: { amount: '12.34' },
             });
-        });
-    }
+        },
+    );
 
-    for (const ownFirst of [
+    describe.each([
         true,
         false,
-    ]) {
-        it(`coexists on nested fields and cursors (ownFirst=${ownFirst})`, async ({ expect }) => {
-            const child = new Schema({ amount: marked() }, { _id: false });
-            const schema = new Schema({
-                child,
-                children: [child],
-                values: [marked()],
-            });
+    ])(
+        'plugin registration order (ownFirst=%s)',
+        (ownFirst) => {
+            it('should coexist on nested fields and cursors', async ({ expect }) => {
+                const child = new Schema({ amount: marked() }, { _id: false });
+                const schema = new Schema({
+                    child,
+                    children: [child],
+                    values: [marked()],
+                });
 
-            if (ownFirst) schema.plugin(mongooseLeanDecimal128ToStringPlugin);
-            schema.plugin(mongooseLeanGetters);
-            if (!ownFirst) schema.plugin(mongooseLeanDecimal128ToStringPlugin);
-            const TestModel = createModel(schema);
-            const value = () => ({
-                child: { amount: decimal() },
-                children: [{ amount: decimal() }],
-                values: [decimal()],
-            });
-
-            const expected = {
-                child: { amount: '12.34' },
-                children: [{ amount: '12.34' }],
-                values: ['12.34'],
-            };
-
-            vi.spyOn(TestModel.collection, 'findOne').mockImplementation(() => Promise.resolve(value()));
-            expect(await TestModel.findOne().lean({ getters: true })).toMatchObject(expected);
-            mockFind(TestModel, [value()]);
-            const result = [];
-            for await (const item of TestModel.find().lean({ getters: true }).cursor()) result.push(item);
-            expect(result).toMatchObject([expected]);
-        });
-
-        for (const getters of [
-            true,
-            false,
-        ]) {
-            it(`coexists with mongoose-lean-getters (ownFirst=${ownFirst}, getters=${getters})`, async ({ expect }) => {
-                const schema = new Schema({ amount: marked() });
                 if (ownFirst) schema.plugin(mongooseLeanDecimal128ToStringPlugin);
-                schema.plugin(mongooseLeanGetters, { defaultLeanOptions: { getters: true } });
+                schema.plugin(mongooseLeanGetters);
                 if (!ownFirst) schema.plugin(mongooseLeanDecimal128ToStringPlugin);
                 const TestModel = createModel(schema);
-                vi.spyOn(TestModel.collection, 'findOne').mockImplementation(
-                    () => Promise.resolve({ amount: decimal() }),
-                );
-
-                expect((await TestModel.findOne().lean({ getters }))?.amount).toBe('12.34');
-                mockFind(TestModel, [{ amount: decimal() }]);
-                expect(await TestModel.find().lean({ getters })).toMatchObject([{ amount: '12.34' }]);
-                const disabled = await TestModel.findOne().lean({
-                    decimal128ToString: false,
-                    getters: false,
+                const value = () => ({
+                    child: { amount: decimal() },
+                    children: [{ amount: decimal() }],
+                    values: [decimal()],
                 });
 
-                expect(disabled?.amount).toBeInstanceOf(Types.Decimal128);
-                const externalOnly = await TestModel.findOne().lean({
-                    decimal128ToString: false,
-                    getters: true,
-                });
+                const expected = {
+                    child: { amount: '12.34' },
+                    children: [{ amount: '12.34' }],
+                    values: ['12.34'],
+                };
 
-                expect(externalOnly?.amount).toBe('12.34');
+                vi.spyOn(TestModel.collection, 'findOne').mockImplementation(() => Promise.resolve(value()));
+                expect(await TestModel.findOne().lean({ getters: true })).toMatchObject(expected);
+                mockFind(TestModel, [value()]);
+                const result = [];
+                for await (const item of TestModel.find().lean({ getters: true }).cursor()) result.push(item);
+                expect(result).toMatchObject([expected]);
             });
-        }
-    }
+
+            it.for([
+                true,
+                false,
+            ])(
+                'should coexist with mongoose-lean-getters (getters=%s)',
+                async (getters, { expect }) => {
+                    const schema = new Schema({ amount: marked() });
+                    if (ownFirst) schema.plugin(mongooseLeanDecimal128ToStringPlugin);
+                    schema.plugin(mongooseLeanGetters, { defaultLeanOptions: { getters: true } });
+                    if (!ownFirst) schema.plugin(mongooseLeanDecimal128ToStringPlugin);
+                    const TestModel = createModel(schema);
+                    vi.spyOn(TestModel.collection, 'findOne').mockImplementation(
+                        () => Promise.resolve({ amount: decimal() }),
+                    );
+
+                    expect((await TestModel.findOne().lean({ getters }))?.amount).toBe('12.34');
+                    mockFind(TestModel, [{ amount: decimal() }]);
+                    expect(await TestModel.find().lean({ getters })).toMatchObject([{ amount: '12.34' }]);
+                    const disabled = await TestModel.findOne().lean({
+                        decimal128ToString: false,
+                        getters: false,
+                    });
+
+                    expect(disabled?.amount).toBeInstanceOf(Types.Decimal128);
+                    const externalOnly = await TestModel.findOne().lean({
+                        decimal128ToString: false,
+                        getters: true,
+                    });
+
+                    expect(externalOnly?.amount).toBe('12.34');
+                },
+            );
+        },
+    );
 });

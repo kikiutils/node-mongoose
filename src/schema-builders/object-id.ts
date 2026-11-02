@@ -37,9 +37,9 @@ export interface ObjectIdSchemaBuilder<
 
     enum: <
         T extends
-        | Readonlyable<(null | O)[]>
+        | Readonlyable<Array<null | O>>
         | { [path: string]: null | O }
-        | { message?: M; values: Readonlyable<(null | O)[]> },
+        | { message?: M; values: Readonlyable<Array<null | O>> },
         M extends string,
         O extends Types.ObjectId,
     >(value: T) => ExtendSchemaBuilder<

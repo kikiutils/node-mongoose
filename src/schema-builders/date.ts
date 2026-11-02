@@ -36,9 +36,9 @@ export interface DateSchemaBuilder<
 
     enum: <
         T extends
-        | Readonlyable<(D | null)[]>
+        | Readonlyable<Array<D | null>>
         | { [path: string]: D | null }
-        | { message?: M; values: Readonlyable<(D | null)[]> },
+        | { message?: M; values: Readonlyable<Array<D | null>> },
         D extends NativeDate,
         M extends string,
     >(value: T) => ExtendSchemaBuilder<
