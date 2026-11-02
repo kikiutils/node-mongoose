@@ -53,24 +53,24 @@ declare module 'mongoose' {
 export function mongooseAssertionsPlugin<S extends Schema>(schema: S) {
     schema.method(
         'assertUpdateSuccess',
-        function (
+        async function (
             update?: UpdateQuery<any> | UpdateWithAggregationPipeline,
             options?: null | QueryOptions,
             expectedModifiedCount?: number,
         ) {
-            return assertMongooseUpdateSuccess(this.updateOne(update, options), expectedModifiedCount);
+            return await assertMongooseUpdateSuccess(this.updateOne(update, options), expectedModifiedCount);
         },
     );
 
     schema.static(
         'assertUpdateSuccess',
-        function (
+        async function (
             filter: QueryFilter<any>,
             update: UpdateQuery<any> | UpdateWithAggregationPipeline,
             options?: (mongo.UpdateOptions & MongooseUpdateQueryOptions<any>) | null,
             expectedModifiedCount: number = 1,
         ) {
-            return assertMongooseUpdateSuccess(
+            return await assertMongooseUpdateSuccess(
                 expectedModifiedCount === 1
                     ? this.updateOne(filter, update, options)
                     : this.updateMany(filter, update, options),

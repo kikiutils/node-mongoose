@@ -126,6 +126,7 @@ export function mongooseLeanDecimal128ToStringPlugin(
         const querySchema = query.model.schema;
         if (Array.isArray(document)) document.forEach((value) => convertDocument(querySchema, value));
         else convertDocument(querySchema, document);
+
         return result;
     }
 

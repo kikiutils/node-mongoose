@@ -34,9 +34,9 @@ function createModel(schema: Schema) {
 function mockFind(TestModel: Pick<ReturnType<typeof createModel>, 'collection'>, results: Array<Record<string, any>>) {
     let index = 0;
     const cursor = {
-        close: vi.fn(() => Promise.resolve()),
-        next: vi.fn(() => Promise.resolve(results[index++] ?? null)),
-        toArray: vi.fn(() => Promise.resolve(results)),
+        close: vi.fn(async () => await Promise.resolve()),
+        next: vi.fn(async () => await Promise.resolve(results[index++] ?? null)),
+        toArray: vi.fn(async () => await Promise.resolve(results)),
     };
 
     vi.spyOn(TestModel.collection, 'find').mockReturnValue(cursor as never);
@@ -210,7 +210,7 @@ describe('mongooseLeanDecimal128ToStringPlugin', () => {
         schema.plugin(mongooseLeanDecimal128ToStringPlugin, { enabledByDefault: false });
         schema.plugin(mongooseLeanDecimal128ToStringPlugin); // First registration wins.
         const TestModel = createModel(schema);
-        vi.spyOn(TestModel.collection, 'findOne').mockImplementation(() => Promise.resolve({ amount: decimal() }));
+        vi.spyOn(TestModel.collection, 'findOne').mockImplementation(async () => await Promise.resolve({ amount: decimal() }));
         expect((await TestModel.findOne().lean())?.amount).toBeInstanceOf(Types.Decimal128);
         expect((await TestModel.findOne().lean({ decimal128ToString: true }))?.amount).toBe('12.34');
         const disabled = await TestModel.findOne().lean({ decimal128ToString: false });
@@ -249,7 +249,7 @@ describe('mongooseLeanDecimal128ToStringPlugin', () => {
             );
 
             vi.spyOn(TestModel.collection, 'findOne').mockImplementation(
-                () => Promise.resolve({ amount: decimal() }),
+                async () => await Promise.resolve({ amount: decimal() }),
             );
 
             const result = await TestModel.findOne().lean();
@@ -341,7 +341,7 @@ describe('mongooseLeanDecimal128ToStringPlugin', () => {
                     values: ['12.34'],
                 };
 
-                vi.spyOn(TestModel.collection, 'findOne').mockImplementation(() => Promise.resolve(value()));
+                vi.spyOn(TestModel.collection, 'findOne').mockImplementation(async () => await Promise.resolve(value()));
                 expect(await TestModel.findOne().lean({ getters: true })).toMatchObject(expected);
                 mockFind(TestModel, [value()]);
                 const result = [];
@@ -361,7 +361,7 @@ describe('mongooseLeanDecimal128ToStringPlugin', () => {
                     if (!ownFirst) schema.plugin(mongooseLeanDecimal128ToStringPlugin);
                     const TestModel = createModel(schema);
                     vi.spyOn(TestModel.collection, 'findOne').mockImplementation(
-                        () => Promise.resolve({ amount: decimal() }),
+                        async () => await Promise.resolve({ amount: decimal() }),
                     );
 
                     expect((await TestModel.findOne().lean({ getters }))?.amount).toBe('12.34');
