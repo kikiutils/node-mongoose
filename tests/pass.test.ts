@@ -4,5 +4,5 @@ import {
 } from 'vitest';
 
 describe.concurrent('pass', () => {
-    it('pass', ({ expect }) => expect(true).toBe(true));
+    it('should pass', ({ expect }) => expect(true).toBe(true));
 });
