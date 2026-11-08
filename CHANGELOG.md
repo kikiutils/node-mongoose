@@ -1,5 +1,27 @@
 # Changelog
 
+## v9.0.3
+
+[compare changes](https://github.com/kikiutils/node-mongoose/compare/v9.0.2...v9.0.3)
+
+### 💅 Refactors
+
+- Unify schema input contracts and typed utilities ([cb22267](https://github.com/kikiutils/node-mongoose/commit/cb22267))
+- Consolidate schema validator types and registration ([f5ef25f](https://github.com/kikiutils/node-mongoose/commit/f5ef25f))
+
+### 🏡 Chore
+
+- Refine template export exclusions and script entrypoint ([4ffddaa](https://github.com/kikiutils/node-mongoose/commit/4ffddaa))
+- Upgrade deps ([6783e58](https://github.com/kikiutils/node-mongoose/commit/6783e58))
+- Resolve ESLint issues across source and tests ([07d7985](https://github.com/kikiutils/node-mongoose/commit/07d7985))
+- Lint code ([1c5c42d](https://github.com/kikiutils/node-mongoose/commit/1c5c42d))
+- Lint code ([f22f1e9](https://github.com/kikiutils/node-mongoose/commit/f22f1e9))
+- Lint code ([ee81f39](https://github.com/kikiutils/node-mongoose/commit/ee81f39))
+
+### ❤️ Contributors
+
+- Kiki-kanri
+
 ## v9.0.2
 
 [compare changes](https://github.com/kikiutils/node-mongoose/compare/v9.0.1...v9.0.2)
