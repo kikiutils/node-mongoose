@@ -8,7 +8,7 @@ import type {
 } from 'mongoose';
 import type { Merge } from 'type-fest';
 
-import type { Readonlyable } from '../types/_internals';
+import type { EnumInput } from '../types/_internals';
 
 import { createBaseSchemaBuilderFactory } from './base';
 
@@ -37,10 +37,7 @@ export interface RefSchemaBuilder<
     >;
 
     enum: <
-        T extends
-        | Readonlyable<Array<null | O>>
-        | { [path: string]: null | O }
-        | { message?: M; values: Readonlyable<Array<null | O>> },
+        T extends EnumInput<null | O, M>,
         M extends string,
         O extends Types.ObjectId,
     >(value: T) => ExtendSchemaBuilder<

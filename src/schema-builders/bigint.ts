@@ -6,8 +6,18 @@ import type {
 } from 'mongoose';
 import type { Merge } from 'type-fest';
 
-import type { Readonlyable } from '../types/_internals';
+import type {
+    EnumInput,
+    ValueWithMessage,
+} from '../types/_internals';
 
+import {
+    defaultEnumValidateMessage,
+    defaultMaxValidateMessage,
+    defaultMinValidateMessage,
+    normalizeEnumValues,
+    normalizeValueWithMessage,
+} from './_internals';
 import { createBaseSchemaBuilderFactory } from './base';
 
 type BigIntLimit = bigint;
@@ -48,10 +58,7 @@ export interface BigIntSchemaBuilder<Props extends BaseProps = BaseProps, ExtraO
     >;
 
     enum: <
-        T extends
-        | Readonlyable<Array<N | null>>
-        | { [path: string]: N | null }
-        | { message?: M; values: Readonlyable<Array<N | null>> },
+        T extends EnumInput<N | null, M>,
         M extends string,
         N extends bigint,
     >(value: T) => ExtendSchemaBuilder<
@@ -66,7 +73,7 @@ export interface BigIntSchemaBuilder<Props extends BaseProps = BaseProps, ExtraO
     >;
 
     max: <
-        T extends L | Readonlyable<[L, S]>,
+        T extends ValueWithMessage<L, S>,
         L extends BigIntLimit,
         S extends string,
     >(value: T) => ExtendSchemaBuilder<
@@ -75,7 +82,7 @@ export interface BigIntSchemaBuilder<Props extends BaseProps = BaseProps, ExtraO
     >;
 
     min: <
-        T extends L | Readonlyable<[L, S]>,
+        T extends ValueWithMessage<L, S>,
         L extends BigIntLimit,
         S extends string,
     >(value: T) => ExtendSchemaBuilder<
@@ -94,11 +101,6 @@ interface BigIntValidationSchema {
     validate: Array<BigIntEnumValidator | BigIntLimitValidator>;
 }
 
-// Constants/Variables
-const defaultEnumValidateMessage = 'Path `{PATH}` ({VALUE}) is not a valid enum value.';
-const defaultMinValidateMessage = 'Path `{PATH}` ({VALUE}) is less than minimum allowed value ({MIN}).';
-const defaultMaxValidateMessage = 'Path `{PATH}` ({VALUE}) is more than maximum allowed value ({MAX}).';
-
 // Functions
 const baseBuilderFactory = createBaseSchemaBuilderFactory(Schema.Types.BigInt);
 
@@ -114,19 +116,8 @@ export function bigintSchemaBuilder() {
                         throw new Error('Duplicate schema attribute: enum');
                     }
 
-                    return (
-                        value: Readonlyable<Array<bigint | null>>
-                          | { [path: string]: bigint | null }
-                          | { message?: string; values: Readonlyable<Array<bigint | null>> },
-                    ) => {
-                        let enumValues: Array<bigint | null>;
-                        let message: string | undefined;
-
-                        if (Array.isArray(value)) enumValues = [...value];
-                        else if ('values' in value && Array.isArray(value.values)) {
-                            enumValues = [...value.values];
-                            if ('message' in value && typeof value.message === 'string') message = value.message;
-                        } else enumValues = Object.values(value);
+                    return (value: EnumInput<bigint | null>) => {
+                        const { enumValues, message } = normalizeEnumValues(value);
 
                         const allowedValues = new Set(enumValues);
                         const validator: BigIntEnumValidator = {
@@ -146,7 +137,7 @@ export function bigintSchemaBuilder() {
                 }
 
                 if (key === 'max' || key === 'min') {
-                    return (value: BigIntLimit | Readonlyable<[BigIntLimit, string]>) => {
+                    return (value: ValueWithMessage<BigIntLimit>) => {
                         const validator = createLimitValidator(key, value);
                         const validators = Array.isArray(schema.validate) ? schema.validate : [];
                         schema.validate = [
@@ -166,14 +157,9 @@ export function bigintSchemaBuilder() {
 
 function createLimitValidator(
     type: 'max' | 'min',
-    value: BigIntLimit | Readonlyable<[BigIntLimit, string]>,
+    value: ValueWithMessage<BigIntLimit>,
 ): BigIntLimitValidator {
-    const [limit, message] = Array.isArray(value)
-        ? value as Readonly<[BigIntLimit, string]>
-        : [
-            value as BigIntLimit,
-            undefined,
-        ];
+    const [limit, message] = normalizeValueWithMessage(value);
 
     if (typeof limit !== 'bigint') throw new TypeError(`BigInt ${type} limit must be a bigint`);
 

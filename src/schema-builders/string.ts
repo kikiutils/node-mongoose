@@ -11,7 +11,10 @@ import type {
 } from 'mongoose';
 import type { Merge } from 'type-fest';
 
-import type { Readonlyable } from '../types/_internals';
+import type {
+    EnumInput,
+    ValueWithMessage,
+} from '../types/_internals';
 
 import { createBaseSchemaBuilderFactory } from './base';
 
@@ -45,10 +48,7 @@ export interface StringSchemaBuilder<
     >;
 
     enum: <
-        T extends
-        | Readonlyable<Array<null | S>>
-        | { [path: string]: null | S }
-        | { message?: M; values: Readonlyable<Array<null | S>> },
+        T extends EnumInput<null | S, M>,
         M extends string,
         S extends string,
     >(value: T) => ExtendSchemaBuilder<
@@ -104,7 +104,7 @@ export interface StringSchemaBuilder<
      * @returns This instance for chaining.
      */
     length: <
-        T extends L | Readonlyable<[L, S]>,
+        T extends ValueWithMessage<L, S>,
         L extends number,
         S extends string,
     >(value: T) => ExtendSchemaBuilder<
@@ -134,7 +134,7 @@ export interface StringSchemaBuilder<
         ExtraOmitFields
     >;
     maxlength: <
-        T extends L | Readonlyable<[L, S]>,
+        T extends ValueWithMessage<L, S>,
         L extends number,
         S extends string,
     >(value: T) => ExtendSchemaBuilder<
@@ -143,7 +143,7 @@ export interface StringSchemaBuilder<
     >;
 
     minlength: <
-        T extends L | Readonlyable<[L, S]>,
+        T extends ValueWithMessage<L, S>,
         L extends number,
         S extends string,
     >(value: T) => ExtendSchemaBuilder<

@@ -11,6 +11,7 @@ import type {
     PipelineStage,
     Schema,
 } from 'mongoose';
+import type { Arrayable } from 'type-fest';
 
 type PrePaginatePipelineStage = '__PREPAGINATE__' | PipelineStage;
 
@@ -86,7 +87,7 @@ export interface AggregatePaginateQueryPopulateOptions {
     /**
      * The nested population options applied to the populated documents.
      */
-    populate?: AggregatePaginateQueryPopulateOptions | AggregatePaginateQueryPopulateOptions[];
+    populate?: Arrayable<AggregatePaginateQueryPopulateOptions>;
 
     /**
      * The field projection used when retrieving populated documents.

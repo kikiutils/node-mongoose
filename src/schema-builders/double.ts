@@ -6,8 +6,18 @@ import type {
 } from 'mongoose';
 import type { Merge } from 'type-fest';
 
-import type { Readonlyable } from '../types/_internals';
+import type {
+    EnumInput,
+    ValueWithMessage,
+} from '../types/_internals';
 
+import {
+    defaultEnumValidateMessage,
+    defaultMaxValidateMessage,
+    defaultMinValidateMessage,
+    normalizeEnumValues,
+    normalizeValueWithMessage,
+} from './_internals';
 import { createBaseSchemaBuilderFactory } from './base';
 
 type DoubleLimit = number | Types.Double;
@@ -48,10 +58,7 @@ export interface DoubleSchemaBuilder<Props extends BaseProps = BaseProps, ExtraO
     >;
 
     enum: <
-        T extends
-        | Readonlyable<Array<N | null>>
-        | { [path: string]: N | null }
-        | { message?: M; values: Readonlyable<Array<N | null>> },
+        T extends EnumInput<N | null, M>,
         M extends string,
         N extends number | Types.Double,
     >(value: T) => ExtendSchemaBuilder<
@@ -66,7 +73,7 @@ export interface DoubleSchemaBuilder<Props extends BaseProps = BaseProps, ExtraO
     >;
 
     max: <
-        T extends L | Readonlyable<[L, S]>,
+        T extends ValueWithMessage<L, S>,
         L extends DoubleLimit,
         S extends string,
     >(value: T) => ExtendSchemaBuilder<
@@ -75,7 +82,7 @@ export interface DoubleSchemaBuilder<Props extends BaseProps = BaseProps, ExtraO
     >;
 
     min: <
-        T extends L | Readonlyable<[L, S]>,
+        T extends ValueWithMessage<L, S>,
         L extends DoubleLimit,
         S extends string,
     >(value: T) => ExtendSchemaBuilder<
@@ -94,24 +101,14 @@ interface DoubleValidationSchema {
     validate: Array<DoubleEnumValidator | DoubleLimitValidator>;
 }
 
-// Constants/Variables
-const defaultEnumValidateMessage = 'Path `{PATH}` ({VALUE}) is not a valid enum value.';
-const defaultMinValidateMessage = 'Path `{PATH}` ({VALUE}) is less than minimum allowed value ({MIN}).';
-const defaultMaxValidateMessage = 'Path `{PATH}` ({VALUE}) is more than maximum allowed value ({MAX}).';
-
 // Functions
 const baseBuilderFactory = createBaseSchemaBuilderFactory(Schema.Types.Double);
 
 function createLimitValidator(
     type: 'max' | 'min',
-    value: DoubleLimit | Readonlyable<[DoubleLimit, string]>,
+    value: ValueWithMessage<DoubleLimit>,
 ): DoubleLimitValidator {
-    const [limit, message] = Array.isArray(value)
-        ? value as Readonly<[DoubleLimit, string]>
-        : [
-            value as DoubleLimit,
-            undefined,
-        ];
+    const [limit, message] = normalizeValueWithMessage(value);
 
     const numericLimit = typeof limit === 'number' ? limit : limit.valueOf();
     if (!Number.isFinite(numericLimit)) throw new RangeError(`Double ${type} limit must be finite`);
@@ -140,19 +137,8 @@ export function doubleSchemaBuilder() {
                         throw new Error('Duplicate schema attribute: enum');
                     }
 
-                    return (
-                        value: Readonlyable<Array<null | number | Types.Double>>
-                          | { [path: string]: null | number | Types.Double }
-                          | { message?: string; values: Readonlyable<Array<null | number | Types.Double>> },
-                    ) => {
-                        let enumValues: Array<null | number | Types.Double>;
-                        let message: string | undefined;
-
-                        if (Array.isArray(value)) enumValues = [...value];
-                        else if ('values' in value && Array.isArray(value.values)) {
-                            enumValues = [...value.values];
-                            if ('message' in value && typeof value.message === 'string') message = value.message;
-                        } else enumValues = Object.values(value);
+                    return (value: EnumInput<null | number | Types.Double>) => {
+                        const { enumValues, message } = normalizeEnumValues(value);
 
                         const allowedValues = new Set(
                             enumValues.map((value) => value === null ? null : value.valueOf()),
@@ -179,7 +165,7 @@ export function doubleSchemaBuilder() {
                 }
 
                 if (key === 'max' || key === 'min') {
-                    return (value: DoubleLimit | Readonlyable<[DoubleLimit, string]>) => {
+                    return (value: ValueWithMessage<DoubleLimit>) => {
                         const validator = createLimitValidator(key, value);
                         const validators = Array.isArray(schema.validate) ? schema.validate : [];
                         schema.validate = [

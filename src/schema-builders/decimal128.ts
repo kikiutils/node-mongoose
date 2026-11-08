@@ -8,8 +8,16 @@ import type {
 } from 'mongoose';
 import type { Merge } from 'type-fest';
 
-import type { Readonlyable } from '../types/_internals';
+import type {
+    EnumInput,
+    ValueWithMessage,
+} from '../types/_internals';
 
+import {
+    defaultMaxValidateMessage,
+    defaultMinValidateMessage,
+    normalizeValueWithMessage,
+} from './_internals';
 import { createBaseSchemaBuilderFactory } from './base';
 
 type Decimal128Limit = Decimal.Value | Types.Decimal128 | { toString: () => string };
@@ -46,10 +54,7 @@ export interface Decimal128SchemaBuilder<
     >;
 
     enum: <
-        T extends
-        | Readonlyable<Array<D | null>>
-        | { [path: string]: D | null }
-        | { message?: M; values: Readonlyable<Array<D | null>> },
+        T extends EnumInput<D | null, M>,
         D extends Types.Decimal128,
         M extends string,
     >(value: T) => ExtendSchemaBuilder<
@@ -64,7 +69,7 @@ export interface Decimal128SchemaBuilder<
     >;
 
     max: <
-        T extends D | Readonlyable<[D, S]>,
+        T extends ValueWithMessage<D, S>,
         D extends Decimal128Limit,
         S extends string,
     >(value: T) => ExtendSchemaBuilder<
@@ -73,7 +78,7 @@ export interface Decimal128SchemaBuilder<
     >;
 
     min: <
-        T extends D | Readonlyable<[D, S]>,
+        T extends ValueWithMessage<D, S>,
         D extends Decimal128Limit,
         S extends string,
     >(value: T) => ExtendSchemaBuilder<
@@ -132,23 +137,14 @@ interface ToStringSetterSchema {
     set: (value?: { toString: () => string }) => string | undefined;
 }
 
-// Constants/Variables
-const defaultMinValidateMessage = 'Path `{PATH}` ({VALUE}) is less than minimum allowed value ({MIN}).';
-const defaultMaxValidateMessage = 'Path `{PATH}` ({VALUE}) is more than maximum allowed value ({MAX}).';
-
 // Functions
 const baseBuilderFactory = createBaseSchemaBuilderFactory(Schema.Types.Decimal128);
 
 function createLimitValidator(
     type: 'max' | 'min',
-    value: Decimal128Limit | Readonlyable<[Decimal128Limit, string]>,
+    value: ValueWithMessage<Decimal128Limit>,
 ): Decimal128LimitValidator {
-    const [limit, message] = Array.isArray(value)
-        ? value as Readonly<[Decimal128Limit, string]>
-        : [
-            value,
-            undefined,
-        ];
+    const [limit, message] = normalizeValueWithMessage(value);
 
     const decimalLimit = new Decimal(limit.toString());
     if (!decimalLimit.isFinite()) throw new RangeError(`Decimal128 ${type} limit must be finite`);
@@ -174,7 +170,7 @@ export function decimal128SchemaBuilder() {
         {
             get(target, key, receiver) {
                 if (key === 'max' || key === 'min') {
-                    return (value: Decimal128Limit | Readonlyable<[Decimal128Limit, string]>) => {
+                    return (value: ValueWithMessage<Decimal128Limit>) => {
                         const validator = createLimitValidator(key, value);
                         const validators = Array.isArray(schema.validate) ? schema.validate : [];
                         schema.validate = [

@@ -6,7 +6,10 @@ import type {
 } from 'mongoose';
 import type { Merge } from 'type-fest';
 
-import type { Readonlyable } from '../types/_internals';
+import type {
+    EnumInput,
+    ValueWithMessage,
+} from '../types/_internals';
 
 import { createBaseSchemaBuilderFactory } from './base';
 
@@ -35,10 +38,7 @@ export interface DateSchemaBuilder<
     >;
 
     enum: <
-        T extends
-        | Readonlyable<Array<D | null>>
-        | { [path: string]: D | null }
-        | { message?: M; values: Readonlyable<Array<D | null>> },
+        T extends EnumInput<D | null, M>,
         D extends NativeDate,
         M extends string,
     >(value: T) => ExtendSchemaBuilder<
@@ -53,7 +53,7 @@ export interface DateSchemaBuilder<
     >;
 
     max: <
-        T extends D | Readonlyable<[D, S]>,
+        T extends ValueWithMessage<D, S>,
         D extends NativeDate,
         S extends string,
     >(value: T) => ExtendSchemaBuilder<
@@ -62,7 +62,7 @@ export interface DateSchemaBuilder<
     >;
 
     min: <
-        T extends D | Readonlyable<[D, S]>,
+        T extends ValueWithMessage<D, S>,
         D extends NativeDate,
         S extends string,
     >(value: T) => ExtendSchemaBuilder<

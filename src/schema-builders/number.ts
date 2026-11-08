@@ -6,7 +6,10 @@ import type {
 } from 'mongoose';
 import type { Merge } from 'type-fest';
 
-import type { Readonlyable } from '../types/_internals';
+import type {
+    EnumInput,
+    ValueWithMessage,
+} from '../types/_internals';
 
 import { createBaseSchemaBuilderFactory } from './base';
 
@@ -35,10 +38,7 @@ export interface NumberSchemaBuilder<
     >;
 
     enum: <
-        T extends
-        | Readonlyable<Array<N | null>>
-        | { [path: string]: N | null }
-        | { message?: M; values: Readonlyable<Array<N | null>> },
+        T extends EnumInput<N | null, M>,
         M extends string,
         N extends number,
     >(value: T) => ExtendSchemaBuilder<
@@ -53,7 +53,7 @@ export interface NumberSchemaBuilder<
     >;
 
     max: <
-        T extends N | Readonlyable<[N, S]>,
+        T extends ValueWithMessage<N, S>,
         N extends number,
         S extends string,
     >(value: T) => ExtendSchemaBuilder<
@@ -62,7 +62,7 @@ export interface NumberSchemaBuilder<
     >;
 
     min: <
-        T extends N | Readonlyable<[N, S]>,
+        T extends ValueWithMessage<N, S>,
         N extends number,
         S extends string,
     >(value: T) => ExtendSchemaBuilder<

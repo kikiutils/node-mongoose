@@ -4,6 +4,11 @@ import type {
     SchemaType,
     Types,
 } from 'mongoose';
+import {
+    objectHasOwn,
+    objectKeys,
+    objectValues,
+} from 'ts-extras';
 
 declare module 'mongoose' {
     interface LeanOptions {
@@ -32,7 +37,7 @@ const isNonNullObject = (value: unknown): value is Record<string, any> => value 
 function convertDocument(schema: Schema, value: unknown) {
     if (!isNonNullObject(value)) return;
     const discriminatorKey = schema.get('discriminatorKey') ?? '__t';
-    const discriminatorSchema = Object.values(schema.discriminators ?? {}).find(
+    const discriminatorSchema = objectValues(schema.discriminators ?? {}).find(
         (childSchema) => childSchema.get('discriminatorKey') === discriminatorKey
           && (childSchema as Schema & { discriminatorMapping?: { value: unknown } }).discriminatorMapping?.value
           === value[discriminatorKey],
@@ -55,7 +60,7 @@ function convertPath(value: unknown, pathSegments: string[], schemaType: SchemaT
 
     if (!isNonNullObject(value)) return;
     const [key, ...remainingPathSegments] = pathSegments;
-    if (key === undefined || !Object.hasOwn(value, key)) return;
+    if (key === undefined || !objectHasOwn(value, key)) return;
     if (remainingPathSegments.length) convertPath(value[key], remainingPathSegments, schemaType);
     else value[key] = convertValue(value[key], schemaType);
 }
@@ -65,7 +70,7 @@ function convertValue(value: unknown, schemaType: SchemaType): unknown {
     const embeddedSchemaType = schemaType.getEmbeddedSchemaType();
     if (embeddedSchemaType && Array.isArray(value)) {
         for (let i = 0; i < value.length; i++) {
-            if (Object.hasOwn(value, i)) value[i] = convertValue(value[i], embeddedSchemaType);
+            if (objectHasOwn(value, i)) value[i] = convertValue(value[i], embeddedSchemaType);
         }
 
         return value;
@@ -74,7 +79,7 @@ function convertValue(value: unknown, schemaType: SchemaType): unknown {
     if (embeddedSchemaType && schemaType.instance === 'Map') {
         if (value instanceof Map) value.forEach((item, key) => value.set(key, convertValue(item, embeddedSchemaType)));
         else if (isNonNullObject(value)) {
-            for (const key of Object.keys(value)) value[key] = convertValue(value[key], embeddedSchemaType);
+            for (const key of objectKeys(value)) value[key] = convertValue(value[key], embeddedSchemaType);
         }
 
         return value;

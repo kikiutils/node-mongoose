@@ -6,8 +6,18 @@ import type {
 } from 'mongoose';
 import type { Merge } from 'type-fest';
 
-import type { Readonlyable } from '../types/_internals';
+import type {
+    EnumInput,
+    ValueWithMessage,
+} from '../types/_internals';
 
+import {
+    defaultEnumValidateMessage,
+    defaultMaxValidateMessage,
+    defaultMinValidateMessage,
+    normalizeEnumValues,
+    normalizeValueWithMessage,
+} from './_internals';
 import { createBaseSchemaBuilderFactory } from './base';
 
 type ExtendSchemaBuilder<
@@ -49,10 +59,7 @@ export interface Int32SchemaBuilder<Props extends BaseProps = BaseProps, ExtraOm
     >;
 
     enum: <
-        T extends
-        | Readonlyable<Array<N | null>>
-        | { [path: string]: N | null }
-        | { message?: M; values: Readonlyable<Array<N | null>> },
+        T extends EnumInput<N | null, M>,
         M extends string,
         N extends number,
     >(value: T) => ExtendSchemaBuilder<
@@ -67,7 +74,7 @@ export interface Int32SchemaBuilder<Props extends BaseProps = BaseProps, ExtraOm
     >;
 
     max: <
-        T extends L | Readonlyable<[L, S]>,
+        T extends ValueWithMessage<L, S>,
         L extends Int32Limit,
         S extends string,
     >(value: T) => ExtendSchemaBuilder<
@@ -76,7 +83,7 @@ export interface Int32SchemaBuilder<Props extends BaseProps = BaseProps, ExtraOm
     >;
 
     min: <
-        T extends L | Readonlyable<[L, S]>,
+        T extends ValueWithMessage<L, S>,
         L extends Int32Limit,
         S extends string,
     >(value: T) => ExtendSchemaBuilder<
@@ -95,24 +102,14 @@ interface Int32ValidationSchema {
     validate: Array<Int32EnumValidator | Int32LimitValidator>;
 }
 
-// Constants/Variables
-const defaultEnumValidateMessage = 'Path `{PATH}` ({VALUE}) is not a valid enum value.';
-const defaultMinValidateMessage = 'Path `{PATH}` ({VALUE}) is less than minimum allowed value ({MIN}).';
-const defaultMaxValidateMessage = 'Path `{PATH}` ({VALUE}) is more than maximum allowed value ({MAX}).';
-
 // Functions
 const baseBuilderFactory = createBaseSchemaBuilderFactory(Schema.Types.Int32);
 
 function createLimitValidator(
     type: 'max' | 'min',
-    value: Int32Limit | Readonlyable<[Int32Limit, string]>,
+    value: ValueWithMessage<Int32Limit>,
 ): Int32LimitValidator {
-    const [numericLimit, message] = Array.isArray(value)
-        ? value as Readonly<[Int32Limit, string]>
-        : [
-            value as Int32Limit,
-            undefined,
-        ];
+    const [numericLimit, message] = normalizeValueWithMessage(value);
 
     if (!Number.isFinite(numericLimit)) throw new RangeError(`Int32 ${type} limit must be finite`);
 
@@ -140,19 +137,8 @@ export function int32SchemaBuilder() {
                         throw new Error('Duplicate schema attribute: enum');
                     }
 
-                    return (
-                        value: Readonlyable<Array<null | number>>
-                          | { [path: string]: null | number }
-                          | { message?: string; values: Readonlyable<Array<null | number>> },
-                    ) => {
-                        let enumValues: Array<null | number>;
-                        let message: string | undefined;
-
-                        if (Array.isArray(value)) enumValues = [...value];
-                        else if ('values' in value && Array.isArray(value.values)) {
-                            enumValues = [...value.values];
-                            if ('message' in value && typeof value.message === 'string') message = value.message;
-                        } else enumValues = Object.values(value);
+                    return (value: EnumInput<null | number>) => {
+                        const { enumValues, message } = normalizeEnumValues(value);
 
                         const allowedValues = new Set(enumValues);
                         const validator: Int32EnumValidator = {
@@ -172,7 +158,7 @@ export function int32SchemaBuilder() {
                 }
 
                 if (key === 'max' || key === 'min') {
-                    return (value: Int32Limit | Readonlyable<[Int32Limit, string]>) => {
+                    return (value: ValueWithMessage<Int32Limit>) => {
                         const validator = createLimitValidator(key, value);
                         const validators = Array.isArray(schema.validate) ? schema.validate : [];
                         schema.validate = [

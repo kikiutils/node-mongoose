@@ -5,6 +5,7 @@ import {
 } from 'es-toolkit/compat';
 import { Types } from 'mongoose';
 import type { Schema } from 'mongoose';
+import { objectEntries } from 'ts-extras';
 
 export interface MongooseNormalizePluginOptions {
     /**
@@ -65,7 +66,7 @@ export function mongooseNormalizePlugin<S extends Schema>(
     // Collect special paths (Decimal128 & private)
     const decimalPaths: string[] = [];
     const privatePaths: string[] = [];
-    for (const [path, schemaType] of Object.entries(schema.paths)) {
+    for (const [path, schemaType] of objectEntries(schema.paths)) {
         if (schemaType?.options?.private) privatePaths.push(path);
         else if (schemaType?.instance === 'Decimal128') decimalPaths.push(path);
     }
