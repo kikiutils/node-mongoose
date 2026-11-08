@@ -4,15 +4,22 @@ import type {
     EnumInput,
     EnumOptions,
     Readonlyable,
+    ValidationSchema,
     ValueWithMessage,
 } from '../types/_internals';
 
 // Constants/Variables
 export const defaultEnumValidateMessage = 'Path `{PATH}` ({VALUE}) is not a valid enum value.';
-export const defaultMinValidateMessage = 'Path `{PATH}` ({VALUE}) is less than minimum allowed value ({MIN}).';
-export const defaultMaxValidateMessage = 'Path `{PATH}` ({VALUE}) is more than maximum allowed value ({MAX}).';
+export const defaultLimitValidateMessages = {
+    max: 'Path `{PATH}` ({VALUE}) is more than maximum allowed value ({MAX}).',
+    min: 'Path `{PATH}` ({VALUE}) is less than minimum allowed value ({MIN}).',
+};
 
 // Functions
+export function hasSchemaValidator(schema: Partial<ValidationSchema<{ type: string }>>, type: string): boolean {
+    return schema.validate?.some((validator) => validator.type === type) ?? false;
+}
+
 function isEnumArray<T>(value: EnumInput<T>): value is readonly T[] {
     return Array.isArray(value);
 }
@@ -44,4 +51,14 @@ export function normalizeValueWithMessage<T>(value: ValueWithMessage<T>): readon
             value,
             undefined,
         ];
+}
+
+export function setSchemaValidator<T extends { type: string }>(
+    schema: Partial<ValidationSchema<T>>,
+    validator: T,
+): void {
+    schema.validate = [
+        ...(schema.validate ?? []).filter(({ type }) => type !== validator.type),
+        validator,
+    ];
 }

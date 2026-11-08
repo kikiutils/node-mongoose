@@ -8,19 +8,25 @@ import type { Merge } from 'type-fest';
 
 import type {
     EnumInput,
+    EnumValidator,
+    LimitValidator,
+    ValidationSchema,
     ValueWithMessage,
 } from '../types/_internals';
 
 import {
     defaultEnumValidateMessage,
-    defaultMaxValidateMessage,
-    defaultMinValidateMessage,
+    defaultLimitValidateMessages,
+    hasSchemaValidator,
     normalizeEnumValues,
     normalizeValueWithMessage,
+    setSchemaValidator,
 } from './_internals';
 import { createBaseSchemaBuilderFactory } from './base';
 
 type BigIntLimit = bigint;
+type BigIntValidationSchema = ValidationSchema<EnumValidator<bigint> | LimitValidator<bigint>>;
+
 type ExtendSchemaBuilder<
     Props extends BaseProps,
     ExtraOmitFields extends string,
@@ -31,21 +37,6 @@ type ExtendSchemaBuilder<
 
 interface BaseProps {
     type: typeof Schema.Types.BigInt;
-}
-
-interface BigIntEnumValidator {
-    enumValues: Array<bigint | null>;
-    message: string;
-    type: 'enum';
-    validator: (value: bigint | null | undefined) => boolean;
-}
-
-interface BigIntLimitValidator {
-    max?: bigint;
-    message: string;
-    min?: bigint;
-    type: 'max' | 'min';
-    validator: (value: bigint | null | undefined) => boolean;
 }
 
 export interface BigIntSchemaBuilder<Props extends BaseProps = BaseProps, ExtraOmitFields extends string = never> {
@@ -97,22 +88,18 @@ export interface BigIntSchemaBuilder<Props extends BaseProps = BaseProps, ExtraO
     unique: ExtendSchemaBuilder<Merge<Props, { unique: true }>, ExtraOmitFields>;
 }
 
-interface BigIntValidationSchema {
-    validate: Array<BigIntEnumValidator | BigIntLimitValidator>;
-}
-
 // Functions
 const baseBuilderFactory = createBaseSchemaBuilderFactory(Schema.Types.BigInt);
 
 export function bigintSchemaBuilder() {
-    const schema: Record<string, any> = {};
+    const schema: Partial<BigIntValidationSchema> & Record<string, any> = {};
     const baseBuilder = baseBuilderFactory(schema);
     return new Proxy(
         baseBuilder,
         {
             get(target, key, receiver) {
                 if (key === 'enum') {
-                    if (schema.validate?.some(({ type }: { type: string }) => type === 'enum')) {
+                    if (hasSchemaValidator(schema, 'enum')) {
                         throw new Error('Duplicate schema attribute: enum');
                     }
 
@@ -120,17 +107,14 @@ export function bigintSchemaBuilder() {
                         const { enumValues, message } = normalizeEnumValues(value);
 
                         const allowedValues = new Set(enumValues);
-                        const validator: BigIntEnumValidator = {
+                        const validator: EnumValidator<bigint> = {
                             enumValues,
                             message: message ?? defaultEnumValidateMessage,
                             type: 'enum',
                             validator: (value) => value === null || value === undefined || allowedValues.has(value),
                         };
 
-                        schema.validate = [
-                            ...schema.validate ?? [],
-                            validator,
-                        ];
+                        setSchemaValidator(schema, validator);
 
                         return receiver;
                     };
@@ -139,11 +123,7 @@ export function bigintSchemaBuilder() {
                 if (key === 'max' || key === 'min') {
                     return (value: ValueWithMessage<BigIntLimit>) => {
                         const validator = createLimitValidator(key, value);
-                        const validators = Array.isArray(schema.validate) ? schema.validate : [];
-                        schema.validate = [
-                            ...validators.filter(({ type }) => type !== key),
-                            validator,
-                        ];
+                        setSchemaValidator(schema, validator);
 
                         return receiver;
                     };
@@ -158,13 +138,13 @@ export function bigintSchemaBuilder() {
 function createLimitValidator(
     type: 'max' | 'min',
     value: ValueWithMessage<BigIntLimit>,
-): BigIntLimitValidator {
+): LimitValidator<bigint> {
     const [limit, message] = normalizeValueWithMessage(value);
 
     if (typeof limit !== 'bigint') throw new TypeError(`BigInt ${type} limit must be a bigint`);
 
     return {
-        message: message ?? (type === 'min' ? defaultMinValidateMessage : defaultMaxValidateMessage),
+        message: message ?? defaultLimitValidateMessages[type],
         [type]: limit,
         type,
         validator: (value) => {

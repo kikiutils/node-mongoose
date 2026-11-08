@@ -320,9 +320,14 @@ describe('int32SchemaBuilder', () => {
             },
         );
 
-        it('should replace repeated runtime limits without dropping the opposite limit', ({ expect }) => {
+        it('should replace repeated runtime limits without dropping enum or the opposite limit', ({ expect }) => {
             const builder = int32();
-            builder.min(1).max(3);
+            builder.enum([
+                1,
+                2,
+                3,
+            ]).min(1).max(3);
+
             const definition = builder
                 .min([
                     2,
@@ -330,13 +335,14 @@ describe('int32SchemaBuilder', () => {
                 ])
                 .nonRequired;
 
-            expect(definition.validate).toHaveLength(2);
+            expect(definition.validate).toHaveLength(3);
             expect(definition.validate.map((validator) => validator.type)).toEqual([
+                'enum',
                 'max',
                 'min',
             ]);
 
-            expect(definition.validate[1]).toMatchObject({
+            expect(definition.validate[2]).toMatchObject({
                 message: 'updated min',
                 min: 2,
             });

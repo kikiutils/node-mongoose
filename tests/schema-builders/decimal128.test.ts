@@ -126,6 +126,30 @@ describe('decimal128SchemaBuilder', () => {
         await expect(new AmountModel({ amount: '3.50' }).validate()).resolves.toBeUndefined();
     });
 
+    it('should replace repeated runtime limits while preserving getters and the opposite limit', ({ expect }) => {
+        const builder = decimal128SchemaBuilder();
+        const withGetter = builder.setToStringGetter;
+        withGetter.min('1.25').max('5.75');
+        const definition = withGetter.min([
+            '2.50',
+            'updated min',
+        ]).nonRequired;
+
+        expect(definition.validate.map(({ type }) => type)).toEqual([
+            'max',
+            'min',
+        ]);
+
+        expect(definition.validate[1]).toMatchObject({
+            message: 'updated min',
+            min: '2.5',
+        });
+
+        expect(definition.validate[1]?.validator(Types.Decimal128.fromString('2.49'))).toBe(false);
+        expect(definition.validate[1]?.validator(Types.Decimal128.fromString('2.50'))).toBe(true);
+        expect(definition.get(Types.Decimal128.fromString('2.50'))).toBe('2.50');
+    });
+
     it('should ignore nullish values for range validation', ({ expect }) => {
         const schema = decimal128SchemaBuilder().min('0').max('10').nonRequired;
 

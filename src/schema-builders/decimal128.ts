@@ -10,17 +10,21 @@ import type { Merge } from 'type-fest';
 
 import type {
     EnumInput,
+    LimitValidator,
+    ValidationSchema,
     ValueWithMessage,
 } from '../types/_internals';
 
 import {
-    defaultMaxValidateMessage,
-    defaultMinValidateMessage,
+    defaultLimitValidateMessages,
     normalizeValueWithMessage,
+    setSchemaValidator,
 } from './_internals';
 import { createBaseSchemaBuilderFactory } from './base';
 
 type Decimal128Limit = Decimal.Value | Types.Decimal128 | { toString: () => string };
+type Decimal128ValidationSchema = ValidationSchema<LimitValidator<string, Types.Decimal128>>;
+
 type ExtendSchemaBuilder<
     Props extends BaseProps,
     ExtraOmitFields extends string,
@@ -33,16 +37,8 @@ interface BaseProps {
     type: typeof Schema.Types.Decimal128;
 }
 
-interface Decimal128LimitValidator {
-    max?: string;
-    message: string;
-    min?: string;
-    type: 'max' | 'min';
-    validator: (value: null | Types.Decimal128 | undefined) => boolean;
-}
-
 export interface Decimal128SchemaBuilder<
-    Props extends { type: typeof Schema.Types.Decimal128 } = { type: typeof Schema.Types.Decimal128 },
+    Props extends BaseProps = BaseProps,
     ExtraOmitFields extends string = never,
 > {
     default: <
@@ -124,10 +120,6 @@ export interface Decimal128SchemaBuilder<
     unique: ExtendSchemaBuilder<Merge<Props, { unique: true }>, ExtraOmitFields>;
 }
 
-interface Decimal128ValidationSchema {
-    validate: Decimal128LimitValidator[];
-}
-
 interface ToStringGetterSchema {
     get: (value?: Types.Decimal128) => string | undefined;
     leanDecimal128ToString: true;
@@ -143,14 +135,14 @@ const baseBuilderFactory = createBaseSchemaBuilderFactory(Schema.Types.Decimal12
 function createLimitValidator(
     type: 'max' | 'min',
     value: ValueWithMessage<Decimal128Limit>,
-): Decimal128LimitValidator {
+): LimitValidator<string, Types.Decimal128> {
     const [limit, message] = normalizeValueWithMessage(value);
 
     const decimalLimit = new Decimal(limit.toString());
     if (!decimalLimit.isFinite()) throw new RangeError(`Decimal128 ${type} limit must be finite`);
 
     return {
-        message: message ?? (type === 'min' ? defaultMinValidateMessage : defaultMaxValidateMessage),
+        message: message ?? defaultLimitValidateMessages[type],
         [type]: decimalLimit.toString(),
         type,
         validator: (value) => {
@@ -163,7 +155,7 @@ function createLimitValidator(
 }
 
 export function decimal128SchemaBuilder() {
-    const schema: Record<string, any> = {};
+    const schema: Partial<Decimal128ValidationSchema> & Record<string, any> = {};
     const baseBuilder = baseBuilderFactory(schema);
     return new Proxy(
         baseBuilder,
@@ -172,11 +164,7 @@ export function decimal128SchemaBuilder() {
                 if (key === 'max' || key === 'min') {
                     return (value: ValueWithMessage<Decimal128Limit>) => {
                         const validator = createLimitValidator(key, value);
-                        const validators = Array.isArray(schema.validate) ? schema.validate : [];
-                        schema.validate = [
-                            ...validators.filter(({ type }) => type !== key),
-                            validator,
-                        ];
+                        setSchemaValidator(schema, validator);
 
                         return receiver;
                     };
