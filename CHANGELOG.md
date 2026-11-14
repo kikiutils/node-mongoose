@@ -1,5 +1,26 @@
 # Changelog
 
+## v9.0.4
+
+[compare changes](https://github.com/kikiutils/node-mongoose/compare/v9.0.3...v9.0.4)
+
+### 💅 Refactors
+
+- **scripts:** Rename peer dependency metadata updater to sync ([cc094ef](https://github.com/kikiutils/node-mongoose/commit/cc094ef))
+
+### 📦 Build
+
+- Generate scoped wildcard package exports from entries ([051558a](https://github.com/kikiutils/node-mongoose/commit/051558a))
+
+### 🏡 Chore
+
+- Update ignore files ([aceb847](https://github.com/kikiutils/node-mongoose/commit/aceb847))
+- Upgrade deps and regenerate exports defines ([c587ff1](https://github.com/kikiutils/node-mongoose/commit/c587ff1))
+
+### ❤️ Contributors
+
+- Kiki-kanri
+
 ## v9.0.3
 
 [compare changes](https://github.com/kikiutils/node-mongoose/compare/v9.0.2...v9.0.3)
