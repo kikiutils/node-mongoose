@@ -1,5 +1,7 @@
 import { defineConfig } from 'tsdown';
 
+import { generatePackageExports } from './scripts/generate-package-exports.ts';
+
 export default defineConfig({
     attw: {
         level: 'error',
@@ -9,7 +11,10 @@ export default defineConfig({
     deps: { onlyBundle: [] },
     dts: true,
     entry: ['./src/**/*.ts'],
-    exports: { exclude: [/(^|\/)_?internals?(\/|$)/] },
+    exports: {
+        customExports: generatePackageExports,
+        exclude: [/(?:^|\/)_?internals?(?:\/|$)/],
+    },
     fixedExtension: false,
     format: 'esm',
     publint: true,

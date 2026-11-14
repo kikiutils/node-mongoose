@@ -183,6 +183,8 @@ dist
 # Local AI agent and code-indexing files
 .omo/
 .omx/
+.omx-state-locks/
+.omx-state-locks.identity.json
 .codegraph/
 .aider*
 CLAUDE.local.md
