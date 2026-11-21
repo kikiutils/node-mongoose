@@ -1,5 +1,17 @@
 # Changelog
 
+## v9.0.5
+
+[compare changes](https://github.com/kikiutils/node-mongoose/compare/v9.0.4...v9.0.5)
+
+### 🏡 Chore
+
+- Upgrade deps ([5f6c870](https://github.com/kikiutils/node-mongoose/commit/5f6c870))
+
+### ❤️ Contributors
+
+- Kiki-kanri
+
 ## v9.0.4
 
 [compare changes](https://github.com/kikiutils/node-mongoose/compare/v9.0.3...v9.0.4)
