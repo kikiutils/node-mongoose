@@ -70,7 +70,7 @@
   "dependencies": {
     "decimal.js": "^10.6.0",
     "es-toolkit": "^1.53.2",
-    "mongoose": "^9.12.3",
+    "mongoose": "^9.13.0",
     "mongoose-aggregate-paginate-v2": "^1.1.5",
     "mongoose-paginate-v2": "^1.9.5",
     "ts-extras": "^3.0.0",
@@ -79,7 +79,7 @@
   "devDependencies": {
     "@antfu/eslint-config": "^10.0.0",
     "@arethetypeswrong/core": "^0.18.5",
-    "@kikiutils/eslint-config": "^11.2.1",
+    "@kikiutils/eslint-config": "^11.4.0",
     "@kikiutils/tsconfigs": "^7.0.0",
     "@types/node": "^26.6.6",
     "@vitest/coverage-v8": "^5.1.1",
